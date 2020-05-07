@@ -3,11 +3,14 @@
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 <?import com.radsoltan.components.NumericalTextField?>
-<VBox fx:id="container" stylesheets="@../css/primary.css" xmlns="http://javafx.com/javafx/10.0.2-internal"
+
+<VBox fx:id="container"
+      styleClass="container"
+      stylesheets="@../css/main.css"
+      xmlns="http://javafx.com/javafx/10.0.2-internal"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.Primary">
     <MenuBar>
         <Menu text="File">
@@ -19,8 +22,8 @@
         <Menu text="About"/>
         <Menu text="Help"/>
     </MenuBar>
-    <HBox>
-        <VBox>
+    <VBox styleClass="main">
+        <HBox>
             <VBox>
                 <Label text="Project Details"/>
                 <HBox>
@@ -40,51 +43,53 @@
                     <TextField/>
                 </HBox>
             </VBox>
-            <HBox>
-                <Label text="Structure Type"/>
-                <ChoiceBox fx:id="structureType" onAction="#test">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Beam"/>
-                            <String fx:value="Slab"/>
-                        </FXCollections>
-                    </items>
-                </ChoiceBox>
-            </HBox>
-            <VBox>
-                <Label text="Analysis Results"/>
-                <HBox>
-                    <Label text="ULS Moment"/>
-                    <NumericalTextField/>
-                </HBox>
-                <HBox>
-                    <Label text="QLS Moment"/>
-                    <NumericalTextField/>
-                </HBox>
-                <HBox>
-                    <Label text="Shear Force"/>
-                    <NumericalTextField/>
-                </HBox>
-            </VBox>
             <VBox>
                 <HBox>
-                    <Label text="Geometry"/>
+                    <Label text="Structure Type"/>
+                    <ChoiceBox fx:id="structureType">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Beam"/>
+                                <String fx:value="Slab"/>
+                            </FXCollections>
+                        </items>
+                    </ChoiceBox>
+                </HBox>
+                <VBox>
+                    <Label text="Analysis Results"/>
+                    <HBox>
+                        <Label text="ULS Moment"/>
+                        <NumericalTextField/>
+                    </HBox>
+                    <HBox>
+                        <Label text="QLS Moment"/>
+                        <NumericalTextField/>
+                    </HBox>
+                    <HBox>
+                        <Label text="Shear Force"/>
+                        <NumericalTextField/>
+                    </HBox>
+                </VBox>
+                <VBox>
+                    <HBox>
+                        <Label text="Geometry"/>
+                        <Button text="Edit"/>
+                    </HBox>
+                    <Label text="Enter geometry..."/>
+                </VBox>
+                <VBox>
+                    <HBox>
+                        <Label text="Reinforcement"/>
+                        <Button text="Edit"/>
+                    </HBox>
+                    <Label text="Enter reinforcement..."/>
+                </VBox>
+                <HBox>
+                    <Label text="Design Parameters"/>
                     <Button text="Edit"/>
                 </HBox>
-                <Label text="Enter geometry..."/>
             </VBox>
-            <VBox>
-                <HBox>
-                    <Label text="Reinforcement"/>
-                    <Button text="Edit"/>
-                </HBox>
-                <Label text="Enter reinforcement..."/>
-            </VBox>
-            <HBox>
-                <Label text="Design Parameters"/>
-                <Button text="Edit"/>
-            </HBox>
-        </VBox>
+        </HBox>
         <VBox>
             <StackPane style="-fx-background-color: grey">
                 <Canvas height="250" width="250"/>
@@ -108,11 +113,5 @@
                 </HBox>
             </VBox>
         </VBox>
-    </HBox>
-    <!--<GridPane>
-        <Label text="first" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <Label text="second" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <Label text="third" GridPane.columnIndex="4"/>
-        <Label text="fourth" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-    </GridPane>-->
+    </VBox>
 </VBox>

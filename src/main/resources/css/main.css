@@ -1,0 +1,20 @@
+/*
+ * CSS Styling based on stylesheets included in Aqua FX (https://github.com/guigarage/aerofx) theme
+ * The theme was modified and unnecessary styling has been removed.
+ */
+
+/*============= Imports =============*/
+@import "lib/aqua_light.css";
+@import "modules/primary.css";
+/*============== Fonts ==============*/
+@font-face {
+    src: url("../fonts/SourceSansPro-Regular.ttf");
+}
+/*========= General Styling =========*/
+.root{
+    -fx-background-color: #eff3fe;
+}
+.main {
+    -fx-font-family: 'Source Sans Pro Regular';
+    -fx-font-size: 14.0;
+}
