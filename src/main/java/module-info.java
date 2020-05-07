@@ -8,4 +8,5 @@ module com.radsoltan {
     opens com.radsoltan.components to javafx.fxml;
 
     exports com.radsoltan;
+    exports com.radsoltan.components;
 }
