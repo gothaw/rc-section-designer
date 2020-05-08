@@ -10,11 +10,80 @@
 @font-face {
     src: url("../fonts/SourceSansPro-Regular.ttf");
 }
+/*===================================*/
 /*========= General Styling =========*/
-.root{
+/*===================================*/
+.root {
+    -fx-font-family: 'Source Sans Pro Regular';
     -fx-background-color: #eff3fe;
 }
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
 .main {
-    -fx-font-family: 'Source Sans Pro Regular';
-    -fx-font-size: 14.0;
+    -fx-alignment: center;
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-hgap: 20px;
+    -fx-vgap: 5px;
+}
+
+.grid-cell {
+    -fx-pref-width: 280px;
+}
+
+.choice-box {
+    -fx-min-width: 90px;
+    -fx-cursor: hand;
+}
+
+.button {
+    -fx-cursor: hand;
+    -fx-min-width: 60px;
+}
+
+.heading {
+    -fx-text-fill: rgb(41.0, 103.0, 243.0);
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 0 0 5px 0;
+    -fx-min-width: 200px;
+}
+
+.subheading {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 2px 0 1px 0;
+}
+
+.field-label {
+    -fx-min-width: 120px;
+    -fx-pref-height: 24px;
+    -fx-content-display: center;
+}
+
+.numerical-field {
+    -fx-pref-width: 85px;
+}
+
+.unit-label {
+    -fx-pref-height: 24px;
+    -fx-padding: 0 0 0 5px;
+}
+
+.field-wrapper {
+    -fx-spacing: 2px;
+    -fx-padding: 0 0 5px 0;
+}
+
+.border-separator {
+    -fx-border-color: #aeb2bd;
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 1.5px 0;
 }
