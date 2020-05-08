@@ -1,0 +1,41 @@
+.canvas-wrapper {
+    -fx-background-color: #fff;
+}
+
+.geometry-section {
+    -fx-padding: 5px 0 0 0;
+    -fx-min-height: 80px;
+}
+
+.reinforcement-section {
+    -fx-padding: 5px 0 0 0;
+    -fx-min-height: 100px;
+}
+
+.design-parameters {
+    -fx-padding: 7px 0 0 0;
+}
+
+.analysis-results {
+    -fx-min-height: 96px;
+}
+
+.results-wrapper {
+    -fx-background-color: #fff;
+    -fx-padding: 5px 10px 5px 10px;
+    -fx-min-height: 60px;
+    -fx-alignment: center-left;
+}
+
+.utilization-note{
+    -fx-padding: 0 0 0 15px;
+    -fx-font-weight: bold;
+}
+
+.pass{
+    -fx-text-fill: green;
+}
+
+.fail{
+    -fx-text-fill: red;
+}

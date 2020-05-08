@@ -20,12 +20,20 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle(Constants.APP_TITLE);
         primaryStage.getIcons().add(new Image(getClass().getResource("/images/beam.png").toExternalForm()));
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
+        setMinMaxStageSize(primaryStage);
         primaryStage.show();
     }
 
     public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
+    }
+
+    public static void setMinMaxStageSize (Stage stage) {
+        stage.setMinHeight(Constants.MIN_WINDOW_HEIGHT);
+        stage.setMaxHeight(Constants.MAX_WINDOW_HEIGHT);
+        stage.setMinWidth(Constants.MIN_WINDOW_WIDTH);
+        stage.setMaxWidth(Constants.MAX_WINDOW_WIDTH);
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

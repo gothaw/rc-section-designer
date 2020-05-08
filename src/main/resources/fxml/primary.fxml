@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.radsoltan.components.*?>
+<?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<?import com.radsoltan.components.NumericalTextField?>
 
-<VBox fx:id="container"
-      styleClass="container"
-      stylesheets="@../css/main.css"
-      xmlns="http://javafx.com/javafx/10.0.2-internal"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.Primary">
+<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
+      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.radsoltan.controllers.Primary">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="New"/>
@@ -22,31 +20,51 @@
         <Menu text="About"/>
         <Menu text="Help"/>
     </MenuBar>
-    <VBox styleClass="main">
-        <HBox>
-            <VBox>
-                <Label text="Project Details"/>
-                <HBox>
-                    <Label text="Project:"/>
-                    <TextField/>
-                </HBox>
-                <HBox>
-                    <Label text="Project Number:"/>
-                    <TextField/>
-                </HBox>
-                <HBox>
-                    <Label text="Description:"/>
-                    <TextField/>
-                </HBox>
-                <HBox>
-                    <Label text="Author:"/>
-                    <TextField/>
-                </HBox>
+    <ScrollPane fitToWidth="true" fitToHeight="true">
+        <GridPane styleClass="main">
+            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label styleClass="heading" text="Project Details"/>
+                <VBox styleClass="field-wrapper, border-separator">
+                    <HBox>
+                        <Label styleClass="field-label" text="Project:"/>
+                        <TextField/>
+                    </HBox>
+                    <HBox>
+                        <Label styleClass="field-label" text="Project Number:"/>
+                        <TextField/>
+                    </HBox>
+                    <HBox>
+                        <Label styleClass="field-label" text="Description:"/>
+                        <TextField/>
+                    </HBox>
+                    <HBox>
+                        <Label styleClass="field-label" text="Author:"/>
+                        <TextField/>
+                    </HBox>
+                </VBox>
+                <Label styleClass="heading" text="Analysis Results"/>
+                <VBox styleClass="field-wrapper, border-separator, analysis-results" >
+                    <HBox>
+                        <Label styleClass="field-label" text="ULS Moment:"/>
+                        <NumericalTextField styleClass="numerical-field"/>
+                        <Label styleClass="unit-label" text="kNm"/>
+                    </HBox>
+                    <HBox>
+                        <Label styleClass="field-label" text="QLS Moment:"/>
+                        <NumericalTextField styleClass="numerical-field"/>
+                        <Label styleClass="unit-label" text="kNm"/>
+                    </HBox>
+                    <HBox>
+                        <Label styleClass="field-label" text="Shear Force:"/>
+                        <NumericalTextField styleClass="numerical-field"/>
+                        <Label styleClass="unit-label" text="kN"/>
+                    </HBox>
+                </VBox>
             </VBox>
-            <VBox>
-                <HBox>
-                    <Label text="Structure Type"/>
-                    <ChoiceBox fx:id="structureType">
+            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label styleClass="heading" text="Structure Type"/>
+                <VBox styleClass="field-wrapper, border-separator">
+                    <ChoiceBox fx:id="structureType" styleClass="choice-box">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Beam"/>
@@ -54,64 +72,59 @@
                             </FXCollections>
                         </items>
                     </ChoiceBox>
-                </HBox>
-                <VBox>
-                    <Label text="Analysis Results"/>
-                    <HBox>
-                        <Label text="ULS Moment"/>
-                        <NumericalTextField/>
-                    </HBox>
-                    <HBox>
-                        <Label text="QLS Moment"/>
-                        <NumericalTextField/>
-                    </HBox>
-                    <HBox>
-                        <Label text="Shear Force"/>
-                        <NumericalTextField/>
-                    </HBox>
                 </VBox>
-                <VBox>
-                    <HBox>
-                        <Label text="Geometry"/>
-                        <Button text="Edit"/>
-                    </HBox>
+                <VBox styleClass="geometry-section, border-separator">
+                    <AnchorPane>
+                        <Label AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" styleClass="heading" text="Geometry"/>
+                        <Button AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" text="Edit"/>
+                    </AnchorPane>
                     <Label text="Enter geometry..."/>
                 </VBox>
-                <VBox>
-                    <HBox>
-                        <Label text="Reinforcement"/>
-                        <Button text="Edit"/>
-                    </HBox>
+                <VBox styleClass="reinforcement-section, border-separator">
+                    <AnchorPane>
+                        <Label AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" styleClass="heading" text="Reinforcement"/>
+                        <Button AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" text="Edit"/>
+                    </AnchorPane>
                     <Label text="Enter reinforcement..."/>
                 </VBox>
-                <HBox>
-                    <Label text="Design Parameters"/>
-                    <Button text="Edit"/>
-                </HBox>
+                <AnchorPane styleClass="design-parameters, border-separator">
+                    <Label AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" styleClass="heading" text="Design Parameters"/>
+                    <Button AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" text="Edit"/>
+                </AnchorPane>
             </VBox>
-        </HBox>
-        <VBox>
-            <StackPane style="-fx-background-color: grey">
-                <Canvas height="250" width="250"/>
-            </StackPane>
-            <Label text="Design Results"/>
-            <VBox>
-                <HBox>
-                    <Label text="Flexure"/>
-                    <Label text="50%"/>
-                    <Label text="Pass"/>
-                </HBox>
-                <HBox>
-                    <Label text="Shear"/>
-                    <Label text="50%"/>
-                    <Label text="Pass"/>
-                </HBox>
-                <HBox>
-                    <Label text="Cracking"/>
-                    <Label text="0.2mm &lt; 0.3mm"/>
-                    <Label text="Pass"/>
-                </HBox>
+            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label styleClass="heading" text="Section Preview"/>
+                <StackPane styleClass="canvas-wrapper">
+                    <Canvas height="250" width="250"/>
+                </StackPane>
             </VBox>
-        </VBox>
-    </VBox>
+            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label styleClass="heading" text="Design Results"/>
+                <Label styleClass="subheading" text="Flexure"/>
+                <VBox styleClass="results-wrapper">
+                    <HBox>
+                        <Label text="0.84 &lt; 1.00"/>
+                        <Label styleClass="utilization-note, pass" text="Pass"/>
+                    </HBox>
+                    <Label text="Section Adequate"/>
+                </VBox>
+                <Label styleClass="subheading" text="Shear"/>
+                <VBox styleClass="results-wrapper">
+                    <HBox>
+                        <Label text="1.10 &gt; 1.00"/>
+                        <Label styleClass="utilization-note, fail" text="Fail"/>
+                    </HBox>
+                    <Label text="Increase shear reinforcement"/>
+                </VBox>
+                <Label styleClass="subheading" text="Cracking"/>
+                <VBox styleClass="results-wrapper">
+                    <HBox>
+                        <Label text="0.2 mm &lt; 0.3 mm"/>
+                        <Label styleClass="utilization-note, pass" text="Pass"/>
+                    </HBox>
+                    <Label text="Section Adequate"/>
+                </VBox>
+            </VBox>
+        </GridPane>
+    </ScrollPane>
 </VBox>
