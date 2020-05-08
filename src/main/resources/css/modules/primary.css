@@ -32,6 +32,10 @@
     -fx-font-weight: bold;
 }
 
+.project-details-field{
+    -fx-pref-width: 160px;
+}
+
 .pass{
     -fx-text-fill: green;
 }
