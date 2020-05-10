@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
  */
 public class NumericalTextField extends TextField {
 
-    private final String pattern;
+    protected String pattern;
 
     /**
      * Constructor. Sets text formatter to use NumberStringConverter.

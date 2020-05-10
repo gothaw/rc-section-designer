@@ -29,7 +29,7 @@
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Project Number:" />
-                        <TextField styleClass="project-details-field" />
+                        <PositiveIntegerField styleClass="project-details-field" />
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Description:" />
@@ -122,15 +122,10 @@
                     </HBox>
                     <Label text="Section Adequate" />
                 </VBox>
+                <VBox styleClass="calculate-btn-wrapper">
+                    <Button text="Calculate" />
+                </VBox>
             </VBox>
-         <columnConstraints>
-            <ColumnConstraints />
-            <ColumnConstraints />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
         </GridPane>
     </ScrollPane>
 </VBox>
