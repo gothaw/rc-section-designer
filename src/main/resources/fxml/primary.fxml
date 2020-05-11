@@ -25,7 +25,7 @@
                 <VBox styleClass="field-wrapper, border-separator">
                     <HBox>
                         <Label styleClass="field-label" text="Project:" />
-                        <TextField styleClass="project-details-field" />
+                        <TextField styleClass="project-details-field" onMouseClicked="#test"/>
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Project Number:" />
@@ -60,9 +60,9 @@
                 </VBox>
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <Label styleClass="heading" text="Structure Type" />
+                <Label styleClass="heading" text="Element Type" />
                 <VBox styleClass="field-wrapper, border-separator">
-                    <ChoiceBox fx:id="structureType" styleClass="choice-box">
+                    <ChoiceBox fx:id="elementType" styleClass="choice-box">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Beam" />

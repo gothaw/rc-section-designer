@@ -1,0 +1,12 @@
+@font-face {
+    src: url("../../fonts/SourceSansPro-Regular.ttf");
+}
+
+.dialog-pane {
+    -fx-font-family: 'Source Sans Pro Regular';
+    -fx-font-size: 12px;
+}
+
+.dialog-pane{
+    -fx-pref-width: 250px;
+}

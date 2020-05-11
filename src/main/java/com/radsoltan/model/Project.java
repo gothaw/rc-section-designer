@@ -5,6 +5,8 @@ public class Project {
     private int Number;
     private String description;
     private String author;
+    private AnalysisResults analysisResults;
+    private StructuralElement structuralElement;
 
     public Project() {
 

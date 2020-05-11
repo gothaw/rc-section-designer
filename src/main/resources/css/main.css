@@ -6,6 +6,7 @@
 /*============= Imports =============*/
 @import "lib/aqua_light.css";
 @import "modules/primary.css";
+@import "modules/alert.css";
 /*============== Fonts ==============*/
 @font-face {
     src: url("../fonts/SourceSansPro-Regular.ttf");
