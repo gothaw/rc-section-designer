@@ -43,3 +43,13 @@
 .fail{
     -fx-text-fill: red;
 }
+
+.calculate-btn-wrapper {
+    -fx-padding: 15px 0 0 0;
+    -fx-alignment: center-right;
+}
+.calculate-btn-wrapper .button {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 15px;
+}

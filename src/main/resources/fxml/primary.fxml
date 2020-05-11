@@ -25,11 +25,11 @@
                 <VBox styleClass="field-wrapper, border-separator">
                     <HBox>
                         <Label styleClass="field-label" text="Project:" />
-                        <TextField styleClass="project-details-field" />
+                        <TextField styleClass="project-details-field" onMouseClicked="#test"/>
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Project Number:" />
-                        <TextField styleClass="project-details-field" />
+                        <PositiveIntegerField styleClass="project-details-field" />
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Description:" />
@@ -60,9 +60,9 @@
                 </VBox>
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <Label styleClass="heading" text="Structure Type" />
+                <Label styleClass="heading" text="Element Type" />
                 <VBox styleClass="field-wrapper, border-separator">
-                    <ChoiceBox fx:id="structureType" styleClass="choice-box">
+                    <ChoiceBox fx:id="elementType" styleClass="choice-box">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Beam" />
@@ -122,15 +122,10 @@
                     </HBox>
                     <Label text="Section Adequate" />
                 </VBox>
+                <VBox styleClass="calculate-btn-wrapper">
+                    <Button text="Calculate" />
+                </VBox>
             </VBox>
-         <columnConstraints>
-            <ColumnConstraints />
-            <ColumnConstraints />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
         </GridPane>
     </ScrollPane>
 </VBox>
