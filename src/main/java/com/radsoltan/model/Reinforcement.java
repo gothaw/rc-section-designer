@@ -1,4 +1,7 @@
 package com.radsoltan.model;
 
-public class Reinforcement {
+public abstract class Reinforcement {
+    protected int yieldStrength;
+
+    abstract void draw();
 }

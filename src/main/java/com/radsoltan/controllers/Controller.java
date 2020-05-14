@@ -10,7 +10,11 @@ import javafx.stage.Stage;
 
 public class Controller {
 
-    protected void showAlertBox(String message, AlertKind kind){
+
+
+
+
+    protected void showAlertBox(String message, AlertKind kind, double prefWidth, double prefHeight){
         Alert alert = new Alert(Alert.AlertType.NONE, message, new ButtonType("OK"));
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass().getResource(kind.getUrl()).toExternalForm()));

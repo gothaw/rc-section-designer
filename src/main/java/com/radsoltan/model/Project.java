@@ -5,10 +5,26 @@ public class Project {
     private int Number;
     private String description;
     private String author;
-    private AnalysisResults analysisResults;
-    private StructuralElement structuralElement;
+    private Beam beam;
+    private Slab slab;
 
-    public Project() {
+    public Project(Beam beam) {
+        this.beam = beam;
+    }
+
+    public Project(Slab slab) {
+        this.slab = slab;
+    }
+
+    public Beam getBeam() {
+        return beam;
+    }
+
+    public Slab getSlab() {
+        return slab;
+    }
+
+    public void calculate(){
 
     }
 }
