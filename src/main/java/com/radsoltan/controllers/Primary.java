@@ -44,7 +44,7 @@ public class Primary extends Controller {
 
 
     public void test(MouseEvent mouseEvent) throws InterruptedException {
-        showAlertBox("Please Set up some important stuff before or I'll get angry!", AlertKind.WARNING);
+        showAlertBox("Please Set up some important stuff before or I'll get angry!", AlertKind.ERROR, 300, 60);
     }
 
 }
