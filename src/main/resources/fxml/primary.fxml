@@ -71,14 +71,14 @@
                         </items>
                     </ChoiceBox>
                 </VBox>
-                <VBox styleClass="geometry-section, border-separator">
+                <VBox styleClass="geometry, border-separator">
                     <AnchorPane>
                         <Label styleClass="heading" text="Geometry" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
                         <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
                     </AnchorPane>
                     <Label text="Enter geometry..." />
                 </VBox>
-                <VBox styleClass="reinforcement-section, border-separator">
+                <VBox styleClass="reinforcement, border-separator">
                     <AnchorPane>
                         <Label styleClass="heading" text="Reinforcement" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
                         <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
