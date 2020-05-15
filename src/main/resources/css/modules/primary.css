@@ -2,12 +2,12 @@
     -fx-background-color: #fff;
 }
 
-.geometry-section {
+.geometry {
     -fx-padding: 5px 0 0 0;
     -fx-min-height: 80px;
 }
 
-.reinforcement-section {
+.reinforcement {
     -fx-padding: 5px 0 0 0;
     -fx-min-height: 100px;
 }

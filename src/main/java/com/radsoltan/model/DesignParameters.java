@@ -1,5 +1,5 @@
 package com.radsoltan.model;
 
-public class Geometry {
+public class DesignParameters {
 
 }

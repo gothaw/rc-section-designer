@@ -1,7 +1,9 @@
 package com.radsoltan.controllers;
 
 import com.radsoltan.App;
+import com.radsoltan.model.Concrete;
 import com.radsoltan.model.Project;
+import com.radsoltan.model.Rebar;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -44,7 +46,8 @@ public class Primary extends Controller {
 
 
     public void test(MouseEvent mouseEvent) throws InterruptedException {
-        showAlertBox("Please Set up some important stuff before or I'll get angry!", AlertKind.ERROR, 300, 60);
+        Concrete concrete = Concrete.C12_15;
+        showAlertBox(concrete.toString(), AlertKind.ERROR, 300, 60);
     }
 
 }
