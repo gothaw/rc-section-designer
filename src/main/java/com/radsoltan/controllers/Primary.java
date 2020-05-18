@@ -1,9 +1,11 @@
 package com.radsoltan.controllers;
 
 import com.radsoltan.App;
-import com.radsoltan.model.Concrete;
-import com.radsoltan.model.Project;
-import com.radsoltan.model.Rebar;
+import com.radsoltan.model.*;
+import com.radsoltan.model.geometry.Geometry;
+import com.radsoltan.model.geometry.Rectangle;
+import com.radsoltan.model.geometry.SlabStrip;
+import com.radsoltan.model.geometry.TShape;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -29,7 +31,14 @@ public class Primary extends Controller {
     private VBox container;
 
     public Primary() {
-        text = new SimpleStringProperty();
+        DesignParameters designParameters = new DesignParameters();
+        Rectangle rectangle = new Rectangle(200, 500);
+        TShape tShape = new TShape(300, 500, 150, 1000);
+        SlabStrip slabStrip = new SlabStrip(300);
+        Geometry geometry = new Geometry(tShape);
+        Beam beam = new Beam(50, 40, 20, geometry, Concrete.C30_37, designParameters);
+        project = new Project(beam);
+        geometry.checksIfFlangeTakesCompressionForce();
     }
 
     public String getText() {

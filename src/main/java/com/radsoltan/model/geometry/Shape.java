@@ -7,5 +7,5 @@ public abstract class Shape implements Drawable {
     public abstract double calculateArea();
     public abstract double calculateFirstMomentOfArea();
     public abstract double calculateSecondMomentOfArea();
-    public abstract double getWidthInCompressionZone();
+    public abstract double getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd);
 }
