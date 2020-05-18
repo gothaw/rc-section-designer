@@ -1,34 +1,13 @@
 package com.radsoltan.model.geometry;
 
-public class LShape extends Shape{
+public class LShape extends TShape{
 
-    private int width;
-    private int depth;
-    private int widthFlange;
-    private int thicknessFlange;
-
-    @Override
-    public double calculateArea() {
-        return 0;
-    }
-
-    @Override
-    public double calculateFirstMomentOfArea() {
-        return 0;
-    }
-
-    @Override
-    public double calculateSecondMomentOfArea() {
-        return 0;
-    }
-
-    @Override
-    public double getWidthInCompressionZone() {
-        return 0;
+    public LShape(int width, int depth, int flangeWidth, int flangeThickness) {
+        super(width, depth, flangeWidth, flangeThickness);
     }
 
     @Override
     public void draw() {
-
+        // TODO: 18/05/2020
     }
 }

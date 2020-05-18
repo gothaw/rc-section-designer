@@ -110,4 +110,8 @@ public enum Concrete {
     public double getStrainEcu3() {
         return ecu3;
     }
+
+    public double calculateDesignCompressiveResistance(double gammaC){
+        return 0.85 * fck / gammaC;
+    }
 }

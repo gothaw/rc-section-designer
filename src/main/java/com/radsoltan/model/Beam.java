@@ -11,8 +11,6 @@ public class Beam implements Flexure, Shear {
     private Reinforcement reinforcement;
     private Concrete concrete;
     private DesignParameters designParameters;
-    private double kFactor;
-    private double kDashFactor;
 
     public Beam(double UlsMoment, double UlsShear, double SlsMoment, Geometry geometry, Concrete concrete, DesignParameters designParameters) {
         this.UlsMoment = UlsMoment;
@@ -20,19 +18,22 @@ public class Beam implements Flexure, Shear {
         this.SlsMoment = SlsMoment;
         this.concrete = concrete;
         this.designParameters = designParameters;
+        this.geometry = geometry;
     }
 
     @Override
     public double calculateBendingCapacity() {
+        if(concrete.getCompressiveStrength() <= 50) {
+
+        } else {
+            throw new IllegalArgumentException("Concrete class greater than C50/60. Outside of scope of this software.");
+        }
+
         return 0;
     }
 
     @Override
     public double calculateShearCapacity() {
         return 0;
-    }
-
-    public void doSomethingWithShape() {
-
     }
 }

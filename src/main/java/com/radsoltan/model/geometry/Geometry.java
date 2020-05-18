@@ -5,9 +5,7 @@ public class Geometry {
     private LShape lShape;
     private TShape tShape;
     private SlabStrip slabStrip;
-    private int widthCompressionZone;
-    private int depth;
-    private Shape shape;
+    private final Shape shape;
 
     public Geometry(Rectangle rectangle) {
         this.rectangle = rectangle;
@@ -16,14 +14,17 @@ public class Geometry {
 
     public Geometry(LShape lShape) {
         this.lShape = lShape;
+        this.shape = (Shape) lShape;
     }
 
     public Geometry(TShape tShape) {
         this.tShape = tShape;
+        this.shape = (Shape) tShape;
     }
 
     public Geometry(SlabStrip slabStrip) {
         this.slabStrip = slabStrip;
+        this.shape = (Shape) slabStrip;
     }
 
     public Rectangle getRectangle() {
@@ -45,4 +46,13 @@ public class Geometry {
     public Shape getShape() {
         return shape;
     }
+
+    public double checksIfFlangeTakesCompressionForce(){
+        return 1.0;
+    }
+
+    public double getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd){
+        return shape.getWidthInCompressionZone(UlsMoment, effectiveDepth, fcd);
+    }
+
 }

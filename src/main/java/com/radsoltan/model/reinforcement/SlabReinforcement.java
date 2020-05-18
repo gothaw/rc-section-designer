@@ -1,9 +1,5 @@
 package com.radsoltan.model.reinforcement;
 
-public class SlabReinforcement extends Reinforcement {
+public class SlabReinforcement {
 
-    @Override
-    public void draw() {
-
-    }
 }
