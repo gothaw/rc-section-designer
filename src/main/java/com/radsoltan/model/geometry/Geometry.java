@@ -5,9 +5,13 @@ public class Geometry {
     private LShape lShape;
     private TShape tShape;
     private SlabStrip slabStrip;
+    private int widthCompressionZone;
+    private int depth;
+    private Shape shape;
 
     public Geometry(Rectangle rectangle) {
         this.rectangle = rectangle;
+        this.shape = (Shape) rectangle;
     }
 
     public Geometry(LShape lShape) {
@@ -38,4 +42,7 @@ public class Geometry {
         return slabStrip;
     }
 
+    public Shape getShape() {
+        return shape;
+    }
 }
