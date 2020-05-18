@@ -24,17 +24,15 @@ public class Beam implements Flexure, Shear {
 
     @Override
     public double calculateBendingCapacity() {
-
-        return 0;
-    }
-
-    @Override
-    public double calculateCracks() {
         return 0;
     }
 
     @Override
     public double calculateShearCapacity() {
         return 0;
+    }
+
+    public void doSomethingWithShape() {
+
     }
 }

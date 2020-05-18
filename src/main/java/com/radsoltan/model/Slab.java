@@ -12,8 +12,4 @@ public class Slab implements Flexure{
         return 0;
     }
 
-    @Override
-    public double calculateCracks() {
-        return 0;
-    }
 }

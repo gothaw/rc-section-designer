@@ -3,8 +3,6 @@ package com.radsoltan.model;
 public interface Flexure {
     double calculateBendingCapacity();
 
-    double calculateCracks();
-
     default double calculateKFactor(double UlsMoment, int width, double effectiveDepth, Concrete concrete) {
         return UlsMoment / (width * effectiveDepth * effectiveDepth * concrete.getCompressiveStrength());
     }
