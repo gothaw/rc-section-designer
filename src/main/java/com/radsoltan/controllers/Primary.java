@@ -6,6 +6,7 @@ import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.TShape;
+import com.radsoltan.model.reinforcement.BeamReinforcement;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -19,6 +20,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Primary extends Controller {
     @FXML
     private TextField numberField;
@@ -31,14 +35,10 @@ public class Primary extends Controller {
     private VBox container;
 
     public Primary() {
-        DesignParameters designParameters = new DesignParameters();
-        Rectangle rectangle = new Rectangle(200, 500);
-        TShape tShape = new TShape(300, 500, 150, 1000);
-        SlabStrip slabStrip = new SlabStrip(300);
-        Geometry geometry = new Geometry(tShape);
-        Beam beam = new Beam(50, 40, 20, geometry, Concrete.C30_37, designParameters);
-        project = new Project(beam);
-        geometry.checksIfFlangeTakesCompressionForce();
+        List<Integer> reinforcementTop = new ArrayList<>(List.of(40, 32, 40, 25));
+        List<Integer> reinforcementBottom = new ArrayList<>(List.of(40, 20, 20, 40));
+        BeamReinforcement reinforcement = new BeamReinforcement(reinforcementTop, reinforcementBottom);
+        System.out.println(reinforcement.calculateCentroidOfTopReinforcement(20));
     }
 
     public String getText() {
