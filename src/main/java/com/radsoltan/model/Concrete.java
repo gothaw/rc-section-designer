@@ -83,31 +83,31 @@ public enum Concrete {
         return Ecm;
     }
 
-    public double getStrainEc1() {
+    public double getCompressiveStrainInConcreteAtPeakStress() {
         return ec1;
     }
 
-    public double getStrainEcu1() {
+    public double getUltimateCompressiveStrainInConcrete() {
         return ecu1;
     }
 
-    public double getStrainEc2() {
+    public double getCompressiveStrainAtMaximumStrengthForParabolaRectangleModel() {
         return ec2;
     }
 
-    public double getStrainEcu2() {
+    public double getUltimateCompressiveStrainForParabolaRectangleModel() {
         return ecu2;
     }
 
-    public double getFactorN() {
+    public double getNFactor() {
         return n;
     }
 
-    public double getStrainEc3() {
+    public double getCompressiveStrainAtMaximumStrengthForBilinearModel() {
         return ec3;
     }
 
-    public double getStrainEcu3() {
+    public double getUltimateCompressiveStrainForBilinearModel() {
         return ecu3;
     }
 
