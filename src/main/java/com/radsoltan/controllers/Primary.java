@@ -38,7 +38,7 @@ public class Primary extends Controller {
         List<Integer> reinforcementTop = new ArrayList<>(List.of(40, 32, 40, 25));
         List<Integer> reinforcementBottom = new ArrayList<>(List.of(40, 20, 20, 40));
         BeamReinforcement reinforcement = new BeamReinforcement(reinforcementTop, reinforcementBottom);
-        System.out.println(reinforcement.calculateCentroidOfTopReinforcement(20));
+        System.out.println(reinforcement.calculateFirstMomentOfAreaForBarsInTopRow(25, 20));
     }
 
     public String getText() {
