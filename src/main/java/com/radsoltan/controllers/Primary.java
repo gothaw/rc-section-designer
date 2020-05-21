@@ -35,10 +35,18 @@ public class Primary extends Controller {
     private VBox container;
 
     public Primary() {
-        List<Integer> reinforcementTop = new ArrayList<>(List.of(40, 32, 40, 25));
-        List<Integer> reinforcementBottom = new ArrayList<>(List.of(40, 20, 20, 40));
-        BeamReinforcement reinforcement = new BeamReinforcement(reinforcementTop, reinforcementBottom);
-        System.out.println(reinforcement.calculateFirstMomentOfAreaForBarsInTopRow(25, 20));
+        int nominalCover = 25;
+        int transverseBar = 8;
+        List<List<Integer>> reinforcementTop = new ArrayList<>(List.of(List.of(32, 16, 32), List.of(10, 12, 10), List.of(10, 12, 10), List.of(6, 6, 6)));
+        List<Integer> verticalSpacingTop = new ArrayList<>(List.of(20, 80, 100));
+        List<Integer> flangeReinforcement = new ArrayList<>(List.of(10, 10, 10));
+        List<List<Integer>> reinforcementBottom = new ArrayList<>(List.of(List.of(40, 20, 20, 40)));
+        List<Integer> verticalSpacingBottom = new ArrayList<>();
+        boolean hasTwoFlanges = true;
+
+        BeamReinforcement reinforcement = new BeamReinforcement(reinforcementTop, verticalSpacingTop, reinforcementBottom, verticalSpacingBottom, flangeReinforcement, hasTwoFlanges);
+
+        System.out.println(reinforcement.calculateDistanceFromCentroidOfEachBarToTheEdge(reinforcementTop, verticalSpacingTop, nominalCover, transverseBar));
     }
 
     public String getText() {
