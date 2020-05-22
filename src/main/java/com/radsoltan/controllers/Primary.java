@@ -37,16 +37,19 @@ public class Primary extends Controller {
     public Primary() {
         int nominalCover = 25;
         int transverseBar = 8;
-        List<List<Integer>> reinforcementTop = new ArrayList<>(List.of(List.of(32, 16, 32), List.of(10, 12, 10), List.of(10, 12, 10), List.of(6, 6, 6)));
+        int numberOfBarsInFlange;
+        List<List<Integer>> reinforcementTop = new ArrayList<>(List.of(List.of(25, 40, 32, 16, 32, 40, 25), List.of(10, 12, 10), List.of(10, 12, 10), List.of(6, 6, 6)));
         List<Integer> verticalSpacingTop = new ArrayList<>(List.of(20, 80, 100));
         List<Integer> flangeReinforcement = new ArrayList<>(List.of(10, 10, 10));
-        List<List<Integer>> reinforcementBottom = new ArrayList<>(List.of(List.of(40, 20, 20, 40)));
+        List<List<Integer>> reinforcementBottom = new ArrayList<>(List.of(List.of(40, 40, 40, 40)));
         List<Integer> verticalSpacingBottom = new ArrayList<>();
         boolean hasTwoFlanges = true;
 
-        BeamReinforcement reinforcement = new BeamReinforcement(reinforcementTop, verticalSpacingTop, reinforcementBottom, verticalSpacingBottom, flangeReinforcement, hasTwoFlanges);
+        BeamReinforcement reinforcement = new BeamReinforcement(reinforcementTop, verticalSpacingTop, reinforcementBottom, verticalSpacingBottom, 4, true);
 
-        System.out.println(reinforcement.calculateDistanceFromCentroidOfEachBarToTheEdge(reinforcementTop, verticalSpacingTop, nominalCover, transverseBar));
+        List<List<Double>> areaOfReinforcement = reinforcement.calculateAreaOfReinforcementBars(reinforcementTop);
+        System.out.println(reinforcement.calculateCentroidOfTopReinforcement(nominalCover, transverseBar));
+        System.out.println(reinforcement.calculateCentroidOfBottomReinforcement(nominalCover, transverseBar));
     }
 
     public String getText() {
