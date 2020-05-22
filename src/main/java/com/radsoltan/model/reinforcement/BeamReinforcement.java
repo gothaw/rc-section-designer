@@ -56,21 +56,26 @@ public class BeamReinforcement extends Reinforcement {
         this.bottomReinforcement = bottomReinforcement;
     }
 
+    @Override
+    public double calculateCentroidOfTopReinforcement(int nominalCoverTop, int shearLinkDiameter) {
+        List<List<Double>> areaOfTopBars = calculateAreaOfReinforcementBars(topReinforcement);
+        List<List<Double>> firstMomentOfAreaForTopBars = calculateFirstMomentOfAreaForReinforcementBars(areaOfTopBars, topReinforcement, topReinforcementVerticalSpacing, nominalCoverTop, shearLinkDiameter, true);
+
+        double sumOfTopBarsArea = areaOfTopBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        double sumOfTopBarsFirstMomentOfArea = firstMomentOfAreaForTopBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+
+        return sumOfTopBarsFirstMomentOfArea / sumOfTopBarsArea;
+    }
 
     @Override
-    public double calculateCentroidOfTopReinforcement(int nominalCoverTop) {
-        List<Integer> barDistanceToTheTopEdge = new ArrayList<>();
+    public double calculateCentroidOfBottomReinforcement(int nominalCoverBottom, int shearLinkDiameter) {
+        List<List<Double>> areaOfBottomBars = calculateAreaOfReinforcementBars(bottomReinforcement);
+        List<List<Double>> firstMomentOfAreaForBottomBars = calculateFirstMomentOfAreaForReinforcementBars(areaOfBottomBars, bottomReinforcement, bottomReinforcementVerticalSpacing, nominalCoverBottom, shearLinkDiameter, false);
 
-        if (topReinforcementVerticalSpacing != null) {
-            barDistanceToTheTopEdge.addAll(topReinforcementVerticalSpacing);
-        }
+        double sumOfBottomBarsArea = areaOfBottomBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        double sumOfBottomBarsFirstMomentOfArea = firstMomentOfAreaForBottomBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
 
-        List<List<Integer>> list2 = IntStream
-                .range(0, topReinforcement.size())
-                .mapToObj(x -> IntStream.range(0, topReinforcement.get(x).size()).mapToObj(y -> barDistanceToTheTopEdge.get(x) * topReinforcement.get(x).get(y)).collect(Collectors.toList())).collect(Collectors.toList());
-
-        System.out.println(list2);
-        return 0;
+        return sumOfBottomBarsFirstMomentOfArea / sumOfBottomBarsArea;
     }
 
     public List<List<Double>> calculateAreaOfReinforcementBars(List<List<Integer>> reinforcement) {
@@ -81,22 +86,22 @@ public class BeamReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-    // TODO: 22/05/2020 Encapsulate methods
-    public List<List<Double>> calculateDistanceFromCentroidOfEachBarToTheEdge(List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int transverseBar, boolean isTopReinforcement) {
+    public List<List<Double>> calculateDistanceFromCentreOfEachBarToTheEdge(List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
 
         List<List<Double>> distanceFromCentroidOfEachBarToTheEdge = new ArrayList<>();
 
         // Distance For First Row
         List<Double> distanceForBarsInFirstRow = reinforcement.get(0).stream()
-                .map(diameter -> diameter * 0.5 + nominalCover + transverseBar)
+                .map(diameter -> diameter * 0.5 + nominalCover + shearLinkDiameter)
                 .collect(Collectors.toList());
 
         distanceFromCentroidOfEachBarToTheEdge.add(distanceForBarsInFirstRow);
 
         // Distance For Subsequent Rows
-        double largestDistanceToFirstRowBar = getMaxDistanceFromFirstRowRebarToEdgeExcludingSlab(distanceForBarsInFirstRow, isTopReinforcement);
+        double largestDistanceToFirstRowBar = getMaxDistanceFromFirstRowRebarToEdgeExcludingSlabRebar(distanceForBarsInFirstRow, isTopReinforcement);
 
-        reinforcement.remove(0);
+        List<List<Integer>> barsInSubsequentRows = new ArrayList<>(reinforcement);
+        barsInSubsequentRows.remove(0);
 
         List<Double> distanceForSubsequentRows = IntStream
                 .range(0, verticalBarSpacing.size())
@@ -105,9 +110,9 @@ public class BeamReinforcement extends Reinforcement {
                         .reduce(0, Integer::sum))
                 .collect(Collectors.toList());
 
-        List<List<Double>> distanceForBarsInSubsequentRows = IntStream.range(0, reinforcement.size())
+        List<List<Double>> distanceForBarsInSubsequentRows = IntStream.range(0, barsInSubsequentRows.size())
                 .mapToObj(i -> IntStream
-                        .range(0, reinforcement.get(i).size())
+                        .range(0, barsInSubsequentRows.get(i).size())
                         .mapToObj(distance -> distanceForSubsequentRows.get(i))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
@@ -117,7 +122,7 @@ public class BeamReinforcement extends Reinforcement {
         return distanceFromCentroidOfEachBarToTheEdge;
     }
 
-    private double getMaxDistanceFromFirstRowRebarToEdgeExcludingSlab(List<Double> distanceForBarsInFirstRow, boolean isTopReinforcement) {
+    private double getMaxDistanceFromFirstRowRebarToEdgeExcludingSlabRebar(List<Double> distanceForBarsInFirstRow, boolean isTopReinforcement) {
         if (isTopReinforcement) {
             int numberOfBarsToBeExcluded = (isReinforcementInSlabSymmetrical) ? numberOfBarsInSlab / 2 : numberOfBarsInSlab;
             List<Double> distanceForBarsInFirstRowExcludingSlab = IntStream
@@ -131,10 +136,19 @@ public class BeamReinforcement extends Reinforcement {
         }
     }
 
-    @Override
-    public double calculateCentroidOfBottomReinforcement(int nominalCoverBottom) {
-        return 0;
+    public List<List<Double>> calculateFirstMomentOfAreaForReinforcementBars(List<List<Double>> areaOfReinforcementBars, List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
+
+        List<List<Double>> distanceFromCentreOfEachBarToEdge = calculateDistanceFromCentreOfEachBarToTheEdge(reinforcement, verticalBarSpacing, nominalCover, shearLinkDiameter, isTopReinforcement);
+
+        return IntStream
+                .range(0, distanceFromCentreOfEachBarToEdge.size())
+                .mapToObj(i -> IntStream
+                        .range(0, distanceFromCentreOfEachBarToEdge.get(i).size())
+                        .mapToObj(j -> distanceFromCentreOfEachBarToEdge.get(i).get(j) * areaOfReinforcementBars.get(i).get(j))
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public void draw() {
