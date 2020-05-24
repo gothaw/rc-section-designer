@@ -14,6 +14,7 @@ public class Rectangle extends Shape  {
         return width;
     }
 
+    @Override
     public int getDepth() {
         return depth;
     }

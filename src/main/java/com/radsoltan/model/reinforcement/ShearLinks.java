@@ -14,6 +14,18 @@ public class ShearLinks implements Drawable {
         this.shearLinkLegs = shearLinkLegs;
     }
 
+    public int getShearLinkDiameter() {
+        return shearLinkDiameter;
+    }
+
+    public int getShearLinkSpacing() {
+        return shearLinkSpacing;
+    }
+
+    public int getShearLinkLegs() {
+        return shearLinkLegs;
+    }
+
     @Override
     public void draw() {
 
