@@ -39,6 +39,11 @@ public class TShape extends Shape {
         return width;
     }
 
+    @Override
+    public int getDepth() {
+        return depth;
+    }
+
     private boolean isNeutralAxisIsInFlange(double UlsMoment, int flangeWidth, int flangeThickness, double effectiveDepth, double fcd) {
         if (UlsMoment > 0) {
             double capacity = flangeWidth * flangeThickness * fcd * (effectiveDepth - 0.5 * flangeThickness);

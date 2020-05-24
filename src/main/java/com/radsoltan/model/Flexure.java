@@ -1,5 +1,7 @@
 package com.radsoltan.model;
 
+import com.radsoltan.model.reinforcement.Reinforcement;
+
 public interface Flexure {
     double calculateBendingCapacity();
 
@@ -11,8 +13,10 @@ public interface Flexure {
         return (isRecommendedKDash) ? 0.168 : 0.6 * redistributionRatio - 0.18 * redistributionRatio * redistributionRatio - 0.21;
     }
 
-    default double calculateEffectiveDepth(int depth, double reinforcementCentroid) {
-        return depth - reinforcementCentroid;
+    default double calculateEffectiveDepth(int depth, double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters, int transverseBarDiameter) {
+        return (UlsMoment > 0) ?
+                depth - reinforcement.calculateCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), transverseBarDiameter) :
+                depth - reinforcement.calculateCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), transverseBarDiameter);
     }
 
     default double calculateLeverArm(double effectiveDepth, double kFactor) {

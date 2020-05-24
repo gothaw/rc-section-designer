@@ -55,4 +55,8 @@ public class Geometry {
         return shape.getWidthInCompressionZone(UlsMoment, effectiveDepth, fcd);
     }
 
+    public int getDepth(){
+        return shape.getDepth();
+    }
+
 }
