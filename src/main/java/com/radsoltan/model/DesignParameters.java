@@ -4,11 +4,20 @@ public class DesignParameters {
     private int nominalCoverTop;
     private int nominalCoverSides;
     private int nominalCoverBottom;
+    private double gammaC;
+    private double gammaS;
+    private double redistributionRatio;
+    private boolean isRecommendedRatio;
 
-    public DesignParameters(int nominalCoverTop, int nominalCoverSides, int nominalCoverBottom) {
+    public DesignParameters(int nominalCoverTop, int nominalCoverSides, int nominalCoverBottom,
+                            double gammaC, double gammaS, double redistributionRatio, boolean isRecommendedRatio) {
         this.nominalCoverTop = nominalCoverTop;
         this.nominalCoverSides = nominalCoverSides;
         this.nominalCoverBottom = nominalCoverBottom;
+        this.gammaC = gammaC;
+        this.gammaS = gammaS;
+        this.redistributionRatio = redistributionRatio;
+        this.isRecommendedRatio = isRecommendedRatio;
     }
 
     public int getNominalCoverTop() {
@@ -21,5 +30,21 @@ public class DesignParameters {
 
     public int getNominalCoverBottom() {
         return nominalCoverBottom;
+    }
+
+    public double getPartialFactorOfSafetyForConcrete() {
+        return gammaC;
+    }
+
+    public double getPartialFactorOfSafetyForSteel() {
+        return gammaS;
+    }
+
+    public double getRedistributionRatio() {
+        return redistributionRatio;
+    }
+
+    public boolean isRecommendedRatio() {
+        return isRecommendedRatio;
     }
 }

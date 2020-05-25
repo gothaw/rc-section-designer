@@ -5,12 +5,12 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 public interface Flexure {
     double calculateBendingCapacity();
 
-    default double calculateKFactor(double UlsMoment, int width, double effectiveDepth, Concrete concrete) {
-        return UlsMoment / (width * effectiveDepth * effectiveDepth * concrete.getCompressiveStrength());
+    default double calculateKFactor(double UlsMoment, int widthInCompressionZone, double effectiveDepth, Concrete concrete) {
+        return Math.abs(UlsMoment) * Math.pow(10,6) / (widthInCompressionZone * effectiveDepth * effectiveDepth * concrete.getCompressiveStrength());
     }
 
-    default double calculateKDashFactor(boolean isRecommendedKDash, double redistributionRatio) {
-        return (isRecommendedKDash) ? 0.168 : 0.6 * redistributionRatio - 0.18 * redistributionRatio * redistributionRatio - 0.21;
+    default double calculateKDashFactor(boolean isRecommendedRatio, double redistributionRatio) {
+        return (isRecommendedRatio) ? 0.168 : 0.6 * redistributionRatio - 0.18 * redistributionRatio * redistributionRatio - 0.21;
     }
 
     default double calculateEffectiveDepth(int depth, double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters, int transverseBarDiameter) {

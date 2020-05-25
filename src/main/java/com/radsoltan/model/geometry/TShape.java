@@ -32,7 +32,7 @@ public class TShape extends Shape {
     }
 
     @Override
-    public double getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd) {
+    public int getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd) {
         if (isNeutralAxisIsInFlange(UlsMoment, flangeWidth, flangeThickness, effectiveDepth, fcd)) {
             return flangeWidth;
         }

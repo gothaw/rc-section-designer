@@ -4,14 +4,20 @@ import com.radsoltan.model.Drawable;
 
 public class ShearLinks implements Drawable {
 
-    private int shearLinkDiameter;
-    private int shearLinkSpacing;
-    private int shearLinkLegs;
+    private final int fyw;
+    private final int shearLinkDiameter;
+    private final int shearLinkSpacing;
+    private final int shearLinkLegs;
 
-    public ShearLinks(int shearLinkDiameter, int shearLinkSpacing, int shearLinkLegs) {
+    public ShearLinks(int fyw, int shearLinkDiameter, int shearLinkSpacing, int shearLinkLegs) {
+        this.fyw = fyw;
         this.shearLinkDiameter = shearLinkDiameter;
         this.shearLinkSpacing = shearLinkSpacing;
         this.shearLinkLegs = shearLinkLegs;
+    }
+
+    public int getYieldStrength() {
+        return fyw;
     }
 
     public int getShearLinkDiameter() {
