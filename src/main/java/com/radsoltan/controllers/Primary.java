@@ -7,6 +7,7 @@ import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.TShape;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
+import com.radsoltan.model.reinforcement.ShearLinks;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -37,19 +38,42 @@ public class Primary extends Controller {
     public Primary() {
         int nominalCover = 25;
         int transverseBar = 8;
-        int numberOfBarsInFlange;
+
+        /* Forces */
+        double UlsMoment = -100;
+        double QslsMoment = 50;
+        double shear = 60;
+
+        /* Concrete */
+        Concrete concrete = Concrete.C32_40;
+
+        /* Reinforcement */
         List<List<Integer>> reinforcementTop = new ArrayList<>(List.of(List.of(25, 40, 32, 16, 32, 40, 25), List.of(10, 12, 10), List.of(10, 12, 10), List.of(6, 6, 6)));
         List<Integer> verticalSpacingTop = new ArrayList<>(List.of(20, 80, 100));
-        List<Integer> flangeReinforcement = new ArrayList<>(List.of(10, 10, 10));
         List<List<Integer>> reinforcementBottom = new ArrayList<>(List.of(List.of(40, 40, 40, 40)));
         List<Integer> verticalSpacingBottom = new ArrayList<>();
-        boolean hasTwoFlanges = true;
+        ShearLinks links = new ShearLinks(450, 10, 150, 2);
+        BeamReinforcement reinforcement = new BeamReinforcement(500, reinforcementTop, verticalSpacingTop, reinforcementBottom, verticalSpacingBottom, links, 4, true);
 
-        BeamReinforcement reinforcement = new BeamReinforcement(reinforcementTop, verticalSpacingTop, reinforcementBottom, verticalSpacingBottom, 4, true);
+        /* Reinforcement Simple */
+        List<List<Integer>> rebarSimple = new ArrayList<>(List.of(List.of(32, 32, 32), List.of(25, 25), List.of(10, 10), List.of(6, 6)));
+        List<Integer> verticalSpacing = new ArrayList<>(List.of(60, 80, 100));
+        BeamReinforcement reinforcementSimple = new BeamReinforcement(500, rebarSimple, verticalSpacing, rebarSimple, verticalSpacing, links);
+
+        /* Shape */
+        TShape tShape = new TShape(300, 600, 1200, 200);
+        Rectangle rectangle = new Rectangle(400, 800);
+        Geometry geometry = new Geometry(rectangle);
+
+        /* Design Parameters */
+        DesignParameters designParameters = new DesignParameters(25, 20, 25, 1.4, 1.15, 0.85, true);
+
+        Beam beam = new Beam(UlsMoment, shear, QslsMoment, geometry, concrete, reinforcementSimple, designParameters);
+        beam.calculateBendingCapacity();
 
         List<List<Double>> areaOfReinforcement = reinforcement.calculateAreaOfReinforcementBars(reinforcementTop);
-        System.out.println(reinforcement.calculateCentroidOfTopReinforcement(nominalCover, transverseBar));
-        System.out.println(reinforcement.calculateCentroidOfBottomReinforcement(nominalCover, transverseBar));
+        System.out.println(reinforcementSimple.calculateCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), links.getShearLinkDiameter()));
+        System.out.println(reinforcementSimple.calculateCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), links.getShearLinkDiameter()));
     }
 
     public String getText() {

@@ -35,7 +35,7 @@ public class Rectangle extends Shape  {
     }
 
     @Override
-    public double getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd) {
+    public int getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd) {
         return getWidth();
     }
 

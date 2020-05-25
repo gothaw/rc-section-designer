@@ -16,7 +16,8 @@ public class BeamReinforcement extends Reinforcement {
     int numberOfBarsInSlab;
     boolean isReinforcementInSlabSymmetrical;
 
-    public BeamReinforcement(List<List<Integer>> topReinforcement,
+    public BeamReinforcement(int fy,
+                             List<List<Integer>> topReinforcement,
                              List<Integer> topReinforcementVerticalSpacing,
                              List<List<Integer>> bottomReinforcement,
                              List<Integer> bottomReinforcementVerticalSpacing,
@@ -24,6 +25,7 @@ public class BeamReinforcement extends Reinforcement {
                              int numberOfBarsInSlab,
                              boolean isReinforcementInSlabSymmetrical) {
 
+        this.fy = fy;
         this.topReinforcement = topReinforcement;
         this.topReinforcementVerticalSpacing = topReinforcementVerticalSpacing;
         this.bottomReinforcement = bottomReinforcement;
@@ -33,12 +35,14 @@ public class BeamReinforcement extends Reinforcement {
         this.isReinforcementInSlabSymmetrical = isReinforcementInSlabSymmetrical;
     }
 
-    public BeamReinforcement(List<List<Integer>> topReinforcement,
+    public BeamReinforcement(int fy,
+                             List<List<Integer>> topReinforcement,
                              List<Integer> topReinforcementVerticalSpacing,
                              List<List<Integer>> bottomReinforcement,
                              List<Integer> bottomReinforcementVerticalSpacing,
                              ShearLinks shearLinks) {
 
+        this.fy = fy;
         this.topReinforcement = topReinforcement;
         this.topReinforcementVerticalSpacing = topReinforcementVerticalSpacing;
         this.bottomReinforcement = bottomReinforcement;
@@ -48,7 +52,9 @@ public class BeamReinforcement extends Reinforcement {
         this.isReinforcementInSlabSymmetrical = false;
     }
 
-    public BeamReinforcement(List<Integer> topReinforcementRow, List<Integer> bottomReinforcementRow, ShearLinks shearLinks) {
+    public BeamReinforcement(int fy, List<Integer> topReinforcementRow, List<Integer> bottomReinforcementRow, ShearLinks shearLinks) {
+
+        this.fy = fy;
 
         List<List<Integer>> topReinforcement = new ArrayList<>();
         topReinforcement.add(new ArrayList<>());
@@ -156,12 +162,6 @@ public class BeamReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-
-    @Override
-    public void draw() {
-        // TODO: 18/05/2020
-    }
-
     public List<List<Integer>> getTopReinforcement() {
         return topReinforcement;
     }
@@ -180,5 +180,10 @@ public class BeamReinforcement extends Reinforcement {
 
     public ShearLinks getShearLinks() {
         return shearLinks;
+    }
+
+    @Override
+    public void draw() {
+        // TODO: 18/05/2020
     }
 }
