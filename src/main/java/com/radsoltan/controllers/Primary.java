@@ -63,7 +63,7 @@ public class Primary extends Controller {
         /* Shape */
         TShape tShape = new TShape(300, 600, 1200, 200);
         Rectangle rectangle = new Rectangle(400, 800);
-        Geometry geometry = new Geometry(rectangle);
+        Geometry geometry = new Geometry(tShape);
 
         /* Design Parameters */
         DesignParameters designParameters = new DesignParameters(25, 20, 25, 1.4, 1.15, 0.85, true);
@@ -74,6 +74,8 @@ public class Primary extends Controller {
         List<List<Double>> areaOfReinforcement = reinforcement.calculateAreaOfReinforcementBars(reinforcementTop);
         System.out.println(reinforcementSimple.calculateCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), links.getShearLinkDiameter()));
         System.out.println(reinforcementSimple.calculateCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), links.getShearLinkDiameter()));
+
+        System.out.println(geometry.getShape().calculateSecondMomentOfArea());
     }
 
     public String getText() {

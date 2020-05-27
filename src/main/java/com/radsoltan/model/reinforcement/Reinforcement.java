@@ -1,6 +1,8 @@
 package com.radsoltan.model.reinforcement;
 
+import com.radsoltan.model.Concrete;
 import com.radsoltan.model.Drawable;
+import com.radsoltan.model.geometry.Geometry;
 
 public abstract class Reinforcement implements Drawable {
 
@@ -13,4 +15,5 @@ public abstract class Reinforcement implements Drawable {
     public double calculateDesignYieldStrength(double gammaS) {
         return fy / gammaS;
     }
+
 }

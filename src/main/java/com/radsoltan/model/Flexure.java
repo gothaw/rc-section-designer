@@ -1,5 +1,6 @@
 package com.radsoltan.model;
 
+import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.reinforcement.Reinforcement;
 
 public interface Flexure {
@@ -21,5 +22,14 @@ public interface Flexure {
 
     default double calculateLeverArm(double effectiveDepth, double kFactor) {
         return effectiveDepth / 2 * (1 + Math.sqrt(1 - 3.53 * kFactor));
+    }
+
+    default double calculateMinimumReinforcement(double fctm, int fy, int widthInTensionZone, double effectiveDepth, Geometry geometry) {
+        double minimumAreaFromSectionNine = Math.max(0.26 * fctm / fy, 0.0013) * widthInTensionZone * effectiveDepth;
+        return 0;
+    }
+
+    default double calculateMaximumReinforcement(double concreteArea) {
+        return 0.04 * concreteArea;
     }
 }

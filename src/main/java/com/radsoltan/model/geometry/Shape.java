@@ -5,8 +5,9 @@ import com.radsoltan.model.Drawable;
 public abstract class Shape implements Drawable {
 
     public abstract double calculateArea();
-    public abstract double calculateFirstMomentOfArea();
+    public abstract double calculateCentroid();
     public abstract double calculateSecondMomentOfArea();
     public abstract int getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd);
+    public abstract int getWidthInTensionZone(double UlsMoment);
     public abstract int getDepth();
 }
