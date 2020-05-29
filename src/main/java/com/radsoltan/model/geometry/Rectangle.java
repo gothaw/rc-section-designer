@@ -1,6 +1,6 @@
 package com.radsoltan.model.geometry;
 
-public class Rectangle extends Shape  {
+public class Rectangle extends Shape {
 
     private final int width;
     private final int depth;
@@ -25,8 +25,8 @@ public class Rectangle extends Shape  {
     }
 
     @Override
-    public double calculateFirstMomentOfArea() {
-        return width * depth * 0.5 * depth;
+    public double calculateCentroid() {
+        return 0.5 * depth;
     }
 
     @Override
@@ -35,8 +35,34 @@ public class Rectangle extends Shape  {
     }
 
     @Override
-    public int getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd) {
+    public int getWidthInCompressionZone(double UlsMoment) {
         return getWidth();
+    }
+
+    @Override
+    public int getWidthInTensionZone(double UlsMoment) {
+        return getWidth();
+    }
+
+    @Override
+    public double calculateAreaInTensionZonePriorCracking(double UlsMoment) {
+        return getWidthInTensionZone(UlsMoment) * calculateCentroid();
+    }
+
+    @Override
+    public double calculateFactorForNonUniformSelfEquilibratingStresses() {
+        if (depth <= 300) {
+            return 1.0;
+        } else if (depth < 800) {
+            return (800 - depth) * 0.35 / 500 + 0.65;
+        } else {
+            return 0.65;
+        }
+    }
+
+    @Override
+    public double calculateFactorForStressDistributionPriorCracking() {
+        return 0.4;
     }
 
     @Override

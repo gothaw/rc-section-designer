@@ -1,42 +1,76 @@
 package com.radsoltan.model.geometry;
 
-public class TShape extends Shape {
+public class TShape extends Shape implements Flanged {
 
-    private final int width;
+    private final int webWidth;
     private final int depth;
+    private final int downstandDepth;
     private final int flangeWidth;
     private final int flangeThickness;
 
-    public TShape(int width, int depth, int flangeWidth, int flangeThickness) {
-        this.width = width;
+    public TShape(int webWidth, int depth, int flangeWidth, int flangeThickness) {
+        this.webWidth = webWidth;
         this.depth = depth;
         this.flangeWidth = flangeWidth;
         this.flangeThickness = flangeThickness;
+        this.downstandDepth = depth - flangeThickness;
     }
 
     @Override
     public double calculateArea() {
-        return width * (depth - flangeThickness) + flangeWidth * flangeThickness;
+        return webWidth * downstandDepth + flangeWidth * flangeThickness;
     }
 
     @Override
-    public double calculateFirstMomentOfArea() {
-        // TODO: 18/05/2020 Implement method
-        return 0;
+    public double calculateCentroid() {
+        double area = calculateArea();
+        double firstMomentOfArea = flangeWidth * flangeThickness * 0.5 * flangeThickness + webWidth * downstandDepth * 0.5 * (depth + flangeThickness);
+        return firstMomentOfArea / area;
     }
 
     @Override
     public double calculateSecondMomentOfArea() {
-        // TODO: 18/05/2020 ImplementMethod
+        double centroid = calculateCentroid();
+        return flangeWidth * Math.pow(flangeThickness, 3) / 12
+                + flangeWidth * flangeThickness * Math.pow(centroid - 0.5 * flangeThickness, 2)
+                + webWidth * Math.pow(downstandDepth, 3) / 12
+                + webWidth * downstandDepth * Math.pow(centroid - 0.5 * (depth + flangeThickness), 2);
+    }
+
+    @Override
+    public int getWidthInCompressionZone(double UlsMoment) {
+        if (UlsMoment >= 0) {
+            return flangeWidth;
+        }
+        return webWidth;
+    }
+
+    @Override
+    public int getWidthInTensionZone(double UlsMoment) {
+        if (UlsMoment >= 0) {
+            return webWidth;
+        } else {
+            return flangeWidth;
+        }
+    }
+
+    @Override
+    public double calculateAreaInTensionZonePriorCracking(double UlsMoment) {
+        double centroid = calculateCentroid();
+        double areaAboveNeutralAxis = (isElasticNeutralAxisInFlange()) ?
+                centroid * flangeWidth :
+                flangeThickness * flangeWidth + (centroid - flangeThickness) * webWidth;
+        return (UlsMoment >= 0) ? calculateArea() - areaAboveNeutralAxis : areaAboveNeutralAxis ;
+    }
+
+    @Override
+    public double calculateFactorForNonUniformSelfEquilibratingStresses() {
         return 0;
     }
 
     @Override
-    public int getWidthInCompressionZone(double UlsMoment, double effectiveDepth, double fcd) {
-        if (isNeutralAxisIsInFlange(UlsMoment, flangeWidth, flangeThickness, effectiveDepth, fcd)) {
-            return flangeWidth;
-        }
-        return width;
+    public double calculateFactorForStressDistributionPriorCracking() {
+        return 0;
     }
 
     @Override
@@ -44,16 +78,29 @@ public class TShape extends Shape {
         return depth;
     }
 
-    private boolean isNeutralAxisIsInFlange(double UlsMoment, int flangeWidth, int flangeThickness, double effectiveDepth, double fcd) {
-        if (UlsMoment > 0) {
-            double capacity = flangeWidth * flangeThickness * fcd * (effectiveDepth - 0.5 * flangeThickness);
-            return capacity > UlsMoment;
-        }
-        return false;
-    }
-
     @Override
     public void draw() {
         // TODO: 18/05/2020
+    }
+
+    @Override
+    public boolean isElasticNeutralAxisInFlange() {
+        return calculateCentroid() < flangeThickness;
+    }
+
+    @Override
+    public boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double fcd) {
+        if (UlsMoment >= 0) {
+            double flangeCapacity = flangeWidth * flangeThickness * fcd * (effectiveDepth - 0.5 * flangeThickness);
+            return flangeCapacity > UlsMoment;
+        } else {
+            double webCapacity = webWidth * downstandDepth * fcd * (effectiveDepth - 0.5 * downstandDepth);
+            return UlsMoment > webCapacity;
+        }
+    }
+
+    public boolean isPlasticNeutralAxisInFlange(double leverArm, double effectiveDepth) {
+        double neutralAxisDepth = 2.5 * (effectiveDepth - leverArm);
+        return neutralAxisDepth <= 2.5 * flangeThickness;
     }
 }
