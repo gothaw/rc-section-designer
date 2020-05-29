@@ -50,7 +50,7 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public double calculateFactorForNonUniformSelfEquilibratingStresses() {
+    public double calculateFactorForNonUniformSelfEquilibratingStresses(double UlsMoment) {
         if (depth <= 300) {
             return 1.0;
         } else if (depth < 800) {
@@ -61,7 +61,7 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public double calculateFactorForStressDistributionPriorCracking() {
+    public double calculateFactorForStressDistributionPriorCracking(double UlsMoment) {
         return 0.4;
     }
 

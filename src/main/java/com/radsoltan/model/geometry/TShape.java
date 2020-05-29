@@ -60,17 +60,29 @@ public class TShape extends Shape implements Flanged {
         double areaAboveNeutralAxis = (isElasticNeutralAxisInFlange()) ?
                 centroid * flangeWidth :
                 flangeThickness * flangeWidth + (centroid - flangeThickness) * webWidth;
-        return (UlsMoment >= 0) ? calculateArea() - areaAboveNeutralAxis : areaAboveNeutralAxis ;
+        return (UlsMoment >= 0) ? calculateArea() - areaAboveNeutralAxis : areaAboveNeutralAxis;
     }
 
     @Override
-    public double calculateFactorForNonUniformSelfEquilibratingStresses() {
-        return 0;
+    public double calculateFactorForNonUniformSelfEquilibratingStresses(double UlsMoment) {
+        int sizeToConsider = (UlsMoment >= 0) ? downstandDepth : flangeWidth;
+        return calculateFactorForNonUniformSelfEquilibratingStressesForWebOrFlange(sizeToConsider);
     }
 
     @Override
-    public double calculateFactorForStressDistributionPriorCracking() {
-        return 0;
+    public double calculateFactorForStressDistributionPriorCracking(double UlsMoment) {
+        if (UlsMoment >= 0) {
+            return 0.4;
+        } else {
+            if (isElasticNeutralAxisInFlange()) {
+                return 0.5;
+            } else {
+                double areaInTensionZone = calculateAreaInTensionZonePriorCracking(UlsMoment);
+                double centroid = calculateCentroid();
+                double unitTensileForceInFlange = 0.5 * flangeWidth * flangeThickness * ((centroid - flangeWidth) / centroid + 1);
+                return Math.min(0.5, 0.9 * unitTensileForceInFlange / areaInTensionZone);
+            }
+        }
     }
 
     @Override
