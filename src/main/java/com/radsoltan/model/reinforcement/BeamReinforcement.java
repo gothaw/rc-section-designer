@@ -70,14 +70,26 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     @Override
+    public double calculateTotalAreaOfTopReinforcement() {
+        List<List<Double>> areaOfTopBars = calculateAreaOfReinforcementBars(topReinforcement);
+        return areaOfTopBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+    }
+
+    @Override
     public double calculateCentroidOfTopReinforcement(int nominalCoverTop, int shearLinkDiameter) {
         List<List<Double>> areaOfTopBars = calculateAreaOfReinforcementBars(topReinforcement);
         List<List<Double>> firstMomentOfAreaForTopBars = calculateFirstMomentOfAreaForReinforcementBars(areaOfTopBars, topReinforcement, topReinforcementVerticalSpacing, nominalCoverTop, shearLinkDiameter, true);
 
-        double sumOfTopBarsArea = areaOfTopBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        double sumOfTopBarsArea = calculateTotalAreaOfTopReinforcement();
         double sumOfTopBarsFirstMomentOfArea = firstMomentOfAreaForTopBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
 
         return sumOfTopBarsFirstMomentOfArea / sumOfTopBarsArea;
+    }
+
+    @Override
+    public double calculateTotalAreaOfBottomReinforcement() {
+        List<List<Double>> areaOfBottomBars = calculateAreaOfReinforcementBars(bottomReinforcement);
+        return areaOfBottomBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
     }
 
     @Override
@@ -85,7 +97,7 @@ public class BeamReinforcement extends Reinforcement {
         List<List<Double>> areaOfBottomBars = calculateAreaOfReinforcementBars(bottomReinforcement);
         List<List<Double>> firstMomentOfAreaForBottomBars = calculateFirstMomentOfAreaForReinforcementBars(areaOfBottomBars, bottomReinforcement, bottomReinforcementVerticalSpacing, nominalCoverBottom, shearLinkDiameter, false);
 
-        double sumOfBottomBarsArea = areaOfBottomBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        double sumOfBottomBarsArea = calculateTotalAreaOfBottomReinforcement();
         double sumOfBottomBarsFirstMomentOfArea = firstMomentOfAreaForBottomBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
 
         return sumOfBottomBarsFirstMomentOfArea / sumOfBottomBarsArea;

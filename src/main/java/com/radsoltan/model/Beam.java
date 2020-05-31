@@ -12,7 +12,9 @@ public class Beam implements Flexure, Shear {
     private double UlsShear;
     private double SlsMoment;
     private double fcd;
+    private int fy;
     private double fyd;
+    private double fctm;
     private Geometry geometry;
     private BeamReinforcement reinforcement;
     private ShearLinks shearLinks;
@@ -32,6 +34,8 @@ public class Beam implements Flexure, Shear {
         this.designParameters = designParameters;
         this.geometry = geometry;
         this.fcd = concrete.calculateDesignCompressiveResistance(designParameters.getPartialFactorOfSafetyForConcrete());
+        this.fctm = concrete.getMeanAxialTensileStrength();
+        this.fy = reinforcement.getYieldStrength();
         this.fyd = reinforcement.calculateDesignYieldStrength(designParameters.getPartialFactorOfSafetyForSteel());
     }
 
@@ -39,13 +43,17 @@ public class Beam implements Flexure, Shear {
     public double calculateBendingCapacity() {
         if (concrete.getCompressiveStrength() <= 50) {
             effectiveDepth = calculateEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
-            widthInCompressiveZone = geometry.getWidthInCompressionZone(UlsMoment, effectiveDepth, fcd);
+            widthInCompressiveZone = geometry.getWidthInCompressionZone(UlsMoment);
             double kFactor = calculateKFactor(UlsMoment, widthInCompressiveZone, effectiveDepth, concrete);
             double kDashFactor = calculateKDashFactor(designParameters.isRecommendedRatio(), designParameters.getRedistributionRatio());
 
             if (kFactor <= kDashFactor) {
                 double leverArm = Math.min(calculateLeverArm(effectiveDepth, kFactor), 0.95 * effectiveDepth);
-                double requiredReinforcement = UlsMoment / (fyd * leverArm);
+                double minimumReinforcement = calculateMinimumReinforcement(UlsMoment, fctm, fy, effectiveDepth, geometry);
+                double requiredReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
+                double providedReinforcement = (UlsMoment >= 0) ? reinforcement.calculateTotalAreaOfBottomReinforcement() : reinforcement.calculateTotalAreaOfTopReinforcement();
+
+
             } else {
                 double leverArm = calculateLeverArm(effectiveDepth, kDashFactor);
             }
