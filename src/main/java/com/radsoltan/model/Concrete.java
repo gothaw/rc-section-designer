@@ -111,7 +111,7 @@ public enum Concrete {
         return ecu3;
     }
 
-    public double calculateDesignCompressiveResistance(double gammaC){
+    public double getDesignCompressiveResistance(double gammaC){
         return 0.85 * fck / gammaC;
     }
 }

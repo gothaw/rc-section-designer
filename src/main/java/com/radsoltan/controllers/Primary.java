@@ -1,25 +1,16 @@
 package com.radsoltan.controllers;
 
-import com.radsoltan.App;
 import com.radsoltan.model.*;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.Rectangle;
-import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.TShape;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,11 +62,11 @@ public class Primary extends Controller {
         Beam beam = new Beam(UlsMoment, shear, QslsMoment, geometry, concrete, reinforcementSimple, designParameters);
         beam.calculateBendingCapacity();
 
-        List<List<Double>> areaOfReinforcement = reinforcement.calculateAreaOfReinforcementBars(reinforcementTop);
-        System.out.println(reinforcementSimple.calculateCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), links.getShearLinkDiameter()));
-        System.out.println(reinforcementSimple.calculateCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), links.getShearLinkDiameter()));
+        List<List<Double>> areaOfReinforcement = reinforcement.getAreaOfReinforcementBars(reinforcementTop);
+        System.out.println(reinforcementSimple.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), links.getShearLinkDiameter()));
+        System.out.println(reinforcementSimple.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), links.getShearLinkDiameter()));
 
-        System.out.println(geometry.getShape().calculateSecondMomentOfArea());
+        System.out.println(geometry.getShape().getSecondMomentOfArea());
     }
 
     public String getText() {

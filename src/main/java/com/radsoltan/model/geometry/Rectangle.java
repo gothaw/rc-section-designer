@@ -20,17 +20,17 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public double calculateArea() {
+    public double getArea() {
         return width * depth;
     }
 
     @Override
-    public double calculateCentroid() {
+    public double getCentroid() {
         return 0.5 * depth;
     }
 
     @Override
-    public double calculateSecondMomentOfArea() {
+    public double getSecondMomentOfArea() {
         return width * Math.pow(depth, 3) / 12;
     }
 
@@ -45,12 +45,12 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public double calculateAreaInTensionZonePriorCracking(double UlsMoment) {
-        return getWidthInTensionZone(UlsMoment) * calculateCentroid();
+    public double getAreaInTensionZonePriorCracking(double UlsMoment) {
+        return getWidthInTensionZone(UlsMoment) * getCentroid();
     }
 
     @Override
-    public double calculateFactorForNonUniformSelfEquilibratingStresses() {
+    public double getFactorForNonUniformSelfEquilibratingStresses(double UlsMoment) {
         if (depth <= 300) {
             return 1.0;
         } else if (depth < 800) {
@@ -61,7 +61,7 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public double calculateFactorForStressDistributionPriorCracking() {
+    public double getFactorForStressDistributionPriorCracking(double UlsMoment) {
         return 0.4;
     }
 
