@@ -5,7 +5,7 @@ import com.radsoltan.model.geometry.Shape;
 import com.radsoltan.model.reinforcement.Reinforcement;
 
 public interface Flexure {
-    double calculateBendingCapacity();
+    void calculateBendingCapacity();
 
     default double calculateKFactor(double UlsMoment, int widthInCompressionZone, double effectiveDepth, Concrete concrete) {
         return Math.abs(UlsMoment) * Math.pow(10,6) / (widthInCompressionZone * effectiveDepth * effectiveDepth * concrete.getCompressiveStrength());
@@ -17,8 +17,8 @@ public interface Flexure {
 
     default double calculateEffectiveDepth(int depth, double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters, int transverseBarDiameter) {
         return (UlsMoment > 0) ?
-                depth - reinforcement.calculateCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), transverseBarDiameter) :
-                depth - reinforcement.calculateCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), transverseBarDiameter);
+                depth - reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), transverseBarDiameter) :
+                depth - reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), transverseBarDiameter);
     }
 
     default double calculateLeverArm(double effectiveDepth, double kFactor) {
@@ -28,9 +28,9 @@ public interface Flexure {
     default double calculateMinimumReinforcement(double UlsMoment, double fctm, int fy, double effectiveDepth, Geometry geometry) {
         Shape shape = geometry.getShape();
         double minimumAreaFromSectionNine = Math.max(0.26 * fctm / fy, 0.0013) * shape.getWidthInTensionZone(UlsMoment) * effectiveDepth;
-        double k = shape.calculateFactorForNonUniformSelfEquilibratingStresses(UlsMoment);
-        double kc = shape.calculateFactorForStressDistributionPriorCracking(UlsMoment);
-        double areaInTensionZone = shape.calculateAreaInTensionZonePriorCracking(UlsMoment);
+        double k = shape.getFactorForNonUniformSelfEquilibratingStresses(UlsMoment);
+        double kc = shape.getFactorForStressDistributionPriorCracking(UlsMoment);
+        double areaInTensionZone = shape.getAreaInTensionZonePriorCracking(UlsMoment);
         double minimumAreaFromSectionSeven = kc * k * fctm * areaInTensionZone / fy;
         return Math.max(minimumAreaFromSectionNine, minimumAreaFromSectionSeven);
     }

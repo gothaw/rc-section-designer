@@ -8,8 +8,8 @@ public class Slab implements Flexure{
     private Reinforcement reinforcement;
 
     @Override
-    public double calculateBendingCapacity() {
-        return 0;
+    public void calculateBendingCapacity() {
+
     }
 
 }

@@ -55,6 +55,10 @@ public class Geometry {
         return shape.getWidthInCompressionZone(UlsMoment);
     }
 
+    public boolean checkIfFlangedSection() {
+        return shape instanceof Flanged;
+    }
+
     public int getDepth(){
         return shape.getDepth();
     }

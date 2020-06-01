@@ -5,7 +5,7 @@ public interface Flanged {
 
     boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double fcd);
 
-    default double calculateFactorForNonUniformSelfEquilibratingStressesForWebOrFlange(int size) {
+    default double getFactorForNonUniformSelfEquilibratingStressesForWebOrFlange(int size) {
         if (size <= 300) {
             return 1.0;
         } else if (size < 800) {

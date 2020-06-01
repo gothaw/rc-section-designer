@@ -17,20 +17,20 @@ public class TShape extends Shape implements Flanged {
     }
 
     @Override
-    public double calculateArea() {
+    public double getArea() {
         return webWidth * downstandDepth + flangeWidth * flangeThickness;
     }
 
     @Override
-    public double calculateCentroid() {
-        double area = calculateArea();
+    public double getCentroid() {
+        double area = getArea();
         double firstMomentOfArea = flangeWidth * flangeThickness * 0.5 * flangeThickness + webWidth * downstandDepth * 0.5 * (depth + flangeThickness);
         return firstMomentOfArea / area;
     }
 
     @Override
-    public double calculateSecondMomentOfArea() {
-        double centroid = calculateCentroid();
+    public double getSecondMomentOfArea() {
+        double centroid = getCentroid();
         return flangeWidth * Math.pow(flangeThickness, 3) / 12
                 + flangeWidth * flangeThickness * Math.pow(centroid - 0.5 * flangeThickness, 2)
                 + webWidth * Math.pow(downstandDepth, 3) / 12
@@ -55,30 +55,30 @@ public class TShape extends Shape implements Flanged {
     }
 
     @Override
-    public double calculateAreaInTensionZonePriorCracking(double UlsMoment) {
-        double centroid = calculateCentroid();
+    public double getAreaInTensionZonePriorCracking(double UlsMoment) {
+        double centroid = getCentroid();
         double areaAboveNeutralAxis = (isElasticNeutralAxisInFlange()) ?
                 centroid * flangeWidth :
                 flangeThickness * flangeWidth + (centroid - flangeThickness) * webWidth;
-        return (UlsMoment >= 0) ? calculateArea() - areaAboveNeutralAxis : areaAboveNeutralAxis;
+        return (UlsMoment >= 0) ? getArea() - areaAboveNeutralAxis : areaAboveNeutralAxis;
     }
 
     @Override
-    public double calculateFactorForNonUniformSelfEquilibratingStresses(double UlsMoment) {
+    public double getFactorForNonUniformSelfEquilibratingStresses(double UlsMoment) {
         int sizeToConsider = (UlsMoment >= 0) ? downstandDepth : flangeWidth;
-        return calculateFactorForNonUniformSelfEquilibratingStressesForWebOrFlange(sizeToConsider);
+        return getFactorForNonUniformSelfEquilibratingStressesForWebOrFlange(sizeToConsider);
     }
 
     @Override
-    public double calculateFactorForStressDistributionPriorCracking(double UlsMoment) {
+    public double getFactorForStressDistributionPriorCracking(double UlsMoment) {
         if (UlsMoment >= 0) {
             return 0.4;
         } else {
             if (isElasticNeutralAxisInFlange()) {
                 return 0.5;
             } else {
-                double areaInTensionZone = calculateAreaInTensionZonePriorCracking(UlsMoment);
-                double centroid = calculateCentroid();
+                double areaInTensionZone = getAreaInTensionZonePriorCracking(UlsMoment);
+                double centroid = getCentroid();
                 double unitTensileForceInFlange = 0.5 * flangeWidth * flangeThickness * ((centroid - flangeWidth) / centroid + 1);
                 return Math.min(0.5, 0.9 * unitTensileForceInFlange / areaInTensionZone);
             }
@@ -97,7 +97,7 @@ public class TShape extends Shape implements Flanged {
 
     @Override
     public boolean isElasticNeutralAxisInFlange() {
-        return calculateCentroid() < flangeThickness;
+        return getCentroid() < flangeThickness;
     }
 
     @Override
