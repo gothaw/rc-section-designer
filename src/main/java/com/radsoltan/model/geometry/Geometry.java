@@ -47,11 +47,7 @@ public class Geometry {
         return shape;
     }
 
-    public double checksIfFlangeTakesCompressionForce(){
-        return 1.0;
-    }
-
-    public int getWidthInCompressionZone(double UlsMoment){
+    public int getWidthInCompressionZone(double UlsMoment) {
         return shape.getWidthInCompressionZone(UlsMoment);
     }
 
@@ -59,8 +55,16 @@ public class Geometry {
         return shape instanceof Flanged;
     }
 
-    public int getDepth(){
+    public int getDepth() {
         return shape.getDepth();
+    }
+
+    public boolean checkIfPlasticNeutralAxisInFlange(double leverArm, double effectiveDepth) {
+        if (checkIfFlangedSection()) {
+            Flanged flangedShape = (Flanged) shape;
+            return flangedShape.isPlasticNeutralAxisInFlange(leverArm, effectiveDepth);
+        }
+        return false;
     }
 
 }
