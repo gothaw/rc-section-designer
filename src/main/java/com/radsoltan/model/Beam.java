@@ -22,7 +22,8 @@ public class Beam implements Flexure, Shear {
     private final double fctm;
     /* Results */
     private double bendingCapacity;
-    private double requiredReinforcement;
+    private double requiredTensileReinforcement;
+    private double requiredCompressionReinforcement;
 
     public Beam(double UlsMoment, double UlsShear, double SlsMoment,
                 Geometry geometry, Concrete concrete,
@@ -72,14 +73,18 @@ public class Beam implements Flexure, Shear {
     }
 
     private void calculateBendingCapacityForRectangularSection(double kFactor, double kDashFactor, double effectiveDepth, double leverArm, double widthInCompressionZone) {
+        double minimumReinforcement = getMinimumReinforcement(UlsMoment, fctm, fy, effectiveDepth, geometry);
         if (kFactor <= kDashFactor) {
-            double minimumReinforcement = getMinimumReinforcement(UlsMoment, fctm, fy, effectiveDepth, geometry);
             double providedReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
-            this.requiredReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
+            this.requiredTensileReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
             this.bendingCapacity = providedReinforcement * leverArm * fyd * Math.pow(10, -6);
         } else {
-
-            double compressionReinforcementRequired = (kFactor - kDashFactor) * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / fsc * (effectiveDepth - centroidOfTopReinforcement);
+            double depthOfPlasticNeutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
+            double centroidOfCompressionReinforcement = getCentroidOfCompressionReinforcement(UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
+            double fsc = Math.min(700 * (depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) / depthOfPlasticNeutralAxis, fyd);
+            this.requiredCompressionReinforcement = (kFactor - kDashFactor) * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fsc * (effectiveDepth - centroidOfCompressionReinforcement));
+            this.requiredTensileReinforcement = Math.max(kDashFactor * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fyd * leverArm) + requiredCompressionReinforcement * fsc / fyd, minimumReinforcement);
+            this.bendingCapacity =
         }
     }
 

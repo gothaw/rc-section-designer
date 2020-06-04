@@ -16,7 +16,7 @@ public interface Flexure {
     }
 
     default double getEffectiveDepth(int depth, double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters, int transverseBarDiameter) {
-        return (UlsMoment > 0) ?
+        return (UlsMoment >= 0) ?
                 depth - reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), transverseBarDiameter) :
                 depth - reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), transverseBarDiameter);
     }
@@ -28,11 +28,10 @@ public interface Flexure {
     }
 
     default double getMinimumReinforcement(double UlsMoment, double fctm, int fy, double effectiveDepth, Geometry geometry) {
-        Shape shape = geometry.getShape();
-        double minimumAreaFromSectionNine = Math.max(0.26 * fctm / fy, 0.0013) * shape.getWidthInTensionZone(UlsMoment) * effectiveDepth;
-        double k = shape.getFactorForNonUniformSelfEquilibratingStresses(UlsMoment);
-        double kc = shape.getFactorForStressDistributionPriorCracking(UlsMoment);
-        double areaInTensionZone = shape.getAreaInTensionZonePriorCracking(UlsMoment);
+        double minimumAreaFromSectionNine = Math.max(0.26 * fctm / fy, 0.0013) * geometry.getWidthInTensionZone(UlsMoment) * effectiveDepth;
+        double k = geometry.getFactorForNonUniformSelfEquilibratingStresses(UlsMoment);
+        double kc = geometry.getFactorForStressDistributionPriorCracking(UlsMoment);
+        double areaInTensionZone = geometry.getAreaInTensionZonePriorCracking(UlsMoment);
         double minimumAreaFromSectionSeven = kc * k * fctm * areaInTensionZone / fy;
         return Math.max(minimumAreaFromSectionNine, minimumAreaFromSectionSeven);
     }
@@ -41,7 +40,13 @@ public interface Flexure {
         return 0.04 * concreteArea;
     }
 
-    default double getDepthOfPlasticNeutralAxis(double UlsMoment, double fcd, double fyd, int widthInCompressionZone, double leverArm, Reinforcement reinforcement) {
-        return 0.0;
+    default double getDepthOfPlasticNeutralAxis(double effectiveDepth, double leverArm) {
+        return (effectiveDepth - leverArm) / 0.4;
+    }
+
+    default double getCentroidOfCompressionReinforcement(double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters, int transverseBarDiameter) {
+        return (UlsMoment >= 0) ?
+                reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverBottom(), transverseBarDiameter) :
+                reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverTop(), transverseBarDiameter);
     }
 }
