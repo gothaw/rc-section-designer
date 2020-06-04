@@ -111,6 +111,7 @@ public class TShape extends Shape implements Flanged {
         }
     }
 
+    @Override
     public boolean isPlasticNeutralAxisInFlange(double leverArm, double effectiveDepth) {
         double neutralAxisDepth = 2.5 * (effectiveDepth - leverArm);
         return neutralAxisDepth <= 2.5 * flangeThickness;

@@ -47,20 +47,39 @@ public class Geometry {
         return shape;
     }
 
-    public double checksIfFlangeTakesCompressionForce(){
-        return 1.0;
+    public int getDepth() {
+        return shape.getDepth();
     }
 
-    public int getWidthInCompressionZone(double UlsMoment){
+    public int getWidthInCompressionZone(double UlsMoment) {
         return shape.getWidthInCompressionZone(UlsMoment);
+    }
+
+    public int getWidthInTensionZone(double UlsMoment) {
+        return shape.getWidthInTensionZone(UlsMoment);
+    }
+
+    public double getAreaInTensionZonePriorCracking(double UlsMoment) {
+        return shape.getAreaInTensionZonePriorCracking(UlsMoment);
+    }
+
+    public double getFactorForNonUniformSelfEquilibratingStresses(double UlsMoment) {
+        return shape.getFactorForNonUniformSelfEquilibratingStresses(UlsMoment);
+    }
+
+    public double getFactorForStressDistributionPriorCracking(double UlsMoment) {
+        return shape.getFactorForStressDistributionPriorCracking(UlsMoment);
     }
 
     public boolean checkIfFlangedSection() {
         return shape instanceof Flanged;
     }
 
-    public int getDepth(){
-        return shape.getDepth();
+    public boolean checkIfPlasticNeutralAxisInFlange(double leverArm, double effectiveDepth) {
+        if (checkIfFlangedSection()) {
+            Flanged flangedShape = (Flanged) shape;
+            return flangedShape.isPlasticNeutralAxisInFlange(leverArm, effectiveDepth);
+        }
+        return false;
     }
-
 }
