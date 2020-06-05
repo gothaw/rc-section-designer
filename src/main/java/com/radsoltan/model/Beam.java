@@ -56,7 +56,7 @@ public class Beam implements Flexure, Shear {
                 if (geometry.checkIfPlasticNeutralAxisInFlange(leverArm, effectiveDepth)) {
                     calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, leverArm, widthInCompressiveZone);
                 } else {
-                    // TODO: 03/06/2020 neutral axis in web
+
                 }
             } else {
                 calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, leverArm, widthInCompressiveZone);
@@ -74,17 +74,18 @@ public class Beam implements Flexure, Shear {
 
     private void calculateBendingCapacityForRectangularSection(double kFactor, double kDashFactor, double effectiveDepth, double leverArm, double widthInCompressionZone) {
         double minimumReinforcement = getMinimumReinforcement(UlsMoment, fctm, fy, effectiveDepth, geometry);
+        double providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
         if (kFactor <= kDashFactor) {
-            double providedReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
             this.requiredTensileReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
-            this.bendingCapacity = providedReinforcement * leverArm * fyd * Math.pow(10, -6);
+            this.bendingCapacity = providedTensileReinforcement * leverArm * fyd * Math.pow(10, -6);
         } else {
             double depthOfPlasticNeutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
             double centroidOfCompressionReinforcement = getCentroidOfCompressionReinforcement(UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
             double fsc = Math.min(700 * (depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) / depthOfPlasticNeutralAxis, fyd);
+            // TODO: 05/06/2020 Check compression reinforcement
             this.requiredCompressionReinforcement = (kFactor - kDashFactor) * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fsc * (effectiveDepth - centroidOfCompressionReinforcement));
             this.requiredTensileReinforcement = Math.max(kDashFactor * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fyd * leverArm) + requiredCompressionReinforcement * fsc / fyd, minimumReinforcement);
-            this.bendingCapacity =
+            this.bendingCapacity = providedTensileReinforcement * fyd * (effectiveDepth - centroidOfCompressionReinforcement) * Math.pow(10, -6) - 0.8 * depthOfPlasticNeutralAxis * widthInCompressionZone * fcd * (0.4 * depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) * Math.pow(10, -6);
         }
     }
 
