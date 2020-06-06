@@ -96,24 +96,28 @@ public class TShape extends Shape implements Flanged {
     }
 
     @Override
+    public int getFlangeWidth() {
+        return flangeWidth;
+    }
+
+    @Override
+    public int getFlangeThickness() {
+        return flangeThickness;
+    }
+
+    @Override
+    public int getWebThickness() {
+        return webWidth;
+    }
+
+    @Override
     public boolean isElasticNeutralAxisInFlange() {
         return getCentroid() < flangeThickness;
     }
 
     @Override
-    public boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double fcd) {
-        if (UlsMoment >= 0) {
-            double flangeCapacity = flangeWidth * flangeThickness * fcd * (effectiveDepth - 0.5 * flangeThickness);
-            return flangeCapacity > UlsMoment;
-        } else {
-            double webCapacity = webWidth * downstandDepth * fcd * (effectiveDepth - 0.5 * downstandDepth);
-            return UlsMoment > webCapacity;
-        }
-    }
-
-    @Override
-    public boolean isPlasticNeutralAxisInFlange(double leverArm, double effectiveDepth) {
+    public boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double leverArm) {
         double neutralAxisDepth = 2.5 * (effectiveDepth - leverArm);
-        return neutralAxisDepth <= 2.5 * flangeThickness;
+        return (UlsMoment >= 0) && neutralAxisDepth <= 2.5 * flangeThickness;
     }
 }

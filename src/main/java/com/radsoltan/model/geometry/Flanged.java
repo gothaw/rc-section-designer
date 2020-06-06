@@ -1,11 +1,16 @@
 package com.radsoltan.model.geometry;
 
 public interface Flanged {
+
+    int getFlangeWidth();
+
+    int getFlangeThickness();
+
+    int getWebThickness();
+
     boolean isElasticNeutralAxisInFlange();
 
-    boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double fcd);
-
-    boolean isPlasticNeutralAxisInFlange(double leverArm, double effectiveDepth);
+    boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double leverArm);
 
     default double getFactorForNonUniformSelfEquilibratingStressesForWebOrFlange(int size) {
         if (size <= 300) {

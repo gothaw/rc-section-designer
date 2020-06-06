@@ -12,7 +12,6 @@ public class Beam implements Flexure, Shear {
     private final Geometry geometry;
     private final BeamReinforcement reinforcement;
     private final ShearLinks shearLinks;
-    private final Concrete concrete;
     private final DesignParameters designParameters;
     /* Material Properties */
     private final int fck;
@@ -20,6 +19,12 @@ public class Beam implements Flexure, Shear {
     private final int fy;
     private final double fyd;
     private final double fctm;
+    /* Design Parameters */
+    private final double effectiveDepth;
+    private double leverArm;
+    /* Provided Reinforcement */
+    private final double providedTensileReinforcement;
+    private final double providedCompressiveReinforcement;
     /* Results */
     private double bendingCapacity;
     private double requiredTensileReinforcement;
@@ -32,7 +37,6 @@ public class Beam implements Flexure, Shear {
         this.UlsMoment = UlsMoment;
         this.UlsShear = UlsShear;
         this.SlsMoment = SlsMoment;
-        this.concrete = concrete;
         this.reinforcement = reinforcement;
         this.shearLinks = reinforcement.getShearLinks();
         this.designParameters = designParameters;
@@ -42,39 +46,43 @@ public class Beam implements Flexure, Shear {
         this.fctm = concrete.getMeanAxialTensileStrength();
         this.fy = reinforcement.getYieldStrength();
         this.fyd = reinforcement.getDesignYieldStrength(designParameters.getPartialFactorOfSafetyForSteel());
+        this.providedCompressiveReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfTopReinforcement() : reinforcement.getTotalAreaOfBottomReinforcement();
+        this.providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
+        this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
     }
 
     @Override
     public void calculateBendingCapacity() {
         if (fck <= 50) {
-            double effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
             int widthInCompressiveZone = geometry.getWidthInCompressionZone(UlsMoment);
             double kFactor = getKFactor(UlsMoment, widthInCompressiveZone, effectiveDepth, fck);
             double kDashFactor = getKDashFactor(designParameters.isRecommendedRatio(), designParameters.getRedistributionRatio());
-            double leverArm = getLeverArm(effectiveDepth, kFactor, kDashFactor);
-            if (geometry.checkIfFlangedSection()) {
-                if (geometry.checkIfPlasticNeutralAxisInFlange(leverArm, effectiveDepth)) {
-                    calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, leverArm, widthInCompressiveZone);
+            double minimumReinforcement = getMinimumReinforcement(UlsMoment, fctm, fy, effectiveDepth, geometry);
+            this.leverArm = getLeverArm(effectiveDepth, kFactor, kDashFactor);
+            if (geometry.isFlangedSection()) {
+                if (geometry.checkIfPlasticNeutralAxisInFlange(UlsMoment, effectiveDepth, leverArm)) {
+                    calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, widthInCompressiveZone, minimumReinforcement);
                 } else {
-
+                    double flangeThickness = geometry.getFlangeThickness();
+                    double flangeCapacity = 0.57 * fck * (geometry.getFlangeWidth() - geometry.getWebThickness()) * flangeThickness * (effectiveDepth - 0.5 * flangeThickness) * Math.pow(10, -6);
+                    double flangeKFactor = (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fck * geometry.getWebThickness() * effectiveDepth * effectiveDepth);
+                    if (flangeKFactor <= kDashFactor) {
+                        double requiredReinforcementForFlangeResistance = flangeCapacity * Math.pow(10, 6) / (fyd * (effectiveDepth - 0.5 * flangeThickness));
+                        this.requiredTensileReinforcement = requiredReinforcementForFlangeResistance + (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fyd * leverArm);
+                        this.bendingCapacity = (providedTensileReinforcement - requiredReinforcementForFlangeResistance) * fyd * leverArm * Math.pow(10, -6) + flangeCapacity;
+                    } else {
+                        throw new IllegalArgumentException("Compressive force greater than the capacity. Redesign section.");
+                    }
                 }
             } else {
-                calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, leverArm, widthInCompressiveZone);
+                calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, widthInCompressiveZone, minimumReinforcement);
             }
-
-            System.out.println(kDashFactor);
-            System.out.println(kFactor);
-            System.out.println(effectiveDepth);
-            System.out.println(widthInCompressiveZone);
-
         } else {
             throw new IllegalArgumentException("Concrete class greater than C50/60. Outside of scope of this software.");
         }
     }
 
-    private void calculateBendingCapacityForRectangularSection(double kFactor, double kDashFactor, double effectiveDepth, double leverArm, double widthInCompressionZone) {
-        double minimumReinforcement = getMinimumReinforcement(UlsMoment, fctm, fy, effectiveDepth, geometry);
-        double providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
+    private void calculateBendingCapacityForRectangularSection(double kFactor, double kDashFactor, double effectiveDepth, double widthInCompressionZone, double minimumReinforcement) {
         if (kFactor <= kDashFactor) {
             this.requiredTensileReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
             this.bendingCapacity = providedTensileReinforcement * leverArm * fyd * Math.pow(10, -6);
@@ -82,7 +90,6 @@ public class Beam implements Flexure, Shear {
             double depthOfPlasticNeutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
             double centroidOfCompressionReinforcement = getCentroidOfCompressionReinforcement(UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
             double fsc = Math.min(700 * (depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) / depthOfPlasticNeutralAxis, fyd);
-            // TODO: 05/06/2020 Check compression reinforcement
             this.requiredCompressionReinforcement = (kFactor - kDashFactor) * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fsc * (effectiveDepth - centroidOfCompressionReinforcement));
             this.requiredTensileReinforcement = Math.max(kDashFactor * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fyd * leverArm) + requiredCompressionReinforcement * fsc / fyd, minimumReinforcement);
             this.bendingCapacity = providedTensileReinforcement * fyd * (effectiveDepth - centroidOfCompressionReinforcement) * Math.pow(10, -6) - 0.8 * depthOfPlasticNeutralAxis * widthInCompressionZone * fcd * (0.4 * depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) * Math.pow(10, -6);
@@ -91,6 +98,26 @@ public class Beam implements Flexure, Shear {
 
     @Override
     public void calculateShearCapacity() {
+        
+    }
 
+    public double getProvidedTensileReinforcement() {
+        return providedTensileReinforcement;
+    }
+
+    public double getProvidedCompressiveReinforcement() {
+        return providedCompressiveReinforcement;
+    }
+
+    public double getBendingCapacity() {
+        return bendingCapacity;
+    }
+
+    public double getRequiredTensileReinforcement() {
+        return requiredTensileReinforcement;
+    }
+
+    public double getRequiredCompressionReinforcement() {
+        return requiredCompressionReinforcement;
     }
 }

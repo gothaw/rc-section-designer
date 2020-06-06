@@ -6,6 +6,7 @@ public class Geometry {
     private TShape tShape;
     private SlabStrip slabStrip;
     private final Shape shape;
+    private Flanged flangedShape;
 
     public Geometry(Rectangle rectangle) {
         this.rectangle = rectangle;
@@ -15,11 +16,13 @@ public class Geometry {
     public Geometry(LShape lShape) {
         this.lShape = lShape;
         this.shape = (Shape) lShape;
+        this.flangedShape = (Flanged) lShape;
     }
 
     public Geometry(TShape tShape) {
         this.tShape = tShape;
         this.shape = (Shape) tShape;
+        this.flangedShape = (Flanged) tShape;
     }
 
     public Geometry(SlabStrip slabStrip) {
@@ -71,15 +74,35 @@ public class Geometry {
         return shape.getFactorForStressDistributionPriorCracking(UlsMoment);
     }
 
-    public boolean checkIfFlangedSection() {
-        return shape instanceof Flanged;
+    public boolean isFlangedSection() {
+        return shape instanceof Flanged && flangedShape != null;
     }
 
-    public boolean checkIfPlasticNeutralAxisInFlange(double leverArm, double effectiveDepth) {
-        if (checkIfFlangedSection()) {
-            Flanged flangedShape = (Flanged) shape;
-            return flangedShape.isPlasticNeutralAxisInFlange(leverArm, effectiveDepth);
+    public boolean checkIfPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double leverArm) {
+        if (isFlangedSection()) {
+            return flangedShape.isPlasticNeutralAxisInFlange(UlsMoment, effectiveDepth, leverArm);
         }
         return false;
+    }
+
+    public int getWebThickness() {
+        if(isFlangedSection()) {
+            return flangedShape.getWebThickness();
+        }
+        return 0;
+    }
+
+    public int getFlangeThickness() {
+        if(isFlangedSection()) {
+            return flangedShape.getFlangeThickness();
+        }
+        return 0;
+    }
+
+    public int getFlangeWidth() {
+        if(isFlangedSection()) {
+            return flangedShape.getFlangeThickness();
+        }
+        return 0;
     }
 }
