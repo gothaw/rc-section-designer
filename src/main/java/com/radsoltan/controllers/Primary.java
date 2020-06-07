@@ -13,7 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Primary extends Controller {
     @FXML
@@ -67,6 +69,14 @@ public class Primary extends Controller {
         System.out.println(reinforcementSimple.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), links.getShearLinkDiameter()));
 
         System.out.println(geometry.getShape().getSecondMomentOfArea());
+
+        /* Slab Example */
+
+        Map<Integer, Integer> topReinforcement = Map.of(20, 400, 16, 400, 10, 200);
+        Map<Integer, Integer> additionalTopReinforcement = Map.of(20, 400, 12, 400);
+
+        Map<Integer, Integer> bottomReinforcement = Map.of(20, 300, 8, 300, 8, 150);
+        Map<Integer, Integer> additionalBottomReinforcement = Map.of(20, 400, 12, 400);
     }
 
     public String getText() {

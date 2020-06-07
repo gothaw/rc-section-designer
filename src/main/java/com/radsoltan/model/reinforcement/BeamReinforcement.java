@@ -8,9 +8,9 @@ import java.util.stream.IntStream;
 
 public class BeamReinforcement extends Reinforcement {
 
-    private List<List<Integer>> topReinforcement;
+    private final List<List<Integer>> topReinforcement;
     private List<Integer> topReinforcementVerticalSpacing;
-    private List<List<Integer>> bottomReinforcement;
+    private final List<List<Integer>> bottomReinforcement;
     private List<Integer> bottomReinforcementVerticalSpacing;
     private final ShearLinks shearLinks;
     int numberOfBarsInSlab;
@@ -41,15 +41,7 @@ public class BeamReinforcement extends Reinforcement {
                              List<List<Integer>> bottomReinforcement,
                              List<Integer> bottomReinforcementVerticalSpacing,
                              ShearLinks shearLinks) {
-
-        this.fy = fy;
-        this.topReinforcement = topReinforcement;
-        this.topReinforcementVerticalSpacing = topReinforcementVerticalSpacing;
-        this.bottomReinforcement = bottomReinforcement;
-        this.bottomReinforcementVerticalSpacing = bottomReinforcementVerticalSpacing;
-        this.shearLinks = shearLinks;
-        this.numberOfBarsInSlab = 0;
-        this.isReinforcementInSlabSymmetrical = false;
+        this(fy, topReinforcement, topReinforcementVerticalSpacing, bottomReinforcement, bottomReinforcementVerticalSpacing, shearLinks, 0, false);
     }
 
     public BeamReinforcement(int fy, List<Integer> topReinforcementRow, List<Integer> bottomReinforcementRow, ShearLinks shearLinks) {

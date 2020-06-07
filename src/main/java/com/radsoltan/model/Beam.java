@@ -7,8 +7,8 @@ import com.radsoltan.model.reinforcement.ShearLinks;
 public class Beam implements Flexure, Shear {
     /* Constructor Parameters */
     private final double UlsMoment;
-    private double UlsShear;
-    private double SlsMoment;
+    private final double UlsShear;
+    private final double SlsMoment;
     private final Geometry geometry;
     private final BeamReinforcement reinforcement;
     private final ShearLinks shearLinks;
