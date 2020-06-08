@@ -6,6 +6,7 @@ import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.TShape;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
+import com.radsoltan.model.reinforcement.SlabReinforcement;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -72,11 +73,22 @@ public class Primary extends Controller {
 
         /* Slab Example */
 
-        Map<Integer, Integer> topReinforcement = Map.of(20, 400, 16, 400, 10, 200);
-        Map<Integer, Integer> additionalTopReinforcement = Map.of(20, 400, 12, 400);
+        List<Integer> topReinforcement = List.of(20, 16, 10);
+        List<Integer> additionalTopReinforcement = List.of(20, 12);
+        List<Integer> spacingTop = List.of(400, 400, 200);
+        List<Integer> vSpacingTop = List.of(50, 50, 50);
 
-        Map<Integer, Integer> bottomReinforcement = Map.of(20, 300, 8, 300, 8, 150);
-        Map<Integer, Integer> additionalBottomReinforcement = Map.of(20, 400, 12, 400);
+        List<Integer> bottomReinforcement = List.of(20, 8, 8);
+        List<Integer> additionalBottomReinforcement = List.of(20, 12);
+        List<Integer> spacingBottom = List.of(300, 300, 150);
+        List<Integer> vSpacingBottom = List.of(50, 50, 50);
+
+        SlabReinforcement slabReinforcement = new SlabReinforcement(500,
+                topReinforcement, additionalTopReinforcement, spacingTop, vSpacingTop,
+                bottomReinforcement, additionalBottomReinforcement, spacingBottom, vSpacingBottom);
+
+        System.out.println(slabReinforcement.getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, spacingTop));
+
     }
 
     public String getText() {
@@ -90,7 +102,6 @@ public class Primary extends Controller {
     public void setText(String text) {
         this.text.set(text);
     }
-
 
     public void test(MouseEvent mouseEvent) throws InterruptedException {
         Concrete concrete = Concrete.C12_15;
