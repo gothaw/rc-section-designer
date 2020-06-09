@@ -76,19 +76,19 @@ public class Primary extends Controller {
         List<Integer> topReinforcement = List.of(20, 16, 10);
         List<Integer> additionalTopReinforcement = List.of(20, 12);
         List<Integer> spacingTop = List.of(400, 400, 200);
-        List<Integer> vSpacingTop = List.of(50, 50, 50);
+        List<Integer> vSpacingTop = List.of(50, 50);
 
         List<Integer> bottomReinforcement = List.of(20, 8, 8);
         List<Integer> additionalBottomReinforcement = List.of(20, 12);
         List<Integer> spacingBottom = List.of(300, 300, 150);
-        List<Integer> vSpacingBottom = List.of(50, 50, 50);
+        List<Integer> vSpacingBottom = List.of(50, 50);
 
         SlabReinforcement slabReinforcement = new SlabReinforcement(500,
                 topReinforcement, additionalTopReinforcement, spacingTop, vSpacingTop,
                 bottomReinforcement, additionalBottomReinforcement, spacingBottom, vSpacingBottom);
 
         System.out.println(slabReinforcement.getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, spacingTop));
-
+        System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToTheEdge(topReinforcement, null, vSpacingTop, 25, 8));
     }
 
     public String getText() {

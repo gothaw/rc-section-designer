@@ -1,7 +1,5 @@
 package com.radsoltan.model.reinforcement;
 
-import com.radsoltan.util.Utility;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -103,16 +101,16 @@ public class BeamReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-    public List<List<Double>> getDistanceFromCentreOfEachBarToTheEdge(List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
+    public List<List<Double>> getDistanceFromCentreOfEachBarToEdge(List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
 
-        List<List<Double>> distanceFromCentroidOfEachBarToTheEdge = new ArrayList<>();
+        List<List<Double>> distanceFromCentroidOfEachBarToEdge = new ArrayList<>();
 
         // Distance For First Row
         List<Double> distanceForBarsInFirstRow = reinforcement.get(0).stream()
                 .map(diameter -> diameter * 0.5 + nominalCover + shearLinkDiameter)
                 .collect(Collectors.toList());
 
-        distanceFromCentroidOfEachBarToTheEdge.add(distanceForBarsInFirstRow);
+        distanceFromCentroidOfEachBarToEdge.add(distanceForBarsInFirstRow);
 
         // Distance For Subsequent Rows
         double largestDistanceToFirstRowBar = getMaxDistanceFromFirstRowRebarToEdgeExcludingSlabRebar(distanceForBarsInFirstRow, isTopReinforcement);
@@ -134,9 +132,9 @@ public class BeamReinforcement extends Reinforcement {
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
 
-        distanceFromCentroidOfEachBarToTheEdge.addAll(distanceForBarsInSubsequentRows);
+        distanceFromCentroidOfEachBarToEdge.addAll(distanceForBarsInSubsequentRows);
 
-        return distanceFromCentroidOfEachBarToTheEdge;
+        return distanceFromCentroidOfEachBarToEdge;
     }
 
     private double getMaxDistanceFromFirstRowRebarToEdgeExcludingSlabRebar(List<Double> distanceForBarsInFirstRow, boolean isTopReinforcement) {
@@ -147,15 +145,15 @@ public class BeamReinforcement extends Reinforcement {
                     .mapToObj(distanceForBarsInFirstRow::get)
                     .collect(Collectors.toList());
 
-            return Utility.findMaxValueInList(distanceForBarsInFirstRowExcludingSlab);
+            return Collections.max(distanceForBarsInFirstRowExcludingSlab);
         } else {
-            return Utility.findMaxValueInList(distanceForBarsInFirstRow);
+            return Collections.max(distanceForBarsInFirstRow);
         }
     }
 
     public List<List<Double>> getFirstMomentOfAreaForReinforcementBars(List<List<Double>> areaOfReinforcementBars, List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
 
-        List<List<Double>> distanceFromCentreOfEachBarToEdge = getDistanceFromCentreOfEachBarToTheEdge(reinforcement, verticalBarSpacing, nominalCover, shearLinkDiameter, isTopReinforcement);
+        List<List<Double>> distanceFromCentreOfEachBarToEdge = getDistanceFromCentreOfEachBarToEdge(reinforcement, verticalBarSpacing, nominalCover, shearLinkDiameter, isTopReinforcement);
 
         return IntStream
                 .range(0, distanceFromCentreOfEachBarToEdge.size())

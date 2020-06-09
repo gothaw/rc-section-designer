@@ -1,5 +1,7 @@
 package com.radsoltan.model.reinforcement;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,27 +69,43 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     public List<Double> getAreaOfReinforcementLayers(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> spacing) {
+        if (additionalReinforcement != null) {
+            List<Double> areaOfReinforcementLayers = IntStream.range(0, additionalReinforcement.size())
+                    .mapToObj(i -> 0.25 * Math.PI * (reinforcement.get(i) * reinforcement.get(i) + additionalReinforcement.get(i) * additionalReinforcement.get(i)) * 1000 / spacing.get(i))
+                    .collect(Collectors.toList());
+            List<Double> areaOfLayersWithoutAdditionalRebar = IntStream.range(additionalReinforcement.size(), reinforcement.size())
+                    .mapToObj(i -> 0.25 * Math.PI * reinforcement.get(i) * reinforcement.get(i) * 1000 / spacing.get(i))
+                    .collect(Collectors.toList());
 
-        List<Double> areaOfReinforcementLayers = IntStream.range(0, additionalReinforcement.size())
-                .mapToObj(i -> 0.25 * Math.PI * (reinforcement.get(i) * reinforcement.get(i) + additionalReinforcement.get(i) * additionalReinforcement.get(i)) * 1000 / spacing.get(i))
-                .collect(Collectors.toList());
-        List<Double> areaOfLayersWithoutAdditionalRebar = IntStream.range(additionalReinforcement.size(), reinforcement.size())
-                .mapToObj(i -> 0.25 * Math.PI * reinforcement.get(i) * reinforcement.get(i) * 1000 / spacing.get(i))
-                .collect(Collectors.toList());
+            areaOfReinforcementLayers.addAll(areaOfLayersWithoutAdditionalRebar);
 
-        areaOfReinforcementLayers.addAll(areaOfLayersWithoutAdditionalRebar);
-
-        return areaOfReinforcementLayers;
+            return areaOfReinforcementLayers;
+        } else {
+            return IntStream.range(0, reinforcement.size())
+                    .mapToObj(i -> 0.25 * Math.PI * reinforcement.get(i) * reinforcement.get(i) * 1000 / spacing.get(i))
+                    .collect(Collectors.toList());
+        }
     }
 
-    public List<Double> getAreaOfReinforcementLayers(List<Integer> reinforcement, List<Integer> spacing) {
-        return IntStream.range(0, reinforcement.size())
-                .mapToObj(i -> 0.25 * Math.PI * reinforcement.get(i) * reinforcement.get(i) * 1000 / spacing.get(i))
+    public List<Double> getDistanceFromCentreOfEachLayerToTheEdge(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover, int transverseBarDiameter) {
+
+        List<Double> distanceFromCentroidOfEachLayerToEdge = new ArrayList<>();
+
+        double distanceForFirstLayer = (additionalReinforcement != null) ?
+                0.5 * Math.max(Collections.max(reinforcement), Collections.max(additionalReinforcement)) + nominalCover + transverseBarDiameter :
+                0.5 * Collections.max(reinforcement) + nominalCover + transverseBarDiameter;
+
+        distanceFromCentroidOfEachLayerToEdge.add(distanceForFirstLayer);
+
+        List<Double> distanceForSubsequentLayers = IntStream.range(0, verticalSpacing.size())
+                .mapToObj(i -> distanceForFirstLayer + verticalSpacing.get(i) + verticalSpacing.stream()
+                        .limit(i)
+                        .reduce(0, Integer::sum))
                 .collect(Collectors.toList());
-    }
 
-    public List<Double> getDistanceFromCentreOfEachLayerToTheEdge(){
+        distanceFromCentroidOfEachLayerToEdge.addAll(distanceForSubsequentLayers);
 
+        return distanceFromCentroidOfEachLayerToEdge;
     }
 
     @Override
