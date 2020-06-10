@@ -14,9 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Primary extends Controller {
     @FXML
@@ -88,7 +86,7 @@ public class Primary extends Controller {
                 bottomReinforcement, additionalBottomReinforcement, spacingBottom, vSpacingBottom);
 
         System.out.println(slabReinforcement.getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, spacingTop));
-        System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToTheEdge(topReinforcement, null, vSpacingTop, 25, 8));
+        System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToEdge(topReinforcement, null, vSpacingTop, 25, 8));
     }
 
     public String getText() {

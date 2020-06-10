@@ -3,7 +3,6 @@ package com.radsoltan.model.reinforcement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -50,22 +49,42 @@ public class SlabReinforcement extends Reinforcement {
 
     @Override
     public double getTotalAreaOfTopReinforcement() {
-        return 0;
+        return getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, topReinforcementSpacing).stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     @Override
     public double getCentroidOfTopReinforcement(int nominalCoverTop, int transverseBarDiameter) {
-        return 0;
+        List<Double> areaOfTopLayers = getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, topReinforcementSpacing);
+        List<Double> firstMomentOfAreaOfTopLayers = getFirstMomentOfAreaReinforcementLayers(areaOfTopLayers, topReinforcement, additionalTopReinforcement, topReinforcementVerticalSpacing, nominalCoverTop, transverseBarDiameter);
+
+        double sumOfAreas = getTotalAreaOfTopReinforcement();
+        double sumOfFirstMomentsOfArea = firstMomentOfAreaOfTopLayers.stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
     @Override
     public double getTotalAreaOfBottomReinforcement() {
-        return 0;
+        return getAreaOfReinforcementLayers(bottomReinforcement, additionalBottomReinforcement, bottomReinforcementSpacing).stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     @Override
     public double getCentroidOfBottomReinforcement(int nominalCoverBottom, int transverseBarDiameter) {
-        return 0;
+        List<Double> areaOfBottomLayers = getAreaOfReinforcementLayers(bottomReinforcement, additionalBottomReinforcement, bottomReinforcementSpacing);
+        List<Double> firstMomentOfAreaOfBottomLayers = getFirstMomentOfAreaReinforcementLayers(areaOfBottomLayers, bottomReinforcement, additionalBottomReinforcement, bottomReinforcementVerticalSpacing, nominalCoverBottom, transverseBarDiameter);
+
+        double sumOfAreas = getTotalAreaOfBottomReinforcement();
+        double sumOfFirstMomentsOfArea = firstMomentOfAreaOfBottomLayers.stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
     public List<Double> getAreaOfReinforcementLayers(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> spacing) {
@@ -87,7 +106,8 @@ public class SlabReinforcement extends Reinforcement {
         }
     }
 
-    public List<Double> getDistanceFromCentreOfEachLayerToTheEdge(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover, int transverseBarDiameter) {
+    // TODO: 10/06/2020 Encapsulation
+    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover, int transverseBarDiameter) {
 
         List<Double> distanceFromCentroidOfEachLayerToEdge = new ArrayList<>();
 
@@ -97,7 +117,8 @@ public class SlabReinforcement extends Reinforcement {
 
         distanceFromCentroidOfEachLayerToEdge.add(distanceForFirstLayer);
 
-        List<Double> distanceForSubsequentLayers = IntStream.range(0, verticalSpacing.size())
+        List<Double> distanceForSubsequentLayers = IntStream
+                .range(0, verticalSpacing.size())
                 .mapToObj(i -> distanceForFirstLayer + verticalSpacing.get(i) + verticalSpacing.stream()
                         .limit(i)
                         .reduce(0, Integer::sum))
@@ -106,6 +127,15 @@ public class SlabReinforcement extends Reinforcement {
         distanceFromCentroidOfEachLayerToEdge.addAll(distanceForSubsequentLayers);
 
         return distanceFromCentroidOfEachLayerToEdge;
+    }
+
+    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover, int transverseBarDiameter) {
+        List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(reinforcement, additionalReinforcement, verticalSpacing, nominalCover, transverseBarDiameter);
+
+        return IntStream
+                .range(0, distanceFromEachLayerToEdge.size())
+                .mapToObj(i -> areaOfReinforcementLayers.get(i) * distanceFromEachLayerToEdge.get(i))
+                .collect(Collectors.toList());
     }
 
     @Override
