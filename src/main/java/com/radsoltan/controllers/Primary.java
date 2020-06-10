@@ -6,6 +6,7 @@ import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.TShape;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
+import com.radsoltan.model.reinforcement.SlabReinforcement;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -67,6 +68,25 @@ public class Primary extends Controller {
         System.out.println(reinforcementSimple.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), links.getShearLinkDiameter()));
 
         System.out.println(geometry.getShape().getSecondMomentOfArea());
+
+        /* Slab Example */
+
+        List<Integer> topReinforcement = List.of(20, 16, 10);
+        List<Integer> additionalTopReinforcement = List.of(20, 12);
+        List<Integer> spacingTop = List.of(400, 400, 200);
+        List<Integer> vSpacingTop = List.of(50, 50);
+
+        List<Integer> bottomReinforcement = List.of(20, 8, 8);
+        List<Integer> additionalBottomReinforcement = List.of(20, 12);
+        List<Integer> spacingBottom = List.of(300, 300, 150);
+        List<Integer> vSpacingBottom = List.of(50, 50);
+
+        SlabReinforcement slabReinforcement = new SlabReinforcement(500,
+                topReinforcement, additionalTopReinforcement, spacingTop, vSpacingTop,
+                bottomReinforcement, additionalBottomReinforcement, spacingBottom, vSpacingBottom);
+
+        System.out.println(slabReinforcement.getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, spacingTop));
+        System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToEdge(topReinforcement, null, vSpacingTop, 25, 8));
     }
 
     public String getText() {
@@ -80,7 +100,6 @@ public class Primary extends Controller {
     public void setText(String text) {
         this.text.set(text);
     }
-
 
     public void test(MouseEvent mouseEvent) throws InterruptedException {
         Concrete concrete = Concrete.C12_15;

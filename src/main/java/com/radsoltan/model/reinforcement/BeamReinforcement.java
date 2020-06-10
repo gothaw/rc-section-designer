@@ -1,16 +1,14 @@
 package com.radsoltan.model.reinforcement;
 
-import com.radsoltan.util.Utility;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BeamReinforcement extends Reinforcement {
 
-    private List<List<Integer>> topReinforcement;
+    private final List<List<Integer>> topReinforcement;
     private List<Integer> topReinforcementVerticalSpacing;
-    private List<List<Integer>> bottomReinforcement;
+    private final List<List<Integer>> bottomReinforcement;
     private List<Integer> bottomReinforcementVerticalSpacing;
     private final ShearLinks shearLinks;
     int numberOfBarsInSlab;
@@ -41,15 +39,7 @@ public class BeamReinforcement extends Reinforcement {
                              List<List<Integer>> bottomReinforcement,
                              List<Integer> bottomReinforcementVerticalSpacing,
                              ShearLinks shearLinks) {
-
-        this.fy = fy;
-        this.topReinforcement = topReinforcement;
-        this.topReinforcementVerticalSpacing = topReinforcementVerticalSpacing;
-        this.bottomReinforcement = bottomReinforcement;
-        this.bottomReinforcementVerticalSpacing = bottomReinforcementVerticalSpacing;
-        this.shearLinks = shearLinks;
-        this.numberOfBarsInSlab = 0;
-        this.isReinforcementInSlabSymmetrical = false;
+        this(fy, topReinforcement, topReinforcementVerticalSpacing, bottomReinforcement, bottomReinforcementVerticalSpacing, shearLinks, 0, false);
     }
 
     public BeamReinforcement(int fy, List<Integer> topReinforcementRow, List<Integer> bottomReinforcementRow, ShearLinks shearLinks) {
@@ -71,8 +61,10 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public double getTotalAreaOfTopReinforcement() {
-        List<List<Double>> areaOfTopBars = getAreaOfReinforcementBars(topReinforcement);
-        return areaOfTopBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        return getAreaOfReinforcementBars(topReinforcement).stream()
+                .flatMap(Collection::stream)
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     @Override
@@ -80,16 +72,21 @@ public class BeamReinforcement extends Reinforcement {
         List<List<Double>> areaOfTopBars = getAreaOfReinforcementBars(topReinforcement);
         List<List<Double>> firstMomentOfAreaForTopBars = getFirstMomentOfAreaForReinforcementBars(areaOfTopBars, topReinforcement, topReinforcementVerticalSpacing, nominalCoverTop, shearLinkDiameter, true);
 
-        double sumOfTopBarsArea = getTotalAreaOfTopReinforcement();
-        double sumOfTopBarsFirstMomentOfArea = firstMomentOfAreaForTopBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        double sumOfAreas = getTotalAreaOfTopReinforcement();
+        double sumOfFirstMomentsOfArea = firstMomentOfAreaForTopBars.stream()
+                .flatMap(Collection::stream)
+                .mapToDouble(Double::doubleValue)
+                .sum();
 
-        return sumOfTopBarsFirstMomentOfArea / sumOfTopBarsArea;
+        return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
     @Override
     public double getTotalAreaOfBottomReinforcement() {
-        List<List<Double>> areaOfBottomBars = getAreaOfReinforcementBars(bottomReinforcement);
-        return areaOfBottomBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        return getAreaOfReinforcementBars(bottomReinforcement).stream()
+                .flatMap(Collection::stream)
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     @Override
@@ -97,10 +94,13 @@ public class BeamReinforcement extends Reinforcement {
         List<List<Double>> areaOfBottomBars = getAreaOfReinforcementBars(bottomReinforcement);
         List<List<Double>> firstMomentOfAreaForBottomBars = getFirstMomentOfAreaForReinforcementBars(areaOfBottomBars, bottomReinforcement, bottomReinforcementVerticalSpacing, nominalCoverBottom, shearLinkDiameter, false);
 
-        double sumOfBottomBarsArea = getTotalAreaOfBottomReinforcement();
-        double sumOfBottomBarsFirstMomentOfArea = firstMomentOfAreaForBottomBars.stream().flatMap(Collection::stream).mapToDouble(Double::doubleValue).sum();
+        double sumOfAreas = getTotalAreaOfBottomReinforcement();
+        double sumOfFirstMomentsOfArea = firstMomentOfAreaForBottomBars.stream()
+                .flatMap(Collection::stream)
+                .mapToDouble(Double::doubleValue)
+                .sum();
 
-        return sumOfBottomBarsFirstMomentOfArea / sumOfBottomBarsArea;
+        return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
     public List<List<Double>> getAreaOfReinforcementBars(List<List<Integer>> reinforcement) {
@@ -111,16 +111,17 @@ public class BeamReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-    public List<List<Double>> getDistanceFromCentreOfEachBarToTheEdge(List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
+    // TODO: 10/06/2020 Encapsulation
+    public List<List<Double>> getDistanceFromCentreOfEachBarToEdge(List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
 
-        List<List<Double>> distanceFromCentroidOfEachBarToTheEdge = new ArrayList<>();
+        List<List<Double>> distanceFromCentroidOfEachBarToEdge = new ArrayList<>();
 
         // Distance For First Row
         List<Double> distanceForBarsInFirstRow = reinforcement.get(0).stream()
                 .map(diameter -> diameter * 0.5 + nominalCover + shearLinkDiameter)
                 .collect(Collectors.toList());
 
-        distanceFromCentroidOfEachBarToTheEdge.add(distanceForBarsInFirstRow);
+        distanceFromCentroidOfEachBarToEdge.add(distanceForBarsInFirstRow);
 
         // Distance For Subsequent Rows
         double largestDistanceToFirstRowBar = getMaxDistanceFromFirstRowRebarToEdgeExcludingSlabRebar(distanceForBarsInFirstRow, isTopReinforcement);
@@ -142,9 +143,9 @@ public class BeamReinforcement extends Reinforcement {
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
 
-        distanceFromCentroidOfEachBarToTheEdge.addAll(distanceForBarsInSubsequentRows);
+        distanceFromCentroidOfEachBarToEdge.addAll(distanceForBarsInSubsequentRows);
 
-        return distanceFromCentroidOfEachBarToTheEdge;
+        return distanceFromCentroidOfEachBarToEdge;
     }
 
     private double getMaxDistanceFromFirstRowRebarToEdgeExcludingSlabRebar(List<Double> distanceForBarsInFirstRow, boolean isTopReinforcement) {
@@ -155,15 +156,15 @@ public class BeamReinforcement extends Reinforcement {
                     .mapToObj(distanceForBarsInFirstRow::get)
                     .collect(Collectors.toList());
 
-            return Utility.findMaxValueInList(distanceForBarsInFirstRowExcludingSlab);
+            return Collections.max(distanceForBarsInFirstRowExcludingSlab);
         } else {
-            return Utility.findMaxValueInList(distanceForBarsInFirstRow);
+            return Collections.max(distanceForBarsInFirstRow);
         }
     }
 
     public List<List<Double>> getFirstMomentOfAreaForReinforcementBars(List<List<Double>> areaOfReinforcementBars, List<List<Integer>> reinforcement, List<Integer> verticalBarSpacing, int nominalCover, int shearLinkDiameter, boolean isTopReinforcement) {
 
-        List<List<Double>> distanceFromCentreOfEachBarToEdge = getDistanceFromCentreOfEachBarToTheEdge(reinforcement, verticalBarSpacing, nominalCover, shearLinkDiameter, isTopReinforcement);
+        List<List<Double>> distanceFromCentreOfEachBarToEdge = getDistanceFromCentreOfEachBarToEdge(reinforcement, verticalBarSpacing, nominalCover, shearLinkDiameter, isTopReinforcement);
 
         return IntStream
                 .range(0, distanceFromCentreOfEachBarToEdge.size())
