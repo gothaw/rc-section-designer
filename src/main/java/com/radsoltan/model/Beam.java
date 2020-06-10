@@ -3,9 +3,9 @@ package com.radsoltan.model;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
+import com.radsoltan.util.Constants;
 
 public class Beam implements Flexure, Shear {
-    /* Constructor Parameters */
     private final double UlsMoment;
     private final double UlsShear;
     private final double SlsMoment;
@@ -13,15 +13,14 @@ public class Beam implements Flexure, Shear {
     private final BeamReinforcement reinforcement;
     private final ShearLinks shearLinks;
     private final DesignParameters designParameters;
+    private final double effectiveDepth;
+    private double leverArm;
     /* Material Properties */
     private final int fck;
     private final double fcd;
     private final int fy;
     private final double fyd;
     private final double fctm;
-    /* Design Parameters */
-    private final double effectiveDepth;
-    private double leverArm;
     /* Provided Reinforcement */
     private final double providedTensileReinforcement;
     private final double providedCompressiveReinforcement;
@@ -48,7 +47,7 @@ public class Beam implements Flexure, Shear {
         this.fyd = reinforcement.getDesignYieldStrength(designParameters.getPartialFactorOfSafetyForSteel());
         this.providedCompressiveReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfTopReinforcement() : reinforcement.getTotalAreaOfBottomReinforcement();
         this.providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
-        this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
+        this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters);
     }
 
     @Override
@@ -71,14 +70,14 @@ public class Beam implements Flexure, Shear {
                         this.requiredTensileReinforcement = requiredReinforcementForFlangeResistance + (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fyd * leverArm);
                         this.bendingCapacity = (providedTensileReinforcement - requiredReinforcementForFlangeResistance) * fyd * leverArm * Math.pow(10, -6) + flangeCapacity;
                     } else {
-                        throw new IllegalArgumentException("Compressive force greater than the capacity. Redesign section.");
+                        throw new IllegalArgumentException(Constants.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE_MESSAGE);
                     }
                 }
             } else {
                 calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, widthInCompressiveZone, minimumReinforcement);
             }
         } else {
-            throw new IllegalArgumentException("Concrete class greater than C50/60. Outside of scope of this software.");
+            throw new IllegalArgumentException(Constants.WRONG_CONCRETE_CLASS_MESSAGE);
         }
     }
 
@@ -88,7 +87,7 @@ public class Beam implements Flexure, Shear {
             this.bendingCapacity = providedTensileReinforcement * leverArm * fyd * Math.pow(10, -6);
         } else {
             double depthOfPlasticNeutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
-            double centroidOfCompressionReinforcement = getCentroidOfCompressionReinforcement(UlsMoment, reinforcement, designParameters, shearLinks.getShearLinkDiameter());
+            double centroidOfCompressionReinforcement = getCentroidOfCompressionReinforcement(UlsMoment, reinforcement, designParameters);
             double fsc = Math.min(700 * (depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) / depthOfPlasticNeutralAxis, fyd);
             this.requiredCompressionReinforcement = (kFactor - kDashFactor) * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fsc * (effectiveDepth - centroidOfCompressionReinforcement));
             this.requiredTensileReinforcement = Math.max(kDashFactor * fck * widthInCompressionZone * effectiveDepth * effectiveDepth / (fyd * leverArm) + requiredCompressionReinforcement * fsc / fyd, minimumReinforcement);

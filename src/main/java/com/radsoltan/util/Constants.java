@@ -8,4 +8,6 @@ public class Constants {
     public static final int MAX_WINDOW_WIDTH = 750;
     public static final int MIN_WINDOW_HEIGHT = 300;
     public static final int MAX_WINDOW_HEIGHT = 710;
+    public static final String WRONG_CONCRETE_CLASS_MESSAGE = "Concrete class greater than C50/60. Outside of scope of this software.";
+    public static final String REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE_MESSAGE = "Compressive force greater than the capacity. Redesign section.";
 }

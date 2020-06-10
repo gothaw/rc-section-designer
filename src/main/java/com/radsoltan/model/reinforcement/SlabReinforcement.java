@@ -8,14 +8,15 @@ import java.util.stream.IntStream;
 
 public class SlabReinforcement extends Reinforcement {
 
-    private List<Integer> topReinforcement;
-    private List<Integer> additionalTopReinforcement;
-    private List<Integer> topReinforcementSpacing;
-    private List<Integer> topReinforcementVerticalSpacing;
-    private List<Integer> bottomReinforcement;
-    private List<Integer> additionalBottomReinforcement;
-    private List<Integer> bottomReinforcementSpacing;
-    private List<Integer> bottomReinforcementVerticalSpacing;
+    private final int transverseBarDiameter;
+    private final List<Integer> topReinforcement;
+    private final List<Integer> additionalTopReinforcement;
+    private final List<Integer> topReinforcementSpacing;
+    private final List<Integer> topReinforcementVerticalSpacing;
+    private final List<Integer> bottomReinforcement;
+    private final List<Integer> additionalBottomReinforcement;
+    private final List<Integer> bottomReinforcementSpacing;
+    private final List<Integer> bottomReinforcementVerticalSpacing;
 
     public SlabReinforcement(int fy,
                              List<Integer> topReinforcement,
@@ -25,7 +26,8 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> bottomReinforcement,
                              List<Integer> additionalBottomReinforcement,
                              List<Integer> bottomReinforcementSpacing,
-                             List<Integer> bottomReinforcementVerticalSpacing) {
+                             List<Integer> bottomReinforcementVerticalSpacing,
+                             int transverseBarDiameter) {
         this.topReinforcement = topReinforcement;
         this.additionalTopReinforcement = additionalTopReinforcement;
         this.topReinforcementSpacing = topReinforcementSpacing;
@@ -34,6 +36,7 @@ public class SlabReinforcement extends Reinforcement {
         this.additionalBottomReinforcement = additionalBottomReinforcement;
         this.bottomReinforcementSpacing = bottomReinforcementSpacing;
         this.bottomReinforcementVerticalSpacing = bottomReinforcementVerticalSpacing;
+        this.transverseBarDiameter = transverseBarDiameter;
     }
 
     public SlabReinforcement(int fy,
@@ -42,9 +45,10 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> topReinforcementVerticalSpacing,
                              List<Integer> bottomReinforcement,
                              List<Integer> bottomReinforcementSpacing,
-                             List<Integer> bottomReinforcementVerticalSpacing) {
+                             List<Integer> bottomReinforcementVerticalSpacing,
+                             int transverseBarDiameter) {
         this(fy, topReinforcement, topReinforcementSpacing, topReinforcementVerticalSpacing, null,
-                bottomReinforcement, bottomReinforcementSpacing, bottomReinforcementVerticalSpacing, null);
+                bottomReinforcement, bottomReinforcementSpacing, bottomReinforcementVerticalSpacing, null, transverseBarDiameter);
     }
 
     @Override
@@ -55,9 +59,9 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     @Override
-    public double getCentroidOfTopReinforcement(int nominalCoverTop, int transverseBarDiameter) {
+    public double getCentroidOfTopReinforcement(int nominalCoverTop) {
         List<Double> areaOfTopLayers = getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, topReinforcementSpacing);
-        List<Double> firstMomentOfAreaOfTopLayers = getFirstMomentOfAreaReinforcementLayers(areaOfTopLayers, topReinforcement, additionalTopReinforcement, topReinforcementVerticalSpacing, nominalCoverTop, transverseBarDiameter);
+        List<Double> firstMomentOfAreaOfTopLayers = getFirstMomentOfAreaReinforcementLayers(areaOfTopLayers, topReinforcement, additionalTopReinforcement, topReinforcementVerticalSpacing, nominalCoverTop);
 
         double sumOfAreas = getTotalAreaOfTopReinforcement();
         double sumOfFirstMomentsOfArea = firstMomentOfAreaOfTopLayers.stream()
@@ -75,9 +79,9 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     @Override
-    public double getCentroidOfBottomReinforcement(int nominalCoverBottom, int transverseBarDiameter) {
+    public double getCentroidOfBottomReinforcement(int nominalCoverBottom) {
         List<Double> areaOfBottomLayers = getAreaOfReinforcementLayers(bottomReinforcement, additionalBottomReinforcement, bottomReinforcementSpacing);
-        List<Double> firstMomentOfAreaOfBottomLayers = getFirstMomentOfAreaReinforcementLayers(areaOfBottomLayers, bottomReinforcement, additionalBottomReinforcement, bottomReinforcementVerticalSpacing, nominalCoverBottom, transverseBarDiameter);
+        List<Double> firstMomentOfAreaOfBottomLayers = getFirstMomentOfAreaReinforcementLayers(areaOfBottomLayers, bottomReinforcement, additionalBottomReinforcement, bottomReinforcementVerticalSpacing, nominalCoverBottom);
 
         double sumOfAreas = getTotalAreaOfBottomReinforcement();
         double sumOfFirstMomentsOfArea = firstMomentOfAreaOfBottomLayers.stream()
@@ -107,7 +111,7 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     // TODO: 10/06/2020 Encapsulation
-    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover, int transverseBarDiameter) {
+    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover) {
 
         List<Double> distanceFromCentroidOfEachLayerToEdge = new ArrayList<>();
 
@@ -129,8 +133,8 @@ public class SlabReinforcement extends Reinforcement {
         return distanceFromCentroidOfEachLayerToEdge;
     }
 
-    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover, int transverseBarDiameter) {
-        List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(reinforcement, additionalReinforcement, verticalSpacing, nominalCover, transverseBarDiameter);
+    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover) {
+        List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(reinforcement, additionalReinforcement, verticalSpacing, nominalCover);
 
         return IntStream
                 .range(0, distanceFromEachLayerToEdge.size())
