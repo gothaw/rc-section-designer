@@ -54,6 +54,14 @@ public class Geometry {
         return shape.getDepth();
     }
 
+    public int getWidth() {
+        return shape.getWidth();
+    }
+
+    public double getArea() {
+        return shape.getArea();
+    }
+
     public int getWidthInCompressionZone(double UlsMoment) {
         return shape.getWidthInCompressionZone(UlsMoment);
     }
@@ -83,13 +91,6 @@ public class Geometry {
             return flangedShape.isPlasticNeutralAxisInFlange(UlsMoment, effectiveDepth, leverArm);
         }
         return false;
-    }
-
-    public int getWebThickness() {
-        if(isFlangedSection()) {
-            return flangedShape.getWebThickness();
-        }
-        return 0;
     }
 
     public int getFlangeThickness() {

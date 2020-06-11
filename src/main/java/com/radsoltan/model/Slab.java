@@ -11,17 +11,16 @@ public class Slab implements Flexure {
     private final Geometry geometry;
     private final SlabReinforcement reinforcement;
     private final DesignParameters designParameters;
-    private double effectiveDepth;
+    private final double effectiveDepth;
     private double leverArm;
     /* Material Properties */
-    private int fck;
-    private double fcd;
-    private int fy;
-    private double fyd;
-    private double fctm;
+    private final int fck;
+    private final double fcd;
+    private final int fy;
+    private final double fyd;
+    private final double fctm;
     /* Provided Reinforcement */
-    private double providedTensileReinforcement;
-    private double providedCompressiveReinforcement;
+    private final double providedTensileReinforcement;
     /* Results */
     private double bendingCapacity;
     private double requiredTensileReinforcement;
@@ -40,7 +39,6 @@ public class Slab implements Flexure {
         this.fctm = concrete.getMeanAxialTensileStrength();
         this.fy = reinforcement.getYieldStrength();
         this.fyd = reinforcement.getDesignYieldStrength(designParameters.getPartialFactorOfSafetyForSteel());
-        this.providedCompressiveReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfTopReinforcement() : reinforcement.getTotalAreaOfBottomReinforcement();
         this.providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
         this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters);
     }
@@ -64,4 +62,15 @@ public class Slab implements Flexure {
         }
     }
 
+    public double getProvidedTensileReinforcement() {
+        return providedTensileReinforcement;
+    }
+
+    public double getBendingCapacity() {
+        return bendingCapacity;
+    }
+
+    public double getRequiredTensileReinforcement() {
+        return requiredTensileReinforcement;
+    }
 }

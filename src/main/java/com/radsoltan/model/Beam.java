@@ -5,7 +5,7 @@ import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
 import com.radsoltan.util.Constants;
 
-public class Beam implements Flexure, Shear {
+public class Beam implements Flexure, Shear, Cracking {
     private final double UlsMoment;
     private final double UlsShear;
     private final double SlsMoment;
@@ -24,10 +24,13 @@ public class Beam implements Flexure, Shear {
     /* Provided Reinforcement */
     private final double providedTensileReinforcement;
     private final double providedCompressiveReinforcement;
-    /* Results */
+    /* Results Bending */
     private double bendingCapacity;
     private double requiredTensileReinforcement;
     private double requiredCompressionReinforcement;
+    private final double maximumReinforcement;
+    /* Results Shear */
+    private final double maximumLinksSpacing;
 
     public Beam(double UlsMoment, double UlsShear, double SlsMoment,
                 Geometry geometry, Concrete concrete,
@@ -48,6 +51,8 @@ public class Beam implements Flexure, Shear {
         this.providedCompressiveReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfTopReinforcement() : reinforcement.getTotalAreaOfBottomReinforcement();
         this.providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
         this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters);
+        this.maximumLinksSpacing = getMaximumSpacingForShearLinks(effectiveDepth);
+        this.maximumReinforcement = getMaximumReinforcement(geometry.getArea() - providedTensileReinforcement - providedCompressiveReinforcement);
     }
 
     @Override
@@ -63,8 +68,8 @@ public class Beam implements Flexure, Shear {
                     calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, widthInCompressiveZone, minimumReinforcement);
                 } else {
                     double flangeThickness = geometry.getFlangeThickness();
-                    double flangeCapacity = 0.57 * fck * (geometry.getFlangeWidth() - geometry.getWebThickness()) * flangeThickness * (effectiveDepth - 0.5 * flangeThickness) * Math.pow(10, -6);
-                    double flangeKFactor = (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fck * geometry.getWebThickness() * effectiveDepth * effectiveDepth);
+                    double flangeCapacity = 0.57 * fck * (geometry.getFlangeWidth() - geometry.getWidth()) * flangeThickness * (effectiveDepth - 0.5 * flangeThickness) * Math.pow(10, -6);
+                    double flangeKFactor = (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fck * geometry.getWidth() * effectiveDepth * effectiveDepth);
                     if (flangeKFactor <= kDashFactor) {
                         double requiredReinforcementForFlangeResistance = flangeCapacity * Math.pow(10, 6) / (fyd * (effectiveDepth - 0.5 * flangeThickness));
                         this.requiredTensileReinforcement = requiredReinforcementForFlangeResistance + (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fyd * leverArm);
@@ -97,7 +102,35 @@ public class Beam implements Flexure, Shear {
 
     @Override
     public void calculateShearCapacity() {
-        
+        if (fck <= 50) {
+            if (leverArm == 0) {
+                leverArm = 0.9 * effectiveDepth;
+            }
+            double width = geometry.getWidth();
+            double shearStress = UlsShear * 1000 / (width * leverArm);
+            double reinforcementRatio = providedTensileReinforcement / (width * effectiveDepth);
+            double CRdc = 0.18 / designParameters.getPartialFactorOfSafetyForConcrete();
+            double k = Math.min(1 + Math.sqrt(200 / effectiveDepth), 2.0);
+            double minimumConcreteShearResistance = 0.035 * Math.pow(k, 1.5) * Math.pow(fck, 0.5);
+            double concreteShearResistance = Math.max(CRdc * k * Math.pow(100 * reinforcementRatio * fck, 0.333), minimumConcreteShearResistance) * width * effectiveDepth * Math.pow(10, -3);
+            if (UlsShear > concreteShearResistance) {
+                double strengthReductionFactor = 0.6 * (1 - 0.004 * fck);
+                double coefficientForStressState = 1.0;
+                double maxAngleOfCompressiveStrut = 45;
+                if(UlsShear > 0){
+
+                } else {
+
+                }
+            }
+        } else {
+            throw new IllegalArgumentException(Constants.WRONG_CONCRETE_CLASS_MESSAGE);
+        }
+    }
+
+    @Override
+    public void calculateCracks() {
+
     }
 
     public double getProvidedTensileReinforcement() {
@@ -118,5 +151,13 @@ public class Beam implements Flexure, Shear {
 
     public double getRequiredCompressionReinforcement() {
         return requiredCompressionReinforcement;
+    }
+
+    public double getMaximumReinforcement() {
+        return maximumReinforcement;
+    }
+
+    public double getMaximumLinksSpacing() {
+        return maximumLinksSpacing;
     }
 }

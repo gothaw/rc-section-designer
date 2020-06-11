@@ -6,8 +6,6 @@ public interface Flanged {
 
     int getFlangeThickness();
 
-    int getWebThickness();
-
     boolean isElasticNeutralAxisInFlange();
 
     boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double leverArm);
