@@ -91,6 +91,11 @@ public class TShape extends Shape implements Flanged {
     }
 
     @Override
+    public int getWidth() {
+        return webWidth;
+    }
+
+    @Override
     public void draw() {
         // TODO: 18/05/2020
     }
@@ -103,11 +108,6 @@ public class TShape extends Shape implements Flanged {
     @Override
     public int getFlangeThickness() {
         return flangeThickness;
-    }
-
-    @Override
-    public int getWebThickness() {
-        return webWidth;
     }
 
     @Override

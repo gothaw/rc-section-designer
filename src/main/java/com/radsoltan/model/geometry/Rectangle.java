@@ -10,13 +10,14 @@ public class Rectangle extends Shape {
         this.depth = depth;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
     @Override
     public int getDepth() {
         return depth;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
     }
 
     @Override

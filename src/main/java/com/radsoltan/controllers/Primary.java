@@ -64,8 +64,8 @@ public class Primary extends Controller {
         beam.calculateBendingCapacity();
 
         List<List<Double>> areaOfReinforcement = reinforcement.getAreaOfReinforcementBars(reinforcementTop);
-        System.out.println(reinforcementSimple.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), links.getShearLinkDiameter()));
-        System.out.println(reinforcementSimple.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), links.getShearLinkDiameter()));
+        System.out.println(reinforcementSimple.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop()));
+        System.out.println(reinforcementSimple.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom()));
 
         System.out.println(geometry.getShape().getSecondMomentOfArea());
 
@@ -83,10 +83,10 @@ public class Primary extends Controller {
 
         SlabReinforcement slabReinforcement = new SlabReinforcement(500,
                 topReinforcement, additionalTopReinforcement, spacingTop, vSpacingTop,
-                bottomReinforcement, additionalBottomReinforcement, spacingBottom, vSpacingBottom);
+                bottomReinforcement, additionalBottomReinforcement, spacingBottom, vSpacingBottom, 10);
 
         System.out.println(slabReinforcement.getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, spacingTop));
-        System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToEdge(topReinforcement, null, vSpacingTop, 25, 8));
+        System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToEdge(topReinforcement, null, vSpacingTop, 25));
     }
 
     public String getText() {

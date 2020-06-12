@@ -15,10 +15,10 @@ public interface Flexure {
         return (isRecommendedRatio) ? 0.168 : 0.6 * redistributionRatio - 0.18 * redistributionRatio * redistributionRatio - 0.21;
     }
 
-    default double getEffectiveDepth(int depth, double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters, int transverseBarDiameter) {
+    default double getEffectiveDepth(int depth, double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters) {
         return (UlsMoment >= 0) ?
-                depth - reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom(), transverseBarDiameter) :
-                depth - reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop(), transverseBarDiameter);
+                depth - reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom()) :
+                depth - reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop());
     }
 
     default double getLeverArm(double effectiveDepth, double kFactor, double kDashFactor) {
@@ -44,9 +44,9 @@ public interface Flexure {
         return (effectiveDepth - leverArm) / 0.4;
     }
 
-    default double getCentroidOfCompressionReinforcement(double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters, int transverseBarDiameter) {
+    default double getCentroidOfCompressionReinforcement(double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters) {
         return (UlsMoment >= 0) ?
-                reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverBottom(), transverseBarDiameter) :
-                reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverTop(), transverseBarDiameter);
+                reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverBottom()) :
+                reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverTop());
     }
 }

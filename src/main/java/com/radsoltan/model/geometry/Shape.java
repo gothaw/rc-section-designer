@@ -6,6 +6,8 @@ public abstract class Shape implements Drawable {
 
     public abstract int getDepth();
 
+    public abstract int getWidth();
+
     public abstract double getArea();
 
     public abstract double getCentroid();
