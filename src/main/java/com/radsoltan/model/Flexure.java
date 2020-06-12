@@ -1,7 +1,6 @@
 package com.radsoltan.model;
 
 import com.radsoltan.model.geometry.Geometry;
-import com.radsoltan.model.geometry.Shape;
 import com.radsoltan.model.reinforcement.Reinforcement;
 
 public interface Flexure {

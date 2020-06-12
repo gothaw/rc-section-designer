@@ -102,8 +102,7 @@ public class Primary extends Controller {
     }
 
     public void test(MouseEvent mouseEvent) throws InterruptedException {
-        Concrete concrete = Concrete.C12_15;
-        showAlertBox(concrete.toString(), AlertKind.ERROR, 300, 60);
+
     }
 
 }
