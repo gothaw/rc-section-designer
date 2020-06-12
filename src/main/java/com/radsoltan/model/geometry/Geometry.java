@@ -30,22 +30,6 @@ public class Geometry {
         this.shape = (Shape) slabStrip;
     }
 
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
-
-    public LShape getLShape() {
-        return lShape;
-    }
-
-    public TShape getTShape() {
-        return tShape;
-    }
-
-    public SlabStrip getSlabStrip() {
-        return slabStrip;
-    }
-
     public Shape getShape() {
         return shape;
     }
