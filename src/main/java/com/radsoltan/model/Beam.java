@@ -24,13 +24,16 @@ public class Beam implements Flexure, Shear, Cracking {
     /* Provided Reinforcement */
     private final double providedTensileReinforcement;
     private final double providedCompressiveReinforcement;
+    private final double providedShearReinforcement;
     /* Results Bending */
     private double bendingCapacity;
     private double requiredTensileReinforcement;
     private double requiredCompressionReinforcement;
     private final double maximumReinforcement;
     /* Results Shear */
+    private double shearCapacity;
     private final double maximumLinksSpacing;
+    private double requiredShearReinforcement;
 
     public Beam(double UlsMoment, double UlsShear, double SlsMoment,
                 Geometry geometry, Concrete concrete,
@@ -53,6 +56,7 @@ public class Beam implements Flexure, Shear, Cracking {
         this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters);
         this.maximumLinksSpacing = getMaximumSpacingForShearLinks(effectiveDepth);
         this.maximumReinforcement = getMaximumReinforcement(geometry.getArea() - providedTensileReinforcement - providedCompressiveReinforcement);
+        this.providedShearReinforcement = shearLinks.getArea();
     }
 
     @Override
@@ -113,15 +117,20 @@ public class Beam implements Flexure, Shear, Cracking {
             double k = Math.min(1 + Math.sqrt(200 / effectiveDepth), 2.0);
             double minimumConcreteShearResistance = 0.035 * Math.pow(k, 1.5) * Math.pow(fck, 0.5);
             double concreteShearResistance = Math.max(CRdc * k * Math.pow(100 * reinforcementRatio * fck, 0.333), minimumConcreteShearResistance) * width * effectiveDepth * Math.pow(10, -3);
+            double yieldStrength = shearLinks.getYieldStrength();
             if (UlsShear > concreteShearResistance) {
                 double strengthReductionFactor = 0.6 * (1 - 0.004 * fck);
                 double coefficientForStressState = 1.0;
-                double maxAngleOfCompressiveStrut = 45;
-                if(UlsShear > 0){
-
+                double maxAngleOfCompressiveStrut = Math.toRadians(45);
+                double maxShearResistance = coefficientForStressState * width * leverArm * strengthReductionFactor * fcd / (Math.tan(maxAngleOfCompressiveStrut) + 1 / Math.tan(maxAngleOfCompressiveStrut));
+                if (UlsShear <= maxShearResistance) {
+                    double angleOfCompressiveStrut = Math.toRadians(Math.max(0.5 * Math.asin(shearStress / (0.2 * fck * (1 - 0.004 * fck))), 21.8));
+                    requiredShearReinforcement = Math.max(shearStress * width / (yieldStrength / Math.tan(angleOfCompressiveStrut)), 0.08 * width * Math.pow(fck, 0.5) * yieldStrength);
                 } else {
-
+                    throw new IllegalArgumentException(Constants.REDESIGN_SECTION_DUE_TO_HIGH_SHEAR);
                 }
+            } else {
+                requiredShearReinforcement = 0.08 * width * Math.pow(fck, 0.5) * yieldStrength;
             }
         } else {
             throw new IllegalArgumentException(Constants.WRONG_CONCRETE_CLASS_MESSAGE);
@@ -155,6 +164,14 @@ public class Beam implements Flexure, Shear, Cracking {
 
     public double getMaximumReinforcement() {
         return maximumReinforcement;
+    }
+
+    public double getRequiredShearReinforcement() {
+        return requiredShearReinforcement;
+    }
+
+    public double getProvidedShearReinforcement() {
+        return providedShearReinforcement;
     }
 
     public double getMaximumLinksSpacing() {

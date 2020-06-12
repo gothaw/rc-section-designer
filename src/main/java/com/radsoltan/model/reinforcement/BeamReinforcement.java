@@ -118,7 +118,7 @@ public class BeamReinforcement extends Reinforcement {
 
         // Distance For First Row
         List<Double> distanceForBarsInFirstRow = reinforcement.get(0).stream()
-                .map(diameter -> diameter * 0.5 + nominalCover + shearLinks.getShearLinkDiameter())
+                .map(diameter -> diameter * 0.5 + nominalCover + shearLinks.getDiameter())
                 .collect(Collectors.toList());
 
         distanceFromCentroidOfEachBarToEdge.add(distanceForBarsInFirstRow);
