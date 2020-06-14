@@ -3,7 +3,7 @@ package com.radsoltan.model;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.Constants;
+import com.radsoltan.util.Messages;
 
 public class Slab implements Flexure {
     private final double UlsMoment;
@@ -55,10 +55,10 @@ public class Slab implements Flexure {
                 this.requiredTensileReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
                 this.bendingCapacity = providedTensileReinforcement * leverArm * fyd * Math.pow(10, -6);
             } else {
-                throw new IllegalArgumentException(Constants.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE_MESSAGE);
+                throw new IllegalArgumentException(Messages.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE);
             }
         } else {
-            throw new IllegalArgumentException(Constants.WRONG_CONCRETE_CLASS_MESSAGE);
+            throw new IllegalArgumentException(Messages.WRONG_CONCRETE_CLASS);
         }
     }
 
