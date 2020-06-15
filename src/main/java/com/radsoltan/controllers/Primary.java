@@ -2,7 +2,11 @@ package com.radsoltan.controllers;
 
 import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
+import com.radsoltan.components.PositiveIntegerField;
+import com.radsoltan.model.Project;
 import com.radsoltan.util.Messages;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,7 +25,12 @@ public class Primary extends Controller {
     @FXML
     public NumericalTextField shear;
     @FXML
+    public PositiveIntegerField projectNumber;
+    @FXML
+    public TextField projectName;
+    @FXML
     private VBox container;
+    private final Project project;
 
     public Primary() {
         /*int nominalCover = 25;
@@ -75,11 +84,21 @@ public class Primary extends Controller {
 
         System.out.println(slabReinforcement.getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, spacingTop));
         System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToEdge(topReinforcement, null, vSpacingTop, 25));*/
+        project = Project.getInstance();
+
+        System.out.println(project.getName());
+    }
+
+    @FXML
+    public void initialize(){
+        projectName.setText(project.getName());
+        elementType.getSelectionModel().select(1);
     }
 
     public void calculate(ActionEvent actionEvent) {
         if (elementType.getValue() != null) {
             System.out.println("Calculate");
+            project.setName(projectName.getText());
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
@@ -102,11 +121,11 @@ public class Primary extends Controller {
     }
 
     public void setGeometry(ActionEvent actionEvent) throws IOException {
-        if (elementType.getValue() != null) {
+        //if (elementType.getValue() != null) {
             App.setRoot("geometry");
-        } else {
-            showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
-        }
+        //} else {
+         //   showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
+       //}
     }
 
     public void setElementType(ActionEvent actionEvent) {

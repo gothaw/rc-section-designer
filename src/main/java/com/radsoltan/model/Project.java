@@ -7,13 +7,16 @@ public class Project {
     private String author;
     private Beam beam;
     private Slab slab;
+    private static Project project;
 
-    public Project(Beam beam) {
-        this.beam = beam;
+    private Project() {
     }
 
-    public Project(Slab slab) {
-        this.slab = slab;
+    public static Project getInstance() {
+        if (project == null) {
+            project = new Project();
+        }
+        return project;
     }
 
     public Beam getBeam() {
@@ -24,7 +27,15 @@ public class Project {
         return slab;
     }
 
-    public void calculate(){
+    public void calculate() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

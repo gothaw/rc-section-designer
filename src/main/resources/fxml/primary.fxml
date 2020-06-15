@@ -27,11 +27,11 @@
                 <VBox styleClass="field-wrapper, border-separator">
                     <HBox>
                         <Label styleClass="field-label" text="Project:" />
-                        <TextField styleClass="project-details-field"/>
+                        <TextField fx:id="projectName" styleClass="project-details-field"/>
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Project Number:" />
-                        <PositiveIntegerField styleClass="project-details-field" />
+                        <PositiveIntegerField fx:id="projectNumber" styleClass="project-details-field" />
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Description:" />

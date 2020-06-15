@@ -47,6 +47,7 @@
 .calculate-btn-wrapper {
     -fx-padding: 15px 0 0 0;
     -fx-alignment: center-right;
+    -fx-spacing: 10;
 }
 .calculate-btn-wrapper .button {
     -fx-font-size: 16px;

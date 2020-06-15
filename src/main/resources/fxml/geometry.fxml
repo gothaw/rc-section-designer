@@ -34,14 +34,13 @@
 
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                <VBox styleClass="calculate-btn-wrapper">
-                    <Button text="Cancel"/>
-                </VBox>
+
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <VBox styleClass="calculate-btn-wrapper">
-                    <Button text="Apply"/>
-                </VBox>
+                <HBox styleClass="calculate-btn-wrapper">
+                    <Button fx:id="cancelButton" onAction="#cancel" text="Cancel"/>
+                    <Button fx:id="okButton" onAction="#applyChanges" text="OK"/>
+                </HBox>
             </VBox>
         </GridPane>
     </ScrollPane>
