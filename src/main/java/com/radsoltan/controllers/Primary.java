@@ -5,6 +5,7 @@ import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
 import com.radsoltan.util.Messages;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -17,19 +18,24 @@ import java.io.IOException;
 public class Primary extends Controller {
 
     @FXML
-    public ChoiceBox elementType;
-    @FXML
-    public NumericalTextField UlsMoment;
-    @FXML
-    public NumericalTextField SlsMoment;
-    @FXML
-    public NumericalTextField shear;
+    private VBox container;
     @FXML
     public PositiveIntegerField projectNumber;
     @FXML
     public TextField projectName;
     @FXML
-    private VBox container;
+    public TextField projectDescription;
+    @FXML
+    public TextField projectAuthor;
+    @FXML
+    public NumericalTextField UlsMoment;
+    @FXML
+    public NumericalTextField SlsMoment;
+    @FXML
+    public NumericalTextField UlsShear;
+    @FXML
+    public ChoiceBox elementType;
+
     private final Project project;
 
     public Primary() {
@@ -86,19 +92,23 @@ public class Primary extends Controller {
         System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToEdge(topReinforcement, null, vSpacingTop, 25));*/
         project = Project.getInstance();
 
-        System.out.println(project.getName());
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         projectName.setText(project.getName());
-        elementType.getSelectionModel().select(1);
+        projectNumber.setText(Integer.toString(project.getNumber()));
+        projectDescription.setText(project.getDescription());
+        projectAuthor.setText(project.getAuthor());
+        UlsMoment.setText(Double.toString(project.getUlsMoment()));
+        System.out.println(project.getUlsMoment());
+        Platform.runLater(() -> container.requestFocus());
     }
 
     public void calculate(ActionEvent actionEvent) {
         if (elementType.getValue() != null) {
             System.out.println("Calculate");
-            project.setName(projectName.getText());
+            System.out.println(UlsMoment.getText());
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
@@ -107,6 +117,7 @@ public class Primary extends Controller {
     public void setDesignParameters(ActionEvent actionEvent) {
         if (elementType.getValue() != null) {
             System.out.println("Set design parameters");
+            setProjectProperties();
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
@@ -115,27 +126,43 @@ public class Primary extends Controller {
     public void setReinforcement(ActionEvent actionEvent) {
         if (elementType.getValue() != null) {
             System.out.println("Set reinforcement");
+            setProjectProperties();
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
     }
 
     public void setGeometry(ActionEvent actionEvent) throws IOException {
-        //if (elementType.getValue() != null) {
+        if (elementType.getValue() != null) {
+            setProjectProperties();
             App.setRoot("geometry");
-        //} else {
-         //   showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
-       //}
+        } else {
+            showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
+        }
     }
 
     public void setElementType(ActionEvent actionEvent) {
-        if(elementType.getValue().toString().toLowerCase().equals("slab")) {
+        if (elementType.getValue().toString().toLowerCase().equals("slab")) {
             container.getStyleClass().add("slab");
             container.getStyleClass().remove("beam");
-            shear.setText("");
+            UlsShear.setText("");
+            project.setUlsShear(0);
         } else if (elementType.getValue().toString().toLowerCase().equals("beam")) {
             container.getStyleClass().add("beam");
             container.getStyleClass().remove("slab");
         }
+    }
+
+    private void setProjectProperties() {
+        project.setName(projectName.getText());
+        project.setNumber(Integer.parseInt(projectNumber.getText()));
+        project.setDescription(projectDescription.getText());
+        project.setAuthor(projectAuthor.getText());
+        project.setUlsMoment(Double.parseDouble(UlsMoment.getText()));
+        System.out.println(project.getUlsMoment());
+    }
+
+    private void setElementType() {
+
     }
 }
