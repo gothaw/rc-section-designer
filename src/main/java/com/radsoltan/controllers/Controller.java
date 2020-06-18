@@ -1,6 +1,7 @@
 package com.radsoltan.controllers;
 
 import com.radsoltan.App;
+import com.radsoltan.util.Constants;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -10,9 +11,9 @@ import javafx.stage.Stage;
 
 public class Controller {
 
-
-
-
+    protected void showAlertBox(String message, AlertKind kind){
+        showAlertBox(message, kind, Constants.DEFAULT_ALERT_WIDTH, Constants.DEFAULT_ALERT_HEIGHT);
+    }
 
     protected void showAlertBox(String message, AlertKind kind, double prefWidth, double prefHeight){
         Alert alert = new Alert(Alert.AlertType.NONE, message, new ButtonType("OK"));
@@ -21,7 +22,7 @@ public class Controller {
         loadAlertStylesheets(alert);
         alert.getButtonTypes().set(0, new ButtonType("OK", ButtonBar.ButtonData.LEFT));
         alert.setTitle(kind.getTitle());
-        alert.getDialogPane().setPrefSize(250, 100);
+        alert.getDialogPane().setPrefSize(prefWidth, prefHeight);
         centerAlertBox(alert);
         alert.showAndWait();
     }

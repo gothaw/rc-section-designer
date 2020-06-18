@@ -7,7 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.Primary">
+<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
+      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.radsoltan.controllers.Primary">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="New" />
@@ -25,36 +27,36 @@
                 <VBox styleClass="field-wrapper, border-separator">
                     <HBox>
                         <Label styleClass="field-label" text="Project:" />
-                        <TextField styleClass="project-details-field" onMouseClicked="#test"/>
+                        <TextField fx:id="projectName" styleClass="project-details-field"/>
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Project Number:" />
-                        <PositiveIntegerField styleClass="project-details-field" />
+                        <PositiveIntegerField fx:id="projectNumber" styleClass="project-details-field" />
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Description:" />
-                        <TextField styleClass="project-details-field" />
+                        <TextField fx:id="projectDescription" styleClass="project-details-field" />
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Author:" />
-                        <TextField styleClass="project-details-field" />
+                        <TextField fx:id="projectAuthor" styleClass="project-details-field" />
                     </HBox>
                 </VBox>
                 <Label styleClass="heading" text="Analysis Results" />
-                <VBox styleClass="field-wrapper, border-separator, analysis-results">
+                <VBox fx:id="forcesSection" styleClass="field-wrapper, border-separator, analysis-results">
                     <HBox>
                         <Label styleClass="field-label" text="ULS Moment:" />
-                        <NumericalTextField styleClass="numerical-field" />
+                        <NumericalTextField fx:id="UlsMoment" styleClass="numerical-field" />
                         <Label styleClass="unit-label" text="kNm" />
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="QLS Moment:" />
-                        <NumericalTextField styleClass="numerical-field" />
+                        <NumericalTextField fx:id="SlsMoment" styleClass="numerical-field" />
                         <Label styleClass="unit-label" text="kNm" />
                     </HBox>
                     <HBox>
                         <Label styleClass="field-label" text="Shear Force:" />
-                        <NumericalTextField styleClass="numerical-field" />
+                        <NumericalTextField fx:id="UlsShear" styleClass="numerical-field" />
                         <Label styleClass="unit-label" text="kN" />
                     </HBox>
                 </VBox>
@@ -62,7 +64,7 @@
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Label styleClass="heading" text="Element Type" />
                 <VBox styleClass="field-wrapper, border-separator">
-                    <ChoiceBox fx:id="elementType" styleClass="choice-box">
+                    <ChoiceBox fx:id="elementTypeChoiceBox" styleClass="choice-box" onAction="#setElementTypeChoiceBox">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Beam" />
@@ -71,23 +73,23 @@
                         </items>
                     </ChoiceBox>
                 </VBox>
-                <VBox styleClass="geometry, border-separator">
+                <VBox fx:id="geometrySection" styleClass="geometry, border-separator">
                     <AnchorPane>
                         <Label styleClass="heading" text="Geometry" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-                        <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+                        <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setGeometry"/>
                     </AnchorPane>
-                    <Label text="Enter geometry..." />
+                    <Label fx:id="geometryText" text="Enter geometry..." />
                 </VBox>
-                <VBox styleClass="reinforcement, border-separator">
+                <VBox fx:id="reinforcementSection" styleClass="reinforcement, border-separator">
                     <AnchorPane>
                         <Label styleClass="heading" text="Reinforcement" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-                        <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+                        <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setReinforcement"/>
                     </AnchorPane>
-                    <Label text="Enter reinforcement..." />
+                    <Label fx:id="reinforcementText" text="Enter reinforcement..." />
                 </VBox>
-                <AnchorPane styleClass="design-parameters, border-separator">
+                <AnchorPane fx:id="designParametersSection" styleClass="design-parameters, border-separator">
                     <Label styleClass="heading" text="Design Parameters" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-                    <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+                    <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setDesignParameters"/>
                 </AnchorPane>
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
@@ -123,7 +125,7 @@
                     <Label text="Section Adequate" />
                 </VBox>
                 <VBox styleClass="calculate-btn-wrapper">
-                    <Button text="Calculate" />
+                    <Button text="Calculate" onAction="#calculate"/>
                 </VBox>
             </VBox>
         </GridPane>

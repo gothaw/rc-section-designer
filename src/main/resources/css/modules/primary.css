@@ -16,6 +16,10 @@
     -fx-padding: 7px 0 0 0;
 }
 
+.not-defined {
+    -fx-text-base-color: red;
+}
+
 .analysis-results {
     -fx-min-height: 96px;
 }
@@ -47,6 +51,7 @@
 .calculate-btn-wrapper {
     -fx-padding: 15px 0 0 0;
     -fx-alignment: center-right;
+    -fx-spacing: 10;
 }
 .calculate-btn-wrapper .button {
     -fx-font-size: 16px;

@@ -1,5 +1,6 @@
 package com.radsoltan;
 
+import com.radsoltan.model.Project;
 import com.radsoltan.util.Constants;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ public class App extends Application {
 
     private static Scene scene;
     private static Stage stage;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {

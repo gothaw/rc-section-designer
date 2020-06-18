@@ -5,8 +5,8 @@ public enum AlertKind {
     WARNING("/images/alert/warning.png", "Warning!"),
     ERROR("/images/alert/error.png", "Error!");
 
-    private String url;
-    private String title;
+    private final String url;
+    private final String title;
 
     AlertKind(String url, String title){
         this.url = url;

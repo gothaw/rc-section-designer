@@ -3,7 +3,7 @@ package com.radsoltan.model;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
-import com.radsoltan.util.Constants;
+import com.radsoltan.util.Messages;
 
 public class Beam implements Flexure, Shear, Cracking {
     private final double UlsMoment;
@@ -79,14 +79,14 @@ public class Beam implements Flexure, Shear, Cracking {
                         this.requiredTensileReinforcement = requiredReinforcementForFlangeResistance + (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fyd * leverArm);
                         this.bendingCapacity = (providedTensileReinforcement - requiredReinforcementForFlangeResistance) * fyd * leverArm * Math.pow(10, -6) + flangeCapacity;
                     } else {
-                        throw new IllegalArgumentException(Constants.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE_MESSAGE);
+                        throw new IllegalArgumentException(Messages.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE);
                     }
                 }
             } else {
                 calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, widthInCompressiveZone, minimumReinforcement);
             }
         } else {
-            throw new IllegalArgumentException(Constants.WRONG_CONCRETE_CLASS_MESSAGE);
+            throw new IllegalArgumentException(Messages.WRONG_CONCRETE_CLASS);
         }
     }
 
@@ -127,13 +127,13 @@ public class Beam implements Flexure, Shear, Cracking {
                     double angleOfCompressiveStrut = Math.toRadians(Math.max(0.5 * Math.asin(shearStress / (0.2 * fck * (1 - 0.004 * fck))), 21.8));
                     requiredShearReinforcement = Math.max(shearStress * width / (yieldStrength / Math.tan(angleOfCompressiveStrut)), 0.08 * width * Math.pow(fck, 0.5) * yieldStrength);
                 } else {
-                    throw new IllegalArgumentException(Constants.REDESIGN_SECTION_DUE_TO_HIGH_SHEAR);
+                    throw new IllegalArgumentException(Messages.REDESIGN_SECTION_DUE_TO_HIGH_SHEAR);
                 }
             } else {
                 requiredShearReinforcement = 0.08 * width * Math.pow(fck, 0.5) * yieldStrength;
             }
         } else {
-            throw new IllegalArgumentException(Constants.WRONG_CONCRETE_CLASS_MESSAGE);
+            throw new IllegalArgumentException(Messages.WRONG_CONCRETE_CLASS);
         }
     }
 
