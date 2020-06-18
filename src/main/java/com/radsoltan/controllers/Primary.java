@@ -5,12 +5,14 @@ import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
 import com.radsoltan.util.Messages;
+import com.radsoltan.util.Utility;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -20,21 +22,34 @@ public class Primary extends Controller {
     @FXML
     private VBox container;
     @FXML
-    public PositiveIntegerField projectNumber;
+    private VBox geometrySection;
     @FXML
-    public TextField projectName;
+    public Label geometryText;
     @FXML
-    public TextField projectDescription;
+    public VBox reinforcementSection;
     @FXML
-    public TextField projectAuthor;
+    public Label reinforcementText;
     @FXML
-    public NumericalTextField UlsMoment;
+    public AnchorPane designParametersSection;
     @FXML
-    public NumericalTextField SlsMoment;
+    private PositiveIntegerField projectNumber;
     @FXML
-    public NumericalTextField UlsShear;
+    private TextField projectName;
     @FXML
-    public ChoiceBox elementType;
+    private TextField projectDescription;
+    @FXML
+    private TextField projectAuthor;
+    @FXML
+    private VBox forcesSection;
+    @FXML
+    private NumericalTextField UlsMoment;
+    @FXML
+    private NumericalTextField SlsMoment;
+    @FXML
+    private NumericalTextField UlsShear;
+    private HBox UlsShearWrapper;
+    @FXML
+    private ChoiceBox<String> elementTypeChoiceBox;
 
     private final Project project;
 
@@ -91,31 +106,50 @@ public class Primary extends Controller {
         System.out.println(slabReinforcement.getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, spacingTop));
         System.out.println(slabReinforcement.getDistanceFromCentreOfEachLayerToEdge(topReinforcement, null, vSpacingTop, 25));*/
         project = Project.getInstance();
-
     }
 
     @FXML
     public void initialize() {
         projectName.setText(project.getName());
-        projectNumber.setText(Integer.toString(project.getNumber()));
+        if (project.getId() != null) {
+            projectNumber.setText(project.getId());
+        }
         projectDescription.setText(project.getDescription());
         projectAuthor.setText(project.getAuthor());
-        UlsMoment.setText(Double.toString(project.getUlsMoment()));
-        System.out.println(project.getUlsMoment());
+        UlsShearWrapper = (HBox) UlsShear.getParent();
+        elementTypeChoiceBox.setValue(Utility.capitalize(project.getElementType()));
+        if (project.getUlsMoment() != null) {
+            UlsMoment.setText(project.getUlsMoment());
+        }
+        if (project.getSlsMoment() != null) {
+            SlsMoment.setText(project.getSlsMoment());
+        }
+        if (project.getUlsShear() != null) {
+            UlsShear.setText(project.getUlsShear());
+        }
+        if (project.getGeometry() == null) {
+            geometrySection.getStyleClass().add("not-defined");
+        }
+        if (project.getReinforcement() == null) {
+            reinforcementSection.getStyleClass().add("not-defined");
+        }
+        if (project.getDesignParameters() == null) {
+            designParametersSection.getStyleClass().add("not-defined");
+        }
         Platform.runLater(() -> container.requestFocus());
     }
 
     public void calculate(ActionEvent actionEvent) {
-        if (elementType.getValue() != null) {
-            System.out.println("Calculate");
-            System.out.println(UlsMoment.getText());
+        if (elementTypeChoiceBox.getValue() != null) {
+
+            setProjectProperties();
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
     }
 
     public void setDesignParameters(ActionEvent actionEvent) {
-        if (elementType.getValue() != null) {
+        if (elementTypeChoiceBox.getValue() != null) {
             System.out.println("Set design parameters");
             setProjectProperties();
         } else {
@@ -124,7 +158,7 @@ public class Primary extends Controller {
     }
 
     public void setReinforcement(ActionEvent actionEvent) {
-        if (elementType.getValue() != null) {
+        if (elementTypeChoiceBox.getValue() != null) {
             System.out.println("Set reinforcement");
             setProjectProperties();
         } else {
@@ -133,36 +167,64 @@ public class Primary extends Controller {
     }
 
     public void setGeometry(ActionEvent actionEvent) throws IOException {
-        if (elementType.getValue() != null) {
+        if (elementTypeChoiceBox.getValue() != null) {
             setProjectProperties();
-            App.setRoot("geometry");
+            switch (elementTypeChoiceBox.getValue().toLowerCase()) {
+                case "slab":
+                    App.setRoot("geometry-slab");
+                    break;
+                case "beam":
+                    App.setRoot("geometry-beam");
+                    break;
+                default:
+                    showAlertBox("Wrong element type.", AlertKind.ERROR);
+            }
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
     }
 
-    public void setElementType(ActionEvent actionEvent) {
-        if (elementType.getValue().toString().toLowerCase().equals("slab")) {
-            container.getStyleClass().add("slab");
-            container.getStyleClass().remove("beam");
+    public void setElementTypeChoiceBox(ActionEvent actionEvent) {
+        String elementType = elementTypeChoiceBox.getValue().toLowerCase();
+        if (elementType.equals("slab")) {
             UlsShear.setText("");
-            project.setUlsShear(0);
-        } else if (elementType.getValue().toString().toLowerCase().equals("beam")) {
-            container.getStyleClass().add("beam");
-            container.getStyleClass().remove("slab");
+            project.setUlsShear(null);
+            if (UlsShearWrapper.getStyleClass().toString().isEmpty()) {
+                UlsShearWrapper.getStyleClass().add("hidden");
+            }
+            setMomentsUnit("kNm/m");
+        } else if (elementType.equals("beam")) {
+            UlsShearWrapper.getStyleClass().remove("hidden");
+            setMomentsUnit("kNm");
         }
+        if (project.getElementType() != null && !project.getElementType().equals(elementType)) {
+            project.setGeometry(null);
+            project.setReinforcement(null);
+            project.setDesignParameters(null);
+            geometrySection.getStyleClass().add("not-defined");
+            reinforcementSection.getStyleClass().add("not-defined");
+            designParametersSection.getStyleClass().add("not-defined");
+        }
+        project.setElementType(elementType);
     }
 
     private void setProjectProperties() {
         project.setName(projectName.getText());
-        project.setNumber(Integer.parseInt(projectNumber.getText()));
+        project.setId(projectNumber.getText());
         project.setDescription(projectDescription.getText());
         project.setAuthor(projectAuthor.getText());
-        project.setUlsMoment(Double.parseDouble(UlsMoment.getText()));
-        System.out.println(project.getUlsMoment());
+        project.setUlsMoment(UlsMoment.getText());
+        project.setSlsMoment(SlsMoment.getText());
+        project.setUlsShear(UlsShear.getText());
+        project.setElementType(elementTypeChoiceBox.getValue().toLowerCase());
     }
 
-    private void setElementType() {
-
+    private void setMomentsUnit(String unit) {
+        HBox UlsMomentWrapper = (HBox) forcesSection.getChildren().get(0);
+        Label UlsMomentUnits = (Label) UlsMomentWrapper.getChildren().get(2);
+        UlsMomentUnits.setText(unit);
+        HBox SlsMomentWrapper = (HBox) forcesSection.getChildren().get(1);
+        Label SlsMomentUnits = (Label) SlsMomentWrapper.getChildren().get(2);
+        SlsMomentUnits.setText(unit);
     }
 }

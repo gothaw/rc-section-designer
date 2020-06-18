@@ -19,6 +19,10 @@
     -fx-background-color: #eff3fe;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }

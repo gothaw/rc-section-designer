@@ -43,7 +43,7 @@
                     </HBox>
                 </VBox>
                 <Label styleClass="heading" text="Analysis Results" />
-                <VBox styleClass="field-wrapper, border-separator, analysis-results">
+                <VBox fx:id="forcesSection" styleClass="field-wrapper, border-separator, analysis-results">
                     <HBox>
                         <Label styleClass="field-label" text="ULS Moment:" />
                         <NumericalTextField fx:id="UlsMoment" styleClass="numerical-field" />
@@ -54,7 +54,7 @@
                         <NumericalTextField fx:id="SlsMoment" styleClass="numerical-field" />
                         <Label styleClass="unit-label" text="kNm" />
                     </HBox>
-                    <HBox styleClass="shear-force-wrapper">
+                    <HBox>
                         <Label styleClass="field-label" text="Shear Force:" />
                         <NumericalTextField fx:id="UlsShear" styleClass="numerical-field" />
                         <Label styleClass="unit-label" text="kN" />
@@ -64,7 +64,7 @@
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Label styleClass="heading" text="Element Type" />
                 <VBox styleClass="field-wrapper, border-separator">
-                    <ChoiceBox fx:id="elementType" styleClass="choice-box" onAction="#setElementType">
+                    <ChoiceBox fx:id="elementTypeChoiceBox" styleClass="choice-box" onAction="#setElementTypeChoiceBox">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Beam" />
@@ -73,21 +73,21 @@
                         </items>
                     </ChoiceBox>
                 </VBox>
-                <VBox styleClass="geometry, border-separator">
+                <VBox fx:id="geometrySection" styleClass="geometry, border-separator">
                     <AnchorPane>
                         <Label styleClass="heading" text="Geometry" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
                         <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setGeometry"/>
                     </AnchorPane>
-                    <Label text="Enter geometry..." />
+                    <Label fx:id="geometryText" text="Enter geometry..." />
                 </VBox>
-                <VBox styleClass="reinforcement, border-separator">
+                <VBox fx:id="reinforcementSection" styleClass="reinforcement, border-separator">
                     <AnchorPane>
                         <Label styleClass="heading" text="Reinforcement" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
                         <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setReinforcement"/>
                     </AnchorPane>
-                    <Label text="Enter reinforcement..." />
+                    <Label fx:id="reinforcementText" text="Enter reinforcement..." />
                 </VBox>
-                <AnchorPane styleClass="design-parameters, border-separator">
+                <AnchorPane fx:id="designParametersSection" styleClass="design-parameters, border-separator">
                     <Label styleClass="heading" text="Design Parameters" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
                     <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setDesignParameters"/>
                 </AnchorPane>

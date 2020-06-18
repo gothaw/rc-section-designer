@@ -5,12 +5,12 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 
 public class Project {
     private String name;
-    private int Number;
+    private String id;
     private String description;
     private String author;
-    private double UlsMoment;
-    private double SlsMoment;
-    private double UlsShear;
+    private String UlsMoment;
+    private String SlsMoment;
+    private String UlsShear;
     private String elementType;
     private Geometry geometry;
     private Reinforcement reinforcement;
@@ -37,12 +37,12 @@ public class Project {
         this.name = name;
     }
 
-    public int getNumber() {
-        return Number;
+    public String getId() {
+        return id;
     }
 
-    public void setNumber(int number) {
-        Number = number;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -61,28 +61,28 @@ public class Project {
         this.author = author;
     }
 
-    public double getUlsMoment() {
+    public String getUlsMoment() {
         return UlsMoment;
     }
 
-    public void setUlsMoment(double ulsMoment) {
-        UlsMoment = ulsMoment;
+    public void setUlsMoment(String ulsMoment) {
+        this.UlsMoment = ulsMoment;
     }
 
-    public double getSlsMoment() {
+    public String getSlsMoment() {
         return SlsMoment;
     }
 
-    public void setSlsMoment(double slsMoment) {
-        SlsMoment = slsMoment;
+    public void setSlsMoment(String slsMoment) {
+        this.SlsMoment = slsMoment;
     }
 
-    public double getUlsShear() {
+    public String getUlsShear() {
         return UlsShear;
     }
 
-    public void setUlsShear(double ulsShear) {
-        UlsShear = ulsShear;
+    public void setUlsShear(String ulsShear) {
+        this.UlsShear = ulsShear;
     }
 
     public String getElementType() {
@@ -91,5 +91,29 @@ public class Project {
 
     public void setElementType(String elementType) {
         this.elementType = elementType;
+    }
+
+    public Geometry getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(Geometry geometry) {
+        this.geometry = geometry;
+    }
+
+    public Reinforcement getReinforcement() {
+        return reinforcement;
+    }
+
+    public void setReinforcement(Reinforcement reinforcement) {
+        this.reinforcement = reinforcement;
+    }
+
+    public DesignParameters getDesignParameters() {
+        return designParameters;
+    }
+
+    public void setDesignParameters(DesignParameters designParameters) {
+        this.designParameters = designParameters;
     }
 }

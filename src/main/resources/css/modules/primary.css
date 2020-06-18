@@ -16,6 +16,10 @@
     -fx-padding: 7px 0 0 0;
 }
 
+.not-defined {
+    -fx-text-base-color: red;
+}
+
 .analysis-results {
     -fx-min-height: 96px;
 }
@@ -53,7 +57,4 @@
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-padding: 5px 15px;
-}
-.slab .shear-force-wrapper{
-    visibility: hidden;
 }
