@@ -8,7 +8,7 @@
 
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.radsoltan.controllers.GeometrySlab">
+      fx:controller="com.radsoltan.controllers.GeometryBeam">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="New" />

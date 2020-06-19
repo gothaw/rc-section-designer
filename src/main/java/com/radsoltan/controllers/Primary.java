@@ -141,7 +141,6 @@ public class Primary extends Controller {
 
     public void calculate(ActionEvent actionEvent) {
         if (elementTypeChoiceBox.getValue() != null) {
-
             setProjectProperties();
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
-      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.radsoltan.controllers.GeometrySlab">
+<?import com.radsoltan.components.PositiveIntegerField?>
+<?import javafx.scene.canvas.Canvas?>
+<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.GeometrySlab">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="New" />
@@ -21,27 +18,27 @@
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <GridPane styleClass="main">
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                <Label styleClass="heading" text="Project Details" />
-                <VBox styleClass="field-wrapper, border-separator">
+            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" >
+                <StackPane styleClass="canvas-wrapper">
+                    <Canvas height="250" width="250" />
+                </StackPane>
+            </VBox>
+            <VBox styleClass="grid-cell, border-separator" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label styleClass="heading" text="Slab Geometry" />
+                <VBox styleClass="field-wrapper" >
                     <HBox>
-                        <Label styleClass="field-label" text="Test:" />
-                        <TextField styleClass="project-details-field"/>
+                        <Label styleClass="field-label" text="Slab thickness [t]:" />
+                        <PositiveIntegerField fx:id="slabThickness" styleClass="numerical-field" />
+                        <Label styleClass="unit-label" text="mm" />
                     </HBox>
                 </VBox>
             </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
-
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
-
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <HBox styleClass="calculate-btn-wrapper">
-                    <Button fx:id="cancelButton" onAction="#cancel" text="Cancel"/>
-                    <Button fx:id="okButton" onAction="#applyChanges" text="OK"/>
+            <AnchorPane styleClass="grid-cell, slab-geometry-buttons" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <HBox AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" styleClass="btn-wrapper">
+                    <Button onAction="#cancel" text="Cancel" />
+                    <Button onAction="#applyChanges" text="OK" />
                 </HBox>
-            </VBox>
+            </AnchorPane>
         </GridPane>
     </ScrollPane>
 </VBox>
