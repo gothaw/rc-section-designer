@@ -156,10 +156,19 @@ public class Primary extends Controller {
         }
     }
 
-    public void setReinforcement(ActionEvent actionEvent) {
+    public void setReinforcement(ActionEvent actionEvent) throws IOException {
         if (elementTypeChoiceBox.getValue() != null) {
-            System.out.println("Set reinforcement");
             setProjectProperties();
+            switch (elementTypeChoiceBox.getValue().toLowerCase()) {
+                case "slab":
+                    App.setRoot("slab-reinforcement");
+                    break;
+                case "beam":
+                    App.setRoot("beam-reinforcement");
+                    break;
+                default:
+                    showAlertBox("Wrong element type.", AlertKind.ERROR);
+            }
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
@@ -170,10 +179,10 @@ public class Primary extends Controller {
             setProjectProperties();
             switch (elementTypeChoiceBox.getValue().toLowerCase()) {
                 case "slab":
-                    App.setRoot("geometry-slab");
+                    App.setRoot("slab-geometry");
                     break;
                 case "beam":
-                    App.setRoot("geometry-beam");
+                    App.setRoot("beam-geometry");
                     break;
                 default:
                     showAlertBox("Wrong element type.", AlertKind.ERROR);

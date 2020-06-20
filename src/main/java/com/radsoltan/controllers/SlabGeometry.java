@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class GeometrySlab extends Controller {
+public class SlabGeometry extends Controller {
 
     @FXML
     private VBox container;
@@ -23,7 +23,7 @@ public class GeometrySlab extends Controller {
     private final Project project;
     private final Geometry geometry;
 
-    public GeometrySlab() {
+    public SlabGeometry() {
         this.project = Project.getInstance();
         this.geometry = project.getGeometry();
     }

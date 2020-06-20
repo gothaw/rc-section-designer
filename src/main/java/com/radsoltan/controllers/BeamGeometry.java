@@ -8,11 +8,11 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 
-public class GeometryBeam {
+public class BeamGeometry {
 
     private final Project project;
 
-    public GeometryBeam() {
+    public BeamGeometry() {
         project = Project.getInstance();
     }
 
