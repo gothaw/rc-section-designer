@@ -124,7 +124,7 @@
                     </HBox>
                     <Label text="Section Adequate" />
                 </VBox>
-                <VBox styleClass="calculate-btn-wrapper">
+                <VBox styleClass="btn-wrapper">
                     <Button text="Calculate" onAction="#calculate"/>
                 </VBox>
             </VBox>

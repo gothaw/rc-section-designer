@@ -8,9 +8,10 @@ public class DesignParameters {
     private double gammaS;
     private double redistributionRatio;
     private boolean isRecommendedRatio;
+    private boolean includeCrackingCalculations;
 
     public DesignParameters(int nominalCoverTop, int nominalCoverSides, int nominalCoverBottom,
-                            double gammaC, double gammaS, double redistributionRatio, boolean isRecommendedRatio) {
+                            double gammaC, double gammaS, double redistributionRatio, boolean isRecommendedRatio, boolean includeCrackingCalculations) {
         this.nominalCoverTop = nominalCoverTop;
         this.nominalCoverSides = nominalCoverSides;
         this.nominalCoverBottom = nominalCoverBottom;
@@ -18,6 +19,7 @@ public class DesignParameters {
         this.gammaS = gammaS;
         this.redistributionRatio = redistributionRatio;
         this.isRecommendedRatio = isRecommendedRatio;
+        this.includeCrackingCalculations = includeCrackingCalculations;
     }
 
     public int getNominalCoverTop() {
@@ -46,5 +48,9 @@ public class DesignParameters {
 
     public boolean isRecommendedRatio() {
         return isRecommendedRatio;
+    }
+
+    public boolean isIncludeCrackingCalculations() {
+        return includeCrackingCalculations;
     }
 }

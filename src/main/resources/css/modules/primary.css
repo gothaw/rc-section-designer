@@ -48,12 +48,13 @@
     -fx-text-fill: red;
 }
 
-.calculate-btn-wrapper {
+.btn-wrapper {
     -fx-padding: 15px 0 0 0;
     -fx-alignment: center-right;
     -fx-spacing: 10;
 }
-.calculate-btn-wrapper .button {
+
+.btn-wrapper .button {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-padding: 5px 15px;

@@ -16,7 +16,6 @@ public class App extends Application {
     private static Scene scene;
     private static Stage stage;
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         scene = new Scene(loadFXML("primary"), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);

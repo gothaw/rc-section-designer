@@ -8,7 +8,7 @@
 
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.radsoltan.controllers.GeometrySlab">
+      fx:controller="com.radsoltan.controllers.BeamGeometry">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="New" />
@@ -22,13 +22,7 @@
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <GridPane styleClass="main">
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                <Label styleClass="heading" text="Project Details" />
-                <VBox styleClass="field-wrapper, border-separator">
-                    <HBox>
-                        <Label styleClass="field-label" text="Test:" />
-                        <TextField styleClass="project-details-field"/>
-                    </HBox>
-                </VBox>
+
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
 
@@ -37,9 +31,9 @@
 
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <HBox styleClass="calculate-btn-wrapper">
-                    <Button fx:id="cancelButton" onAction="#cancel" text="Cancel"/>
-                    <Button fx:id="okButton" onAction="#applyChanges" text="OK"/>
+                <HBox styleClass="btn-wrapper">
+                    <Button onAction="#cancel" text="Cancel"/>
+                    <Button onAction="#applyChanges" text="OK"/>
                 </HBox>
             </VBox>
         </GridPane>
