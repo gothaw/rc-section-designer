@@ -1,0 +1,22 @@
+.slab-reinforcement-wrapper {
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+}
+
+.layers-wrapper, .layers-heading-wrapper {
+    -fx-max-width: 580px;
+}
+
+.layers-wrapper {
+    -fx-pref-height: 200px;
+}
+
+.layer {
+    -fx-padding: 10px 0 0 0;
+    -fx-spacing: 8px;
+}
+
+.spacing-field {
+    -fx-pref-width: 65px;
+}

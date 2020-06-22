@@ -5,7 +5,7 @@
 
 <?import com.radsoltan.components.PositiveIntegerField?>
 <?import javafx.scene.canvas.Canvas?>
-<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.SlabGeometry">
+<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.SlabGeometrySetup">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="New" />
@@ -17,7 +17,7 @@
         <Menu text="Help" />
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <GridPane styleClass="main">
+        <GridPane styleClass="main-grid">
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" >
                 <StackPane styleClass="canvas-wrapper">
                     <Canvas height="250" width="250" />

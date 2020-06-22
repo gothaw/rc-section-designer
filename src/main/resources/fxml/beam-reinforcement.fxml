@@ -8,7 +8,7 @@
 
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.radsoltan.controllers.BeamGeometry">
+      fx:controller="com.radsoltan.controllers.BeamReinforcementSetup">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="New" />
@@ -20,7 +20,7 @@
         <Menu text="Help" />
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <GridPane styleClass="main">
+        <GridPane styleClass="main-grid">
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
 
             </VBox>

@@ -8,6 +8,7 @@
 @import "modules/primary.css";
 @import "modules/alert.css";
 @import "modules/geometry.css";
+@import "modules/reinforcement.css";
 /*============== Fonts ==============*/
 @font-face {
     src: url("../fonts/SourceSansPro-Regular.ttf");
@@ -32,7 +33,7 @@
     -fx-background-color: transparent;
 }
 
-.main {
+.main-grid {
     -fx-alignment: center;
     -fx-font-size: 14px;
     -fx-padding: 10px;
@@ -44,7 +45,7 @@
     -fx-pref-width: 280px;
 }
 
-.choice-box {
+.element-type {
     -fx-min-width: 90px;
     -fx-cursor: hand;
 }
@@ -68,10 +69,13 @@
     -fx-padding: 2px 0 1px 0;
 }
 
-.field-label {
-    -fx-min-width: 120px;
+.label {
     -fx-pref-height: 24px;
     -fx-content-display: center;
+}
+
+.field-label {
+    -fx-min-width: 120px;
 }
 
 .numerical-field {
@@ -79,7 +83,6 @@
 }
 
 .unit-label {
-    -fx-pref-height: 24px;
     -fx-padding: 0 0 0 5px;
 }
 

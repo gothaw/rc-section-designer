@@ -6,36 +6,36 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.canvas.Canvas?>
+<?import com.radsoltan.components.PositiveIntegerField?>
+<?import javafx.collections.FXCollections?>
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.radsoltan.controllers.BeamGeometry">
+      fx:controller="com.radsoltan.controllers.SlabReinforcementSetup">
     <MenuBar>
         <Menu text="File">
-            <MenuItem text="New" />
-            <MenuItem text="Open" />
-            <MenuItem text="Save" />
-            <MenuItem text="Save As" />
+            <MenuItem text="New"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
         </Menu>
-        <Menu text="About" />
-        <Menu text="Help" />
+        <Menu text="About"/>
+        <Menu text="Help"/>
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <GridPane styleClass="main">
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
-
+        <VBox styleClass="slab-reinforcement-wrapper">
+            <VBox styleClass="layers-heading-wrapper">
+                <Label styleClass="heading" text="Top Layers" />
             </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
-
+            <VBox fx:id="topLayers" styleClass="layers-wrapper, border-separator-top"/>
+            <VBox styleClass="layers-heading-wrapper">
+                <Label styleClass="heading" text="Bottom Layers" />
             </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
-
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <HBox styleClass="btn-wrapper">
-                    <Button onAction="#cancel" text="Cancel"/>
-                    <Button onAction="#applyChanges" text="OK"/>
-                </HBox>
-            </VBox>
-        </GridPane>
+            <VBox fx:id="bottomLayers" styleClass="layers-wrapper, border-separator-top"/>
+            <HBox styleClass="btn-wrapper">
+                <Button onAction="#cancel" text="Cancel"/>
+                <Button onAction="#applyChanges" text="OK"/>
+            </HBox>
+        </VBox>
     </ScrollPane>
 </VBox>

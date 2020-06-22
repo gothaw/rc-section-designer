@@ -775,3 +775,99 @@
 .menu-item:show-mnemonics > .mnemonic-underline {
     -fx-stroke: -fx-text-base-color;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * ComboBox                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+
+/* -------------- CODE  FOR THE NON-EDITABLE COMBO-BOX -------------- */
+.combo-box-base > .arrow-button {
+    -fx-background-color:
+            linear-gradient(rgb(155.0, 155.0, 155.0) 0.0%, rgb(172.0, 172.0, 172.0)  100.0%),
+            rgb(255.0, 255.0, 255.0),
+            linear-gradient(rgb(255.0, 255.0, 255.0) 25.0%, rgb(243.0, 243.0, 243.0) 50.0%, rgb(236.0, 236.0, 236.0) 50.0%, rgb(243.0, 243.0, 243.0) 100.0% );
+    -fx-background-insets: 0.5 0.5 0.5 0.0, 1.0 1.5 1.0 0.5, 1.0 2.0 1.0 0.5;
+    -fx-background-radius: 0.0 4.0 4.0 0.0, 0.0 3.0 3.0 0.0, 0.0 3.0 3.0 0.0;
+    -fx-border-width: 0.5 0.5 0.5 0.0;
+    -fx-border-color: rgb(169.0, 169.0, 169.0) rgb(205.0, 205.0, 205.0) rgb(205.0, 205.0, 205.0) rgb(205.0, 205.0, 205.0);
+    -fx-border-radius: 0.0 4.0 4.0 0.0;
+    -fx-padding: 0.0em 0.4em 0.0em 0.433333em;
+}
+
+.combo-box-base:showing > .arrow-button {
+    -fx-background-color:
+            linear-gradient(rgb(155.0, 155.0, 155.0) 0.0%, rgb(172.0, 172.0, 172.0)  100.0%),
+            linear-gradient(rgb(225.0, 225.0, 225.0) 25.0%, rgb(213.0, 213.0, 213.0) 50.0%, rgb(207.0, 207.0, 207.0) 50.0%, rgb(212.0, 212.0, 212.0) 100.0% );
+    -fx-background-insets: 0.5 0.5 0.5 0.0, 1.0 1.5 1.0 0.5;
+}
+
+.combo-box-base > .arrow-button > .arrow,
+.web-view .form-select-button .arrow {
+    -fx-background-insets: 1.0 0.0 -1.0 0.0, 0.5 0.0 -0.5 0.0;
+    -fx-background-color: rgb(255.0, 255.0, 255.0), rgb(71.0, 71.0, 71.0);
+    -fx-padding: 0.2em 0.266667em 0.166667em 0.266667em;
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}
+
+.combo-box-base:disabled {
+    -fx-opacity: 1.0 ;
+}
+
+.combo-box-base > .text-field:disabled,
+.combo-box-base > .arrow-button:disabled,
+.combo-box-base > .list-cell:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.web-view .form-select-button {
+    -fx-background-radius: 2.0, 2.0, 1.0, 0.0;
+    -fx-background-insets: 2.0 2.0 1.0 2.0, 2.0, 3.0, 4.0;
+}
+
+/* -------------- STYLES FOR THE DEFAULT LISTVIEW-BASED COMBOBOX ------------- */
+
+.combo-box {
+    -fx-aqua-inner-focus-color: rgb(104, 155, 201, 0.8);
+    -fx-aqua-outer-focus-color: rgb(120, 171, 217);
+    -fx-cursor: hand;
+}
+
+/* Customize the ListCell that appears in the ComboBox button itself */
+.combo-box > .list-cell {
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 0.12em 0.5em 0.18em 0.583333em;
+    -fx-border-radius: 4.0 0.0 0.0 4.0;
+    -fx-border-width: 0.5 0.0 0.5 0.5;
+    -fx-border-color: rgb(169.0, 169.0, 169.0) rgb(205.0, 205.0, 205.0) rgb(205.0, 205.0, 205.0) rgb(205.0, 205.0, 205.0);
+    -fx-background-color: linear-gradient(rgb(155.0, 155.0, 155.0) 0.0%, rgb(172.0, 172.0, 172.0)  100.0%),
+    -choice-base;
+    -fx-background-insets: 0.5 0.0 0.5 0.5, 1.0 0.0 1.0 1.0;
+    -fx-background-radius: 4.0 0.0 0.0 4.0, 4.0 0.0 0.0 4.0;
+    -fx-content-display: LEFT;
+    -fx-opacity: 1.0;
+}
+
+.combo-box-popup > .list-view {
+    -fx-background-color: white;
+    -fx-background-insets: -3.0 0.0 0.0 0.0;
+    -fx-background-radius: 0.0;
+    -fx-border-color: rgb(0.0,0.0,0.0,0.4);
+    -fx-border-insets: -3.0 0.0 0.0 0.0;
+    -fx-border-width: 0.5 0.5 1.5 0.5;
+    -fx-effect: dropshadow( three-pass-box , rgba(0.0,0.0,0.0,0.6) , 8.0, 0.0 , 0.0 , 0.0 );
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4.0 0.0 4.0 5.0;
+    -fx-background-color: white;
+}
+
+.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background-color:  linear-gradient(rgb(101.0, 140.0, 245.0) 0.0%, rgb(41.0, 103.0, 243.0) 100.0%);
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
