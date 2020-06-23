@@ -4,12 +4,8 @@
     -fx-alignment: center;
 }
 
-.layers-wrapper, .layers-heading-wrapper {
-    -fx-max-width: 580px;
-}
-
 .layers-wrapper {
-    -fx-pref-height: 200px;
+    -fx-pref-height: 265px;
 }
 
 .layer {
@@ -19,4 +15,9 @@
 
 .spacing-field {
     -fx-pref-width: 65px;
+}
+
+.edit-layers-button-wrapper {
+    -fx-padding: 8px 0 10px 0;
+    -fx-spacing: 8px;
 }

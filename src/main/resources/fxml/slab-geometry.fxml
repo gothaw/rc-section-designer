@@ -5,40 +5,38 @@
 
 <?import com.radsoltan.components.PositiveIntegerField?>
 <?import javafx.scene.canvas.Canvas?>
-<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.SlabGeometrySetup">
+<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
+      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.radsoltan.controllers.SlabGeometrySetup">
     <MenuBar>
         <Menu text="File">
-            <MenuItem text="New" />
-            <MenuItem text="Open" />
-            <MenuItem text="Save" />
-            <MenuItem text="Save As" />
+            <MenuItem text="New"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
         </Menu>
-        <Menu text="About" />
-        <Menu text="Help" />
+        <Menu text="About"/>
+        <Menu text="Help"/>
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <GridPane styleClass="main-grid">
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" >
+        <VBox styleClass="slab-geometry">
+            <VBox styleClass="section-wrapper">
                 <StackPane styleClass="canvas-wrapper">
-                    <Canvas height="250" width="250" />
+                    <Canvas height="250" width="250"/>
                 </StackPane>
             </VBox>
-            <VBox styleClass="grid-cell, border-separator" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                <Label styleClass="heading" text="Slab Geometry" />
-                <VBox styleClass="field-wrapper" >
-                    <HBox>
-                        <Label styleClass="field-label" text="Slab thickness [t]:" />
-                        <PositiveIntegerField fx:id="slabThickness" styleClass="numerical-field" />
-                        <Label styleClass="unit-label" text="mm" />
-                    </HBox>
-                </VBox>
-            </VBox>
-            <AnchorPane styleClass="grid-cell, slab-geometry-buttons" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <HBox AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" styleClass="btn-wrapper">
-                    <Button onAction="#cancel" text="Cancel" />
-                    <Button onAction="#applyChanges" text="OK" />
+            <VBox styleClass="section-wrapper, border-separator-top">
+                <Label styleClass="heading" text="Slab Geometry"/>
+                <HBox styleClass="field-wrapper">
+                    <Label styleClass="field-label" text="Slab thickness [t]:"/>
+                    <PositiveIntegerField fx:id="slabThickness" styleClass="numerical-field"/>
+                    <Label styleClass="unit-label" text="mm"/>
                 </HBox>
-            </AnchorPane>
-        </GridPane>
+            </VBox>
+            <HBox styleClass="section-wrapper, slab-geometry-edit-buttons">
+                <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
+                <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
+            </HBox>
+        </VBox>
     </ScrollPane>
 </VBox>

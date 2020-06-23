@@ -18,6 +18,7 @@
 /*===================================*/
 .root {
     -fx-font-family: 'Source Sans Pro Regular';
+    -fx-font-size: 14px;
     -fx-background-color: #eff3fe;
 }
 
@@ -31,14 +32,6 @@
 
 .scroll-pane {
     -fx-background-color: transparent;
-}
-
-.main-grid {
-    -fx-alignment: center;
-    -fx-font-size: 14px;
-    -fx-padding: 10px;
-    -fx-hgap: 20px;
-    -fx-vgap: 5px;
 }
 
 .grid-cell {
@@ -101,4 +94,23 @@
     -fx-border-color: #aeb2bd;
     -fx-border-style: solid;
     -fx-border-width: 1.5px 0 0 0;
+}
+
+.section-wrapper {
+    -fx-max-width: 580px;
+}
+
+.large-button {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 15px;
+}
+
+.canvas-wrapper {
+    -fx-background-color: #fff;
+}
+
+.edit-buttons-wrapper {
+   -fx-alignment: center-right;
+   -fx-spacing: 8px;
 }

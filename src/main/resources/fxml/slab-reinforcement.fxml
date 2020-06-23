@@ -24,17 +24,29 @@
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <VBox styleClass="slab-reinforcement-wrapper">
-            <VBox styleClass="layers-heading-wrapper">
+            <VBox styleClass="section-wrapper">
                 <Label styleClass="heading" text="Top Layers" />
             </VBox>
-            <VBox fx:id="topLayers" styleClass="layers-wrapper, border-separator-top"/>
-            <VBox styleClass="layers-heading-wrapper">
+            <VBox styleClass="section-wrapper, layers-wrapper, border-separator-top">
+                <VBox fx:id="topLayers" />
+                <HBox styleClass="edit-layers-button-wrapper">
+                    <Button fx:id="deleteTopLayerButton" text="Delete" onAction="#deleteTopLayer"/>
+                    <Button fx:id="addTopLayerButton" text="Add" onAction="#addTopLayer"/>
+                </HBox>
+            </VBox>
+            <VBox styleClass="section-wrapper">
                 <Label styleClass="heading" text="Bottom Layers" />
             </VBox>
-            <VBox fx:id="bottomLayers" styleClass="layers-wrapper, border-separator-top"/>
-            <HBox styleClass="btn-wrapper">
-                <Button onAction="#cancel" text="Cancel"/>
-                <Button onAction="#applyChanges" text="OK"/>
+            <VBox styleClass="section-wrapper, layers-wrapper, border-separator-top">
+                <VBox fx:id="bottomLayers" />
+                <HBox styleClass="edit-layers-button-wrapper">
+                    <Button fx:id="deleteBottomLayerButton" text="Delete" onAction="#deleteBottomLayer"/>
+                    <Button fx:id="addBottomLayerButton" text="Add" onAction="#addBottomLayer"/>
+                </HBox>
+            </VBox>
+            <HBox styleClass="section-wrapper, edit-buttons-wrapper">
+                <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
+                <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
             </HBox>
         </VBox>
     </ScrollPane>

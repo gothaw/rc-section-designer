@@ -1,3 +1,11 @@
-.slab-geometry-buttons {
-    -fx-padding: 240px 0 0 0;
+.slab-geometry {
+    -fx-padding: 10px;
+    -fx-alignment: center;
+    -fx-spacing: 8px;
+}
+
+.slab-geometry-edit-buttons {
+    -fx-padding: 245px 0 0 0;
+    -fx-spacing: 8px;
+    -fx-alignment: center-right;
 }

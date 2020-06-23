@@ -31,9 +31,9 @@
 
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <HBox styleClass="btn-wrapper">
-                    <Button onAction="#cancel" text="Cancel"/>
-                    <Button onAction="#applyChanges" text="OK"/>
+                <HBox>
+                    <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
+                    <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
                 </HBox>
             </VBox>
         </GridPane>
