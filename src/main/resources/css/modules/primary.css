@@ -1,5 +1,8 @@
-.canvas-wrapper {
-    -fx-background-color: #fff;
+.primary-grid {
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-hgap: 20px;
+    -fx-vgap: 5px;
 }
 
 .geometry {
@@ -48,14 +51,8 @@
     -fx-text-fill: red;
 }
 
-.btn-wrapper {
+.primary-button-wrapper {
     -fx-padding: 15px 0 0 0;
     -fx-alignment: center-right;
     -fx-spacing: 10;
-}
-
-.btn-wrapper .button {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-padding: 5px 15px;
 }

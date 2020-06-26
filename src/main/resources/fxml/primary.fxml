@@ -21,7 +21,7 @@
         <Menu text="Help" />
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <GridPane styleClass="main">
+        <GridPane styleClass="primary-grid">
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <Label styleClass="heading" text="Project Details" />
                 <VBox styleClass="field-wrapper, border-separator">
@@ -64,7 +64,7 @@
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Label styleClass="heading" text="Element Type" />
                 <VBox styleClass="field-wrapper, border-separator">
-                    <ChoiceBox fx:id="elementTypeChoiceBox" styleClass="choice-box" onAction="#setElementTypeChoiceBox">
+                    <ChoiceBox fx:id="elementTypeChoiceBox" styleClass="element-type" onAction="#setElementTypeChoiceBox">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Beam" />
@@ -124,8 +124,8 @@
                     </HBox>
                     <Label text="Section Adequate" />
                 </VBox>
-                <VBox styleClass="btn-wrapper">
-                    <Button text="Calculate" onAction="#calculate"/>
+                <VBox styleClass="primary-button-wrapper">
+                    <Button styleClass="large-button" text="Calculate" onAction="#calculate"/>
                 </VBox>
             </VBox>
         </GridPane>

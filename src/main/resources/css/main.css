@@ -8,6 +8,7 @@
 @import "modules/primary.css";
 @import "modules/alert.css";
 @import "modules/geometry.css";
+@import "modules/reinforcement.css";
 /*============== Fonts ==============*/
 @font-face {
     src: url("../fonts/SourceSansPro-Regular.ttf");
@@ -17,6 +18,7 @@
 /*===================================*/
 .root {
     -fx-font-family: 'Source Sans Pro Regular';
+    -fx-font-size: 14px;
     -fx-background-color: #eff3fe;
 }
 
@@ -32,19 +34,11 @@
     -fx-background-color: transparent;
 }
 
-.main {
-    -fx-alignment: center;
-    -fx-font-size: 14px;
-    -fx-padding: 10px;
-    -fx-hgap: 20px;
-    -fx-vgap: 5px;
-}
-
 .grid-cell {
     -fx-pref-width: 280px;
 }
 
-.choice-box {
+.element-type {
     -fx-min-width: 90px;
     -fx-cursor: hand;
 }
@@ -68,10 +62,13 @@
     -fx-padding: 2px 0 1px 0;
 }
 
-.field-label {
-    -fx-min-width: 120px;
+.label {
     -fx-pref-height: 24px;
     -fx-content-display: center;
+}
+
+.field-label {
+    -fx-min-width: 120px;
 }
 
 .numerical-field {
@@ -79,7 +76,6 @@
 }
 
 .unit-label {
-    -fx-pref-height: 24px;
     -fx-padding: 0 0 0 5px;
 }
 
@@ -98,4 +94,23 @@
     -fx-border-color: #aeb2bd;
     -fx-border-style: solid;
     -fx-border-width: 1.5px 0 0 0;
+}
+
+.section-wrapper {
+    -fx-max-width: 580px;
+}
+
+.large-button {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 15px;
+}
+
+.canvas-wrapper {
+    -fx-background-color: #fff;
+}
+
+.edit-buttons-wrapper {
+   -fx-alignment: center-right;
+   -fx-spacing: 8px;
 }
