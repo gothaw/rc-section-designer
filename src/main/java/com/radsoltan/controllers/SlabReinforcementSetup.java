@@ -88,12 +88,13 @@ public class SlabReinforcementSetup extends Controller {
         Label joiningLabel = new Label(" + ");
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
         diameterComboBox.setPrefWidth(55);
+        Label spacingLabel = new Label("at 700mm");
 
         List<Node> layerItems = layer.getChildren();
 
         layerItems.add(layerItems.size() - 1, joiningLabel);
         layerItems.add(layerItems.size() - 1, diameterComboBox);
-
+        layerItems.add(layerItems.size() - 1, spacingLabel);
 
 
         Button deleteButton = (Button) stackPane.lookup(".delete-additional-reinforcement");
@@ -112,11 +113,11 @@ public class SlabReinforcementSetup extends Controller {
         HBox layer = new HBox();
         layer.getStyleClass().add("layer");
         Label layerLabel = new Label(Utility.capitalize(layerLabels.get(layerIndex)) + " layer:");
-        layerLabel.setPrefWidth(85);
+        layerLabel.setPrefWidth(75);
         Label spacingLabel = new Label("at");
         Label unitsLabel = new Label("mm");
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
-        diameterComboBox.setPrefWidth(55);
+        diameterComboBox.setPrefWidth(60);
         ComboBox<Integer> spacingComboBox = new ComboBox<>(spacings);
         spacingComboBox.setPrefWidth(60);
         StackPane buttonWrapper = new StackPane();
