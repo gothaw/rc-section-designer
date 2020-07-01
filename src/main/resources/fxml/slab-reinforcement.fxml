@@ -1,52 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.canvas.Canvas?>
-<?import com.radsoltan.components.PositiveIntegerField?>
-<?import javafx.collections.FXCollections?>
-<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
-      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.radsoltan.controllers.SlabReinforcementSetup">
+<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.SlabReinforcementSetup">
     <MenuBar>
         <Menu text="File">
-            <MenuItem text="New"/>
-            <MenuItem text="Open"/>
-            <MenuItem text="Save"/>
-            <MenuItem text="Save As"/>
+            <MenuItem text="New" />
+            <MenuItem text="Open" />
+            <MenuItem text="Save" />
+            <MenuItem text="Save As" />
         </Menu>
-        <Menu text="About"/>
-        <Menu text="Help"/>
+        <Menu text="About" />
+        <Menu text="Help" />
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <VBox styleClass="slab-reinforcement-wrapper">
-            <VBox styleClass="section-wrapper">
+            <AnchorPane styleClass="section-wrapper">
                 <Label styleClass="heading" text="Top Layers" />
-            </VBox>
+                <HBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                    <CheckBox fx:id="topLayersSecondaryDirection"/>
+                    <Label text="Secondary Reinforcement" />
+                </HBox>
+            </AnchorPane>
             <VBox styleClass="section-wrapper, layers-wrapper, border-separator-top">
-                <VBox fx:id="topLayers" />
+                <GridPane styleClass="slab-reinforcement-grid">
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
+                        <Label styleClass="label-small" text="Reinforcement Layers:" />
+                    </VBox>
+                    <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
+                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
+                            <Label styleClass="label-small" text="Clear spacing" />
+                            <Label styleClass="label-small" text="between layers:" />
+                        </VBox>
+                    </AnchorPane>
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topLayers" styleClass="slab-reinforcement-col-left" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topLayersVerticalSpacing" styleClass="slab-reinforcement-col-right" />
+                </GridPane>
                 <HBox styleClass="edit-layers-button-wrapper">
-                    <Button fx:id="deleteTopLayerButton" text="Delete" onAction="#deleteTopLayer"/>
-                    <Button fx:id="addTopLayerButton" text="Add" onAction="#addTopLayer"/>
+                    <Button fx:id="addTopLayerButton" onAction="#addTopLayer" text="Add" />
+                    <Button fx:id="deleteTopLayerButton" onAction="#deleteTopLayer" text="Delete" />
                 </HBox>
             </VBox>
-            <VBox styleClass="section-wrapper">
+            <AnchorPane styleClass="section-wrapper">
                 <Label styleClass="heading" text="Bottom Layers" />
-            </VBox>
+                <HBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                    <CheckBox fx:id="bottomLayersSecondaryDirection"/>
+                    <Label text="Secondary Reinforcement" />
+                </HBox>
+            </AnchorPane>
             <VBox styleClass="section-wrapper, layers-wrapper, border-separator-top">
                 <VBox fx:id="bottomLayers" />
                 <HBox styleClass="edit-layers-button-wrapper">
-                    <Button fx:id="deleteBottomLayerButton" text="Delete" onAction="#deleteBottomLayer"/>
-                    <Button fx:id="addBottomLayerButton" text="Add" onAction="#addBottomLayer"/>
+                    <Button fx:id="addBottomLayerButton" onAction="#addBottomLayer" text="Add" />
+                    <Button fx:id="deleteBottomLayerButton" onAction="#deleteBottomLayer" text="Delete" />
                 </HBox>
             </VBox>
             <HBox styleClass="section-wrapper, edit-buttons-wrapper">
-                <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
-                <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
+                <Button onAction="#cancel" styleClass="large-button" text="Cancel" />
+                <Button onAction="#applyChanges" styleClass="large-button" text="OK" />
             </HBox>
         </VBox>
     </ScrollPane>
