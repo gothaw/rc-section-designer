@@ -1,6 +1,7 @@
 package com.radsoltan.controllers;
 
 import com.radsoltan.App;
+import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
@@ -34,7 +35,11 @@ public class SlabReinforcementSetup extends Controller {
     @FXML
     public VBox topLayers;
     @FXML
+    public VBox topLayersVerticalSpacing;
+    @FXML
     public VBox bottomLayers;
+    @FXML
+    public VBox bottomLayersVerticalSpacing;
     @FXML
     public Button deleteTopLayerButton;
     @FXML
@@ -65,8 +70,8 @@ public class SlabReinforcementSetup extends Controller {
     @FXML
     public void initialize() {
         if (slabReinforcement == null) {
-            addReinforcementLayer(topLayers, 0);
-            addReinforcementLayer(bottomLayers, 0);
+            addReinforcementLayer(topLayers, topLayersVerticalSpacing, 0);
+            addReinforcementLayer(bottomLayers, bottomLayersVerticalSpacing, 0);
             numberOfTopLayers = 1;
             numberOfBottomLayers = 1;
         }
@@ -87,15 +92,16 @@ public class SlabReinforcementSetup extends Controller {
         HBox layer = (HBox) stackPane.getParent();
         Label joiningLabel = new Label(" + ");
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
-        diameterComboBox.setPrefWidth(55);
-        Label spacingLabel = new Label("at 700mm");
+
+        Label spacingLabel = new Label("");
 
         List<Node> layerItems = layer.getChildren();
+
+        layer.getChildren().addAll();
 
         layerItems.add(layerItems.size() - 1, joiningLabel);
         layerItems.add(layerItems.size() - 1, diameterComboBox);
         layerItems.add(layerItems.size() - 1, spacingLabel);
-
 
         Button deleteButton = (Button) stackPane.lookup(".delete-additional-reinforcement");
         deleteButton.getStyleClass().remove("hidden");
@@ -105,21 +111,28 @@ public class SlabReinforcementSetup extends Controller {
         Button deleteButton = (Button) actionEvent.getSource();
         deleteButton.getStyleClass().add("hidden");
         StackPane stackPane = (StackPane) deleteButton.getParent();
+
+        HBox layer = (HBox) stackPane.getParent();
+        List<Node> layerItems = layer.getChildren();
+
+        layerItems.remove(layerItems.size() - 2);
+        layerItems.remove(layerItems.size() - 2);
+        layerItems.remove(layerItems.size() - 2);
+
+
         Button addButton = (Button) stackPane.lookup(".add-additional-reinforcement");
         addButton.getStyleClass().remove("hidden");
     }
 
-    private void addReinforcementLayer(VBox target, int layerIndex) {
+    private void addReinforcementLayer(VBox layerTarget, VBox verticalSpacingTarget, int layerIndex) {
         HBox layer = new HBox();
         layer.getStyleClass().add("layer");
         Label layerLabel = new Label(Utility.capitalize(layerLabels.get(layerIndex)) + " layer:");
-        layerLabel.setPrefWidth(75);
+        layerLabel.getStyleClass().add("layer-label");
         Label spacingLabel = new Label("at");
         Label unitsLabel = new Label("mm");
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
-        diameterComboBox.setPrefWidth(60);
         ComboBox<Integer> spacingComboBox = new ComboBox<>(spacings);
-        spacingComboBox.setPrefWidth(60);
         StackPane buttonWrapper = new StackPane();
         Button addButton = new Button("Add");
         addButton.getStyleClass().add("add-additional-reinforcement");
@@ -139,38 +152,48 @@ public class SlabReinforcementSetup extends Controller {
         layerNodes.add(unitsLabel);
         layerNodes.add(buttonWrapper);
 
-        target.getChildren().add(layer);
+        if (layerIndex != 0) {
+            PositiveIntegerField verticalSpacingInputField = new PositiveIntegerField();
+            Label unitLabel = new Label("mm");
+            HBox verticalSpacingWrapper = new HBox(verticalSpacingInputField, unitLabel);
+            verticalSpacingWrapper.getStyleClass().add("slab-vertical-spacing-wrapper");
+            verticalSpacingTarget.getChildren().add(verticalSpacingWrapper);
+        }
+
+        layerTarget.getChildren().add(layer);
+
     }
 
-    private void deleteReinforcementLayer(VBox target) {
-        List<Node> layers = target.getChildren();
+    private void deleteReinforcementLayer(VBox layerTarget, VBox verticalSpacingTarget) {
+        List<Node> layers = layerTarget.getChildren();
         layers.remove(layers.size() - 1);
+        verticalSpacingTarget.getChildren().remove(verticalSpacingTarget.getChildren().size() - 1);
     }
 
     public void deleteTopLayer(ActionEvent actionEvent) {
         if (numberOfTopLayers > 1) {
-            deleteReinforcementLayer(topLayers);
+            deleteReinforcementLayer(topLayers, topLayersVerticalSpacing);
             numberOfTopLayers--;
         }
     }
 
     public void addTopLayer(ActionEvent actionEvent) {
         if (numberOfTopLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayer(topLayers, numberOfTopLayers);
+            addReinforcementLayer(topLayers, topLayersVerticalSpacing, numberOfTopLayers);
             numberOfTopLayers++;
         }
     }
 
     public void deleteBottomLayer(ActionEvent actionEvent) {
         if (numberOfBottomLayers > 1) {
-            deleteReinforcementLayer(bottomLayers);
+            deleteReinforcementLayer(bottomLayers, bottomLayersVerticalSpacing);
             numberOfBottomLayers--;
         }
     }
 
     public void addBottomLayer(ActionEvent actionEvent) {
         if (numberOfBottomLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayer(bottomLayers, numberOfBottomLayers);
+            addReinforcementLayer(bottomLayers, bottomLayersVerticalSpacing, numberOfBottomLayers);
             numberOfBottomLayers++;
         }
     }

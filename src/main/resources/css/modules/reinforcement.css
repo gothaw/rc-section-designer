@@ -5,12 +5,25 @@
     -fx-alignment: center;
 }
 
-.slab-reinforcement-col-left {
+.slab-reinforcement-layer-wrapper {
     -fx-pref-width: 500px;
+}
+
+.slab-reinforcement-vertical-spacing-column {
+    -fx-padding: 16px 0 0 0;
 }
 
 .slab-reinforcement-grid {
     -fx-hgap: 10px;
+}
+
+.slab-vertical-spacing-wrapper {
+    -fx-padding: 8px 0 0 0;
+    -fx-spacing: 5px;
+}
+
+.slab-vertical-spacing-wrapper .text-field{
+    -fx-pref-width: 45px;
 }
 
 .layers-wrapper {
@@ -20,6 +33,10 @@
 .layer {
     -fx-padding: 10px 0 0 0;
     -fx-spacing: 8px;
+}
+
+.layer-label {
+    -fx-pref-width: 65px;
 }
 
 .edit-layers-button-wrapper {
