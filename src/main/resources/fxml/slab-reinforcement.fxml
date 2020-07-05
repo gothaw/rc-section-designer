@@ -26,11 +26,10 @@
                     <Label styleClass="label-small-checkbox" text="Secondary Reinforcement" />
                 </HBox>
             </AnchorPane>
-
-            <VBox styleClass="section-wrapper, layers-wrapper, border-separator-top">
+            <VBox styleClass="section-wrapper, slab-top-reinforcement, border-separator-top" prefHeight="265">
                 <GridPane styleClass="slab-reinforcement-grid" >
                     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
-                        <Label styleClass="label-small" text="Reinforcement Layers:" />
+                        <Label styleClass="label-small" text="Reinforcement layers:" />
                     </VBox>
                     <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
                         <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
@@ -38,10 +37,10 @@
                             <Label styleClass="label-small" text="between layers:" />
                         </VBox>
                     </AnchorPane>
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topLayers" styleClass="slab-reinforcement-layer-wrapper" />
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topLayersVerticalSpacing" styleClass="slab-reinforcement-vertical-spacing-column" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topLayers" styleClass="slab-reinforcement-layers" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topLayersVerticalSpacing" styleClass="slab-reinforcement-vertical-spacings" />
                 </GridPane>
-                <HBox styleClass="edit-layers-button-wrapper">
+                <HBox styleClass="edit-slab-layers-button-wrapper">
                     <Button fx:id="addTopLayerButton" onAction="#addTopLayer" text="Add" />
                     <Button fx:id="deleteTopLayerButton" onAction="#deleteTopLayer" text="Delete" />
                 </HBox>
@@ -51,15 +50,14 @@
                 <Label styleClass="heading" text="Bottom Layers" />
                 <HBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                     <CheckBox fx:id="bottomLayersSecondaryDirection"/>
-                    <Label text="Secondary Reinforcement" />
+                    <Label styleClass="label-small-checkbox" text="Secondary Reinforcement" />
                 </HBox>
             </AnchorPane>
-
-            <VBox styleClass="section-wrapper, layers-wrapper, border-separator-top">
+            <VBox styleClass="section-wrapper, slab-bottom-reinforcement, border-separator-top">
 
                 <GridPane styleClass="slab-reinforcement-grid" >
                     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
-                        <Label styleClass="label-small" text="Reinforcement Layers:" />
+                        <Label styleClass="label-small" text="Reinforcement layers:" />
                     </VBox>
                     <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
                         <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
@@ -67,11 +65,11 @@
                             <Label styleClass="label-small" text="between layers:" />
                         </VBox>
                     </AnchorPane>
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomLayers" styleClass="slab-reinforcement-layer-wrapper" />
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="bottomLayersVerticalSpacing" styleClass="slab-reinforcement-vertical-spacing-column" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomLayers" styleClass="slab-reinforcement-layers" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="bottomLayersVerticalSpacing" styleClass="slab-reinforcement-vertical-spacings" />
                 </GridPane>
 
-                <HBox styleClass="edit-layers-button-wrapper">
+                <HBox styleClass="edit-slab-layers-button-wrapper">
                     <Button fx:id="addBottomLayerButton" onAction="#addBottomLayer" text="Add" />
                     <Button fx:id="deleteBottomLayerButton" onAction="#deleteBottomLayer" text="Delete" />
                 </HBox>

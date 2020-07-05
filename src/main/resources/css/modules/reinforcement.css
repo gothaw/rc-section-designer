@@ -5,11 +5,15 @@
     -fx-alignment: center;
 }
 
-.slab-reinforcement-layer-wrapper {
+.slab-top-reinforcement, .slab-bottom-reinforcement {
+    -fx-pref-height: 265px;
+}
+
+.slab-reinforcement-layers {
     -fx-pref-width: 500px;
 }
 
-.slab-reinforcement-vertical-spacing-column {
+.slab-reinforcement-vertical-spacings {
     -fx-padding: 16px 0 0 0;
 }
 
@@ -26,20 +30,16 @@
     -fx-pref-width: 45px;
 }
 
-.layers-wrapper {
-    -fx-pref-height: 265px;
-}
-
-.layer {
+.slab-layer {
     -fx-padding: 10px 0 0 0;
     -fx-spacing: 8px;
 }
 
-.layer-label {
+.slab-layer-label {
     -fx-pref-width: 65px;
 }
 
-.edit-layers-button-wrapper {
+.edit-slab-layers-button-wrapper {
     -fx-padding: 8px 0 10px 0;
     -fx-spacing: 8px;
 }
