@@ -77,7 +77,9 @@
 .label-small {
     -fx-font-size: 12px;
     -fx-pref-height: 16px;
-    -fx-content-display: center;
+}
+.label-small-checkbox{
+    -fx-font-size: 12px;
 }
 
 .field-label {
@@ -137,4 +139,8 @@
 .check-box .box {
     -fx-pref-height: 18px;
     -fx-pref-width: 18px;
+}
+
+.combo-box {
+    -fx-pref-width: 60px;
 }

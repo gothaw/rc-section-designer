@@ -5,24 +5,41 @@
     -fx-alignment: center;
 }
 
-.slab-reinforcement-col-left {
+.slab-top-reinforcement, .slab-bottom-reinforcement {
+    -fx-pref-height: 265px;
+}
+
+.slab-reinforcement-layers {
     -fx-pref-width: 500px;
+}
+
+.slab-reinforcement-vertical-spacings {
+    -fx-padding: 16px 0 0 0;
 }
 
 .slab-reinforcement-grid {
     -fx-hgap: 10px;
 }
 
-.layers-wrapper {
-    -fx-pref-height: 265px;
+.slab-vertical-spacing-wrapper {
+    -fx-padding: 8px 0 0 0;
+    -fx-spacing: 5px;
 }
 
-.layer {
+.slab-vertical-spacing-wrapper .text-field{
+    -fx-pref-width: 45px;
+}
+
+.slab-layer {
     -fx-padding: 10px 0 0 0;
     -fx-spacing: 8px;
 }
 
-.edit-layers-button-wrapper {
+.slab-layer-label {
+    -fx-pref-width: 65px;
+}
+
+.edit-slab-layers-button-wrapper {
     -fx-padding: 8px 0 10px 0;
     -fx-spacing: 8px;
 }

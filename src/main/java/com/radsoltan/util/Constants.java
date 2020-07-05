@@ -15,5 +15,5 @@ public class Constants {
     public static final int DEFAULT_ALERT_HEIGHT = 80;
     public static final ArrayList<Integer> BAR_DIAMETERS = new ArrayList<>(List.of(6, 8, 10, 12, 16, 20, 25, 32, 40));
     public static final int MAX_NUMBER_OF_LAYERS = 6;
-    public static final ArrayList<String> LAYERS_ORDINAL_NUMBERS = new ArrayList<>(List.of("1st", "2nd", "3rd", "4th", "5th", "6th"));
+    public static final ArrayList<String> LAYERS_ORDINAL_LABELS = new ArrayList<>(List.of("1st", "2nd", "3rd", "4th", "5th", "6th"));
 }
