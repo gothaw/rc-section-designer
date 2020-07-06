@@ -8,7 +8,6 @@ import java.util.stream.IntStream;
 
 public class SlabReinforcement extends Reinforcement {
 
-    private final int transverseBarDiameter;
     private final List<Integer> topReinforcement;
     private final List<Integer> additionalTopReinforcement;
     private final List<Integer> topReinforcementSpacing;
@@ -26,8 +25,7 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> bottomReinforcement,
                              List<Integer> additionalBottomReinforcement,
                              List<Integer> bottomReinforcementSpacing,
-                             List<Integer> bottomReinforcementVerticalSpacing,
-                             int transverseBarDiameter) {
+                             List<Integer> bottomReinforcementVerticalSpacing) {
         this.topReinforcement = topReinforcement;
         this.additionalTopReinforcement = additionalTopReinforcement;
         this.topReinforcementSpacing = topReinforcementSpacing;
@@ -36,7 +34,6 @@ public class SlabReinforcement extends Reinforcement {
         this.additionalBottomReinforcement = additionalBottomReinforcement;
         this.bottomReinforcementSpacing = bottomReinforcementSpacing;
         this.bottomReinforcementVerticalSpacing = bottomReinforcementVerticalSpacing;
-        this.transverseBarDiameter = transverseBarDiameter;
     }
 
     public SlabReinforcement(int fy,
@@ -45,10 +42,9 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> topReinforcementVerticalSpacing,
                              List<Integer> bottomReinforcement,
                              List<Integer> bottomReinforcementSpacing,
-                             List<Integer> bottomReinforcementVerticalSpacing,
-                             int transverseBarDiameter) {
+                             List<Integer> bottomReinforcementVerticalSpacing) {
         this(fy, topReinforcement, topReinforcementSpacing, topReinforcementVerticalSpacing, null,
-                bottomReinforcement, bottomReinforcementSpacing, bottomReinforcementVerticalSpacing, null, transverseBarDiameter);
+                bottomReinforcement, bottomReinforcementSpacing, bottomReinforcementVerticalSpacing, null);
     }
 
     @Override
@@ -115,9 +111,10 @@ public class SlabReinforcement extends Reinforcement {
 
         List<Double> distanceFromCentroidOfEachLayerToEdge = new ArrayList<>();
 
+        // TODO: 05/07/2020 Bug - distance for the first layer not calculated properly
         double distanceForFirstLayer = (additionalReinforcement != null) ?
-                0.5 * Math.max(Collections.max(reinforcement), Collections.max(additionalReinforcement)) + nominalCover + transverseBarDiameter :
-                0.5 * Collections.max(reinforcement) + nominalCover + transverseBarDiameter;
+                0.5 * Math.max(Collections.max(reinforcement), Collections.max(additionalReinforcement)) + nominalCover :
+                0.5 * Collections.max(reinforcement) + nominalCover;
 
         distanceFromCentroidOfEachLayerToEdge.add(distanceForFirstLayer);
 
@@ -140,6 +137,38 @@ public class SlabReinforcement extends Reinforcement {
                 .range(0, distanceFromEachLayerToEdge.size())
                 .mapToObj(i -> areaOfReinforcementLayers.get(i) * distanceFromEachLayerToEdge.get(i))
                 .collect(Collectors.toList());
+    }
+
+    public List<Integer> getTopReinforcement() {
+        return topReinforcement;
+    }
+
+    public List<Integer> getAdditionalTopReinforcement() {
+        return additionalTopReinforcement;
+    }
+
+    public List<Integer> getTopReinforcementSpacing() {
+        return topReinforcementSpacing;
+    }
+
+    public List<Integer> getTopReinforcementVerticalSpacing() {
+        return topReinforcementVerticalSpacing;
+    }
+
+    public List<Integer> getBottomReinforcement() {
+        return bottomReinforcement;
+    }
+
+    public List<Integer> getAdditionalBottomReinforcement() {
+        return additionalBottomReinforcement;
+    }
+
+    public List<Integer> getBottomReinforcementSpacing() {
+        return bottomReinforcementSpacing;
+    }
+
+    public List<Integer> getBottomReinforcementVerticalSpacing() {
+        return bottomReinforcementVerticalSpacing;
     }
 
     @Override
