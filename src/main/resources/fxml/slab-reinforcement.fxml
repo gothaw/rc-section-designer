@@ -19,13 +19,9 @@
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <VBox styleClass="slab-reinforcement-wrapper">
 
-            <AnchorPane styleClass="section-wrapper">
+            <VBox styleClass="section-wrapper">
                 <Label styleClass="heading" text="Top Layers" />
-                <HBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                    <CheckBox fx:id="topLayersSecondaryDirection"/>
-                    <Label styleClass="label-small-checkbox" text="Secondary Reinforcement" />
-                </HBox>
-            </AnchorPane>
+            </VBox>
             <VBox styleClass="section-wrapper, slab-top-reinforcement, border-separator-top" prefHeight="265">
                 <GridPane styleClass="slab-reinforcement-grid" >
                     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
@@ -46,13 +42,9 @@
                 </HBox>
             </VBox>
 
-            <AnchorPane styleClass="section-wrapper">
+            <VBox styleClass="section-wrapper">
                 <Label styleClass="heading" text="Bottom Layers" />
-                <HBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                    <CheckBox fx:id="bottomLayersSecondaryDirection"/>
-                    <Label styleClass="label-small-checkbox" text="Secondary Reinforcement" />
-                </HBox>
-            </AnchorPane>
+            </VBox>
             <VBox styleClass="section-wrapper, slab-bottom-reinforcement, border-separator-top">
 
                 <GridPane styleClass="slab-reinforcement-grid" >
