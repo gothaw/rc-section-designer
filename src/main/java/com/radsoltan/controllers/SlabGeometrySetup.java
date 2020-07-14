@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SlabGeometrySetup extends Controller {
 
@@ -43,17 +44,26 @@ public class SlabGeometrySetup extends Controller {
     }
 
     public void applyChanges(ActionEvent actionEvent) throws IOException {
-        if (!slabThickness.getText().equals("")) {
+        validationMessages = new ArrayList<>();
+        validateForEmptyFields();
+        if (validationMessages.isEmpty()) {
             SlabStrip slabStrip = new SlabStrip(Integer.parseInt(slabThickness.getText()));
             Geometry geometry = new Geometry(slabStrip);
             project.setGeometry(geometry);
             App.setRoot("primary");
         } else {
-            showAlertBox("Please define slab thickness.", AlertKind.INFO);
+            showAlertBox(validationMessages.get(0), AlertKind.INFO);
         }
     }
 
     public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
+    }
+
+    @Override
+    protected void validateForEmptyFields() {
+        if (slabThickness.getText().equals("")) {
+            validationMessages.add("Please define slab thickness.");
+        }
     }
 }

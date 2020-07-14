@@ -9,7 +9,11 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class Controller {
+import java.util.List;
+
+public abstract class Controller {
+
+    protected List<String> validationMessages;
 
     protected void showAlertBox(String message, AlertKind kind){
         showAlertBox(message, kind, Constants.DEFAULT_ALERT_WIDTH, Constants.DEFAULT_ALERT_HEIGHT);
@@ -37,4 +41,5 @@ public class Controller {
         dialogPane.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
     }
 
+    protected abstract void validateForEmptyFields();
 }
