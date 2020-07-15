@@ -17,8 +17,7 @@ public class SlabReinforcement extends Reinforcement {
     private final List<Integer> bottomReinforcementSpacing;
     private final List<Integer> bottomReinforcementVerticalSpacing;
 
-    public SlabReinforcement(int fy,
-                             List<Integer> topReinforcement,
+    public SlabReinforcement(List<Integer> topReinforcement,
                              List<Integer> additionalTopReinforcement,
                              List<Integer> topReinforcementSpacing,
                              List<Integer> topReinforcementVerticalSpacing,
@@ -36,14 +35,13 @@ public class SlabReinforcement extends Reinforcement {
         this.bottomReinforcementVerticalSpacing = bottomReinforcementVerticalSpacing;
     }
 
-    public SlabReinforcement(int fy,
-                             List<Integer> topReinforcement,
+    public SlabReinforcement(List<Integer> topReinforcement,
                              List<Integer> topReinforcementSpacing,
                              List<Integer> topReinforcementVerticalSpacing,
                              List<Integer> bottomReinforcement,
                              List<Integer> bottomReinforcementSpacing,
                              List<Integer> bottomReinforcementVerticalSpacing) {
-        this(fy, topReinforcement, topReinforcementSpacing, topReinforcementVerticalSpacing, null,
+        this(topReinforcement, topReinforcementSpacing, topReinforcementVerticalSpacing, null,
                 bottomReinforcement, bottomReinforcementSpacing, bottomReinforcementVerticalSpacing, null);
     }
 

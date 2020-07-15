@@ -184,4 +184,9 @@ public class Primary extends Controller {
         Label SlsMomentUnits = (Label) SlsMomentWrapper.getChildren().get(2);
         SlsMomentUnits.setText(unit);
     }
+
+    @Override
+    protected void validateForEmptyFields() {
+
+    }
 }

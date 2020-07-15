@@ -14,16 +14,14 @@ public class BeamReinforcement extends Reinforcement {
     int numberOfBarsInSlab;
     boolean isReinforcementInSlabSymmetrical;
 
-    public BeamReinforcement(int fy,
-                             List<List<Integer>> topReinforcement,
-                             List<Integer> topReinforcementVerticalSpacing,
-                             List<List<Integer>> bottomReinforcement,
-                             List<Integer> bottomReinforcementVerticalSpacing,
-                             ShearLinks shearLinks,
-                             int numberOfBarsInSlab,
-                             boolean isReinforcementInSlabSymmetrical) {
+    public BeamReinforcement(List<List<Integer>> topReinforcement,
+            List<Integer> topReinforcementVerticalSpacing,
+            List<List<Integer>> bottomReinforcement,
+            List<Integer> bottomReinforcementVerticalSpacing,
+            ShearLinks shearLinks,
+            int numberOfBarsInSlab,
+            boolean isReinforcementInSlabSymmetrical) {
 
-        this.fy = fy;
         this.topReinforcement = topReinforcement;
         this.topReinforcementVerticalSpacing = topReinforcementVerticalSpacing;
         this.bottomReinforcement = bottomReinforcement;
@@ -33,18 +31,15 @@ public class BeamReinforcement extends Reinforcement {
         this.isReinforcementInSlabSymmetrical = isReinforcementInSlabSymmetrical;
     }
 
-    public BeamReinforcement(int fy,
-                             List<List<Integer>> topReinforcement,
+    public BeamReinforcement(List<List<Integer>> topReinforcement,
                              List<Integer> topReinforcementVerticalSpacing,
                              List<List<Integer>> bottomReinforcement,
                              List<Integer> bottomReinforcementVerticalSpacing,
                              ShearLinks shearLinks) {
-        this(fy, topReinforcement, topReinforcementVerticalSpacing, bottomReinforcement, bottomReinforcementVerticalSpacing, shearLinks, 0, false);
+        this(topReinforcement, topReinforcementVerticalSpacing, bottomReinforcement, bottomReinforcementVerticalSpacing, shearLinks, 0, false);
     }
 
-    public BeamReinforcement(int fy, List<Integer> topReinforcementRow, List<Integer> bottomReinforcementRow, ShearLinks shearLinks) {
-
-        this.fy = fy;
+    public BeamReinforcement(List<Integer> topReinforcementRow, List<Integer> bottomReinforcementRow, ShearLinks shearLinks) {
 
         List<List<Integer>> topReinforcement = new ArrayList<>();
         topReinforcement.add(new ArrayList<>());

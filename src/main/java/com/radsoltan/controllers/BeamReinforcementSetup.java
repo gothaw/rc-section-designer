@@ -5,8 +5,15 @@ import javafx.event.ActionEvent;
 public class BeamReinforcementSetup extends Controller {
 
     public void cancel(ActionEvent actionEvent) {
+
     }
 
     public void applyChanges(ActionEvent actionEvent) {
+
+    }
+
+    @Override
+    protected void validateForEmptyFields() {
+
     }
 }
