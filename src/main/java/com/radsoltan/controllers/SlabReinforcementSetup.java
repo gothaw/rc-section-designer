@@ -68,8 +68,7 @@ public class SlabReinforcementSetup extends Controller {
         List<Integer> additionalBottomReinforcement = List.of(20, 12);
         List<Integer> spacingBottom = List.of(300, 300, 150);
         List<Integer> vSpacingBottom = List.of(50, 50);
-        slabReinforcement = new SlabReinforcement(500,
-                topReinforcement, additionalTopReinforcement, spacingTop, vSpacingTop,
+        slabReinforcement = new SlabReinforcement(topReinforcement, additionalTopReinforcement, spacingTop, vSpacingTop,
                 bottomReinforcement, additionalBottomReinforcement, spacingBottom, vSpacingBottom);
 
         List<Integer> spacingsArray = new ArrayList<>();
@@ -113,18 +112,48 @@ public class SlabReinforcementSetup extends Controller {
     public void applyChanges(ActionEvent actionEvent) {
         validationMessages = new ArrayList<>();
         validateForEmptyFields();
+        // TODO: 15/07/2020 Validation of RebarSpacing
+        if (validationMessages.isEmpty()) {
 
+            List<Integer> topReinforcement = new ArrayList<>();
+            List<Integer> topReinforcementSpacing = new ArrayList<>();
+            List<Integer> topAdditionalReinforcement = new ArrayList<>();
+            List<Integer> topVerticalSpacing = new ArrayList<>();
+            List<Integer> bottomReinforcement = new ArrayList<>();
+            List<Integer> bottomReinforcementSpacing = new ArrayList<>();
+            List<Integer> bottomAdditionalReinforcement = new ArrayList<>();
+            List<Integer> bottomVerticalSpacing = new ArrayList<>();
+
+            Reinforcement slabReinforcement = new SlabReinforcement(topReinforcement, topAdditionalReinforcement, topReinforcementSpacing, topVerticalSpacing,
+                    bottomReinforcement, bottomAdditionalReinforcement, bottomReinforcementSpacing, bottomVerticalSpacing);
+            project.setReinforcement(slabReinforcement);
+        } else {
+            showAlertBox(validationMessages.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
+        }
     }
 
-    private void checkIfLayerFieldsAreEmpty(VBox layerWrapper, VBox verticalSpacingsWrapper, int layerIndex) {
+    private void checkIfLayerFieldsAreEmpty(VBox layerWrapper, VBox verticalSpacingsWrapper, int layerIndex, String layersLocation) {
+        String layerLocation = layersLocation.toLowerCase();
         HBox layer = (HBox) layerWrapper.getChildren().get(layerIndex);
         @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
         @SuppressWarnings("unchecked") ComboBox<Integer> spacingComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_SPACING_COMBO_BOX);
         @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
         if (diameterComboBox.getValue() == null) {
-            validationMessages.add(String.format("Please enter diameter for %s layer", layerLabels.get(layerIndex)));
+            validationMessages.add(String.format("Please enter bar diameter for %s %s layer.", layerLabels.get(layerIndex), layerLocation));
         }
-        // TODO: 14/07/2020 change validate methods from void to return List<String>
+        if (spacingComboBox.getValue() == null) {
+            validationMessages.add(String.format("Please enter bar spacing for %s %s layer.", layerLabels.get(layerIndex), layerLocation));
+        }
+        if (additionalDiameterComboBox != null && additionalDiameterComboBox.getValue() == null) {
+            validationMessages.add(String.format("Please enter alternate bar diameter for %s %s layer.", layerLabels.get(layerIndex), layerLocation));
+        }
+        if (layerIndex > 0) {
+            HBox verticalSpacingHBox = (HBox) verticalSpacingsWrapper.getChildren().get(layerIndex - 1);
+            PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
+            if (verticalSpacingField.getText().equals("")) {
+                validationMessages.add(String.format("Please enter vertical spacing between %s and %s %s layer.", layerLabels.get(layerIndex - 1), layerLabels.get(layerIndex), layerLocation));
+            }
+        }
     }
 
     public void cancel(ActionEvent actionEvent) throws IOException {
@@ -281,10 +310,10 @@ public class SlabReinforcementSetup extends Controller {
     @Override
     protected void validateForEmptyFields() {
         for (int i = 0; i < numberOfTopLayers; i++) {
-            checkIfLayerFieldsAreEmpty(topLayers, topLayersVerticalSpacing, i);
+            checkIfLayerFieldsAreEmpty(topLayers, topLayersVerticalSpacing, i, "top");
         }
         for (int j = 0; j < numberOfBottomLayers; j++) {
-            checkIfLayerFieldsAreEmpty(bottomLayers, bottomLayersVerticalSpacing, j);
+            checkIfLayerFieldsAreEmpty(bottomLayers, bottomLayersVerticalSpacing, j, "bottom");
         }
     }
 }

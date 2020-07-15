@@ -37,8 +37,8 @@ public class Slab implements Flexure {
         this.fck = concrete.getCompressiveStrength();
         this.fcd = concrete.getDesignCompressiveResistance(designParameters.getPartialFactorOfSafetyForConcrete());
         this.fctm = concrete.getMeanAxialTensileStrength();
-        this.fy = reinforcement.getYieldStrength();
-        this.fyd = reinforcement.getDesignYieldStrength(designParameters.getPartialFactorOfSafetyForSteel());
+        this.fy = designParameters.getYieldStrength();
+        this.fyd = designParameters.getDesignYieldStrength();
         this.providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
         this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters);
     }
