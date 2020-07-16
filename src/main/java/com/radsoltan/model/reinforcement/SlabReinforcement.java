@@ -35,16 +35,6 @@ public class SlabReinforcement extends Reinforcement {
         this.bottomReinforcementVerticalSpacing = bottomReinforcementVerticalSpacing;
     }
 
-    public SlabReinforcement(List<Integer> topReinforcement,
-                             List<Integer> topReinforcementSpacing,
-                             List<Integer> topReinforcementVerticalSpacing,
-                             List<Integer> bottomReinforcement,
-                             List<Integer> bottomReinforcementSpacing,
-                             List<Integer> bottomReinforcementVerticalSpacing) {
-        this(topReinforcement, topReinforcementSpacing, topReinforcementVerticalSpacing, null,
-                bottomReinforcement, bottomReinforcementSpacing, bottomReinforcementVerticalSpacing, null);
-    }
-
     @Override
     public double getTotalAreaOfTopReinforcement() {
         return getAreaOfReinforcementLayers(topReinforcement, additionalTopReinforcement, topReinforcementSpacing).stream()
@@ -86,22 +76,11 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     public List<Double> getAreaOfReinforcementLayers(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> spacing) {
-        if (additionalReinforcement != null) {
-            List<Double> areaOfReinforcementLayers = IntStream.range(0, additionalReinforcement.size())
-                    .mapToObj(i -> 0.25 * Math.PI * (reinforcement.get(i) * reinforcement.get(i) + additionalReinforcement.get(i) * additionalReinforcement.get(i)) * 1000 / spacing.get(i))
-                    .collect(Collectors.toList());
-            List<Double> areaOfLayersWithoutAdditionalRebar = IntStream.range(additionalReinforcement.size(), reinforcement.size())
-                    .mapToObj(i -> 0.25 * Math.PI * reinforcement.get(i) * reinforcement.get(i) * 1000 / spacing.get(i))
-                    .collect(Collectors.toList());
 
-            areaOfReinforcementLayers.addAll(areaOfLayersWithoutAdditionalRebar);
+        return IntStream.range(0, reinforcement.size())
+                .mapToObj(i -> 0.25 * Math.PI * (reinforcement.get(i) * reinforcement.get(i) + additionalReinforcement.get(i) * additionalReinforcement.get(i)) * 1000 / spacing.get(i))
+                .collect(Collectors.toList());
 
-            return areaOfReinforcementLayers;
-        } else {
-            return IntStream.range(0, reinforcement.size())
-                    .mapToObj(i -> 0.25 * Math.PI * reinforcement.get(i) * reinforcement.get(i) * 1000 / spacing.get(i))
-                    .collect(Collectors.toList());
-        }
     }
 
     // TODO: 10/06/2020 Encapsulation
@@ -109,10 +88,7 @@ public class SlabReinforcement extends Reinforcement {
 
         List<Double> distanceFromCentroidOfEachLayerToEdge = new ArrayList<>();
 
-        // TODO: 05/07/2020 Bug - distance for the first layer not calculated properly
-        double distanceForFirstLayer = (additionalReinforcement != null) ?
-                0.5 * Math.max(Collections.max(reinforcement), Collections.max(additionalReinforcement)) + nominalCover :
-                0.5 * Collections.max(reinforcement) + nominalCover;
+        double distanceForFirstLayer = 0.5 * Math.max(reinforcement.get(0), additionalReinforcement.get(0)) + nominalCover;
 
         distanceFromCentroidOfEachLayerToEdge.add(distanceForFirstLayer);
 
