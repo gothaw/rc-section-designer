@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Primary extends Controller {
 
@@ -186,7 +187,7 @@ public class Primary extends Controller {
     }
 
     @Override
-    protected void validateForEmptyFields() {
-
+    protected List<String> getValidationMessagesForEmptyFields() {
+        return null;
     }
 }
