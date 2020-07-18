@@ -11,6 +11,7 @@ public class CssStyleClasses {
     public static final String SLAB_REINFORCEMENT_SPACING_COMBO_BOX = "slab-reinforcement-spacing-combo-box";
     public static final String SLAB_VERTICAL_SPACING_WRAPPER = "slab-vertical-spacing-wrapper";
     public static final String SLAB_ADDITIONAL_REINFORCEMENT_SPACING_LABEL = "slab-additional-reinforcement-spacing-label";
+    public static final String SLAB_ADDITIONAL_REINFORCEMENT_JOINING_LABEL = "slab-additional-reinforcement-joining-label";
     public static final String SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER = "slab-additional-reinforcement-diameter";
     public static final String SLAB_VERTICAL_SPACING_FIELD = "slab-vertical-spacing-field";
 }

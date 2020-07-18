@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -35,9 +36,13 @@ public class SlabReinforcementSetup extends Controller {
     @FXML
     public VBox topLayersVerticalSpacingVBox;
     @FXML
+    public VBox topLayersVerticalSpacingsTitle;
+    @FXML
     public VBox bottomLayersVBox;
     @FXML
     public VBox bottomLayersVerticalSpacingVBox;
+    @FXML
+    public VBox bottomLayersVerticalSpacingsTitle;
     @FXML
     public Button deleteTopLayerButton;
     @FXML
@@ -72,8 +77,8 @@ public class SlabReinforcementSetup extends Controller {
     @FXML
     public void initialize() {
         if (slabReinforcement == null) {
-            addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, 0);
-            addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, 0);
+            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, 0);
+            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, 0);
             numberOfTopLayers = 1;
             numberOfBottomLayers = 1;
         } else {
@@ -88,16 +93,20 @@ public class SlabReinforcementSetup extends Controller {
             List<Integer> bottomReinforcementSpacing = slabReinforcement.getBottomReinforcementSpacing();
             List<Integer> bottomAdditionalReinforcement = slabReinforcement.getAdditionalBottomReinforcement();
             List<Integer> bottomVerticalSpacing = slabReinforcement.getBottomReinforcementVerticalSpacing();
-            for (int i = 0; i < numberOfTopLayers; i++) {
-                addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, i);
-                initializeReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, i, topReinforcement, topAdditionalReinforcement, topReinforcementSpacing, topVerticalSpacing);
-            }
-            for (int j = 0; j < numberOfBottomLayers; j++) {
-                addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, j);
-                initializeReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, j, bottomReinforcement, bottomAdditionalReinforcement, bottomReinforcementSpacing, bottomVerticalSpacing);
-            }
+            IntStream.range(0, numberOfTopLayers).forEach(i -> {
+                addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, i);
+                initializeReinforcementLayerFields(topLayersVBox, topLayersVerticalSpacingVBox, i, topReinforcement, topAdditionalReinforcement, topReinforcementSpacing, topVerticalSpacing);
+            });
+            IntStream.range(0, numberOfBottomLayers).forEach(i -> {
+                addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i);
+                initializeReinforcementLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i, bottomReinforcement, bottomAdditionalReinforcement, bottomReinforcementSpacing, bottomVerticalSpacing);
+            });
         }
         Platform.runLater(() -> container.requestFocus());
+    }
+
+    public void cancel(ActionEvent actionEvent) throws IOException {
+        App.setRoot("primary");
     }
 
     public void applyChanges(ActionEvent actionEvent) throws IOException {
@@ -125,7 +134,6 @@ public class SlabReinforcementSetup extends Controller {
         List<Integer> spacings = new ArrayList<>();
         List<Integer> verticalSpacings = new ArrayList<>();
 
-
         for (int i = 0; i < numberOfLayers; i++) {
             HBox layer = (HBox) layerWrapper.getChildren().get(i);
             @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
@@ -152,12 +160,7 @@ public class SlabReinforcementSetup extends Controller {
                 "verticalSpacings", verticalSpacings));
     }
 
-
-    public void cancel(ActionEvent actionEvent) throws IOException {
-        App.setRoot("primary");
-    }
-
-    private void addReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper, int layerIndex) {
+    private void addReinforcementLayerInView(VBox layersWrapper, VBox verticalSpacingsWrapper, int layerIndex) {
         Label layerLabel = new Label(Utility.capitalize(layerLabels.get(layerIndex)) + " layer:");
         layerLabel.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER_LABEL);
         Label spacingLabel = new Label("at");
@@ -170,9 +173,9 @@ public class SlabReinforcementSetup extends Controller {
 
         Button addButton = new Button("Add");
         addButton.getStyleClass().add(CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-        addButton.setOnAction(this::addAdditionalReinforcement);
+        addButton.setOnAction(this::addAdditionalReinforcementInView);
         Button deleteButton = new Button("Delete");
-        deleteButton.setOnAction(this::deleteAdditionalReinforcement);
+        deleteButton.setOnAction(this::deleteAdditionalReinforcementFromView);
         deleteButton.getStyleClass().addAll(CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON, CssStyleClasses.HIDDEN);
         StackPane buttonWrapper = new StackPane(addButton, deleteButton);
         buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
@@ -192,9 +195,16 @@ public class SlabReinforcementSetup extends Controller {
         layersWrapper.getChildren().add(layer);
     }
 
-    private void initializeReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper,
-                                              int layerIndex, List<Integer> reinforcement, List<Integer> additionalReinforcement,
-                                              List<Integer> spacing, List<Integer> verticalSpacing) {
+    private void deleteReinforcementLayerFromView(VBox layersWrapper, VBox verticalSpacingsWrapper) {
+        List<Node> layers = layersWrapper.getChildren();
+        layers.remove(layers.size() - 1);
+        List<Node> verticalSpacings = verticalSpacingsWrapper.getChildren();
+        verticalSpacings.remove(verticalSpacings.size() - 1);
+    }
+
+    private void initializeReinforcementLayerFields(VBox layersWrapper, VBox verticalSpacingsWrapper,
+                                                    int layerIndex, List<Integer> reinforcement, List<Integer> additionalReinforcement,
+                                                    List<Integer> spacing, List<Integer> verticalSpacing) {
         List<Node> layers = layersWrapper.getChildren();
         if (layerIndex < layers.size()) {
             HBox layer = (HBox) layers.get(layerIndex);
@@ -206,7 +216,7 @@ public class SlabReinforcementSetup extends Controller {
             diameterComboBox.setValue(reinforcement.get(layerIndex));
             spacingComboBox.setValue(spacing.get(layerIndex));
             if (additionalReinforcement.get(layerIndex) != 0) {
-                addAdditionalReinforcement(addButton, deleteButton, layer);
+                addAdditionalReinforcementInView(addButton, deleteButton, layer);
                 @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
                 additionalDiameterComboBox.setValue(additionalReinforcement.get(layerIndex));
             }
@@ -219,23 +229,17 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
-    private void deleteReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper) {
-        List<Node> layers = layersWrapper.getChildren();
-        layers.remove(layers.size() - 1);
-        List<Node> verticalSpacings = verticalSpacingsWrapper.getChildren();
-        verticalSpacings.remove(verticalSpacings.size() - 1);
-    }
-
-    public void addAdditionalReinforcement(ActionEvent actionEvent) {
+    public void addAdditionalReinforcementInView(ActionEvent actionEvent) {
         Button addButton = (Button) actionEvent.getSource();
         StackPane stackPane = (StackPane) addButton.getParent();
         Button deleteButton = (Button) stackPane.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
         HBox layer = (HBox) stackPane.getParent();
-        addAdditionalReinforcement(addButton, deleteButton, layer);
+        addAdditionalReinforcementInView(addButton, deleteButton, layer);
     }
 
-    public void addAdditionalReinforcement(Button addButton, Button deleteButton, HBox layer) {
+    public void addAdditionalReinforcementInView(Button addButton, Button deleteButton, HBox layer) {
         Label joiningLabel = new Label(" + ");
+        joiningLabel.getStyleClass().add(CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
         diameterComboBox.getStyleClass().add(CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
         Label spacingLabel = new Label(getAdditionalReinforcementSpacingLabel(layer));
@@ -253,15 +257,18 @@ public class SlabReinforcementSetup extends Controller {
         return (spacing.getValue() != null) ? String.format("at %d mm", spacing.getValue()) : "";
     }
 
-    public void deleteAdditionalReinforcement(ActionEvent actionEvent) {
+    public void deleteAdditionalReinforcementFromView(ActionEvent actionEvent) {
         Button deleteButton = (Button) actionEvent.getSource();
         StackPane stackPane = (StackPane) deleteButton.getParent();
         Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
         HBox layer = (HBox) stackPane.getParent();
 
         List<Node> layerNodes = layer.getChildren();
-        int layerNodesSize = layerNodes.size();
-        IntStream.of(2, 3, 4).forEach(i -> layerNodes.remove(layerNodesSize - i));
+        Label joiningLabel = (Label) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
+        @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
+        Label spacingLabel = (Label) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_SPACING_LABEL);
+
+        layerNodes.removeAll(new ArrayList<>(List.of(joiningLabel, diameterComboBox, spacingLabel)));
 
         deleteButton.getStyleClass().add(CssStyleClasses.HIDDEN);
         addButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
@@ -276,31 +283,43 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
-    public void deleteTopLayer(ActionEvent actionEvent) {
+    public void deleteLayerFromTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers > 1) {
-            deleteReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox);
+            deleteReinforcementLayerFromView(topLayersVBox, topLayersVerticalSpacingVBox);
             numberOfTopLayers--;
         }
+        if (numberOfTopLayers == 1) {
+            topLayersVerticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
+        }
     }
 
-    public void addTopLayer(ActionEvent actionEvent) {
+    public void addLayerToTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, numberOfTopLayers);
+            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, numberOfTopLayers);
             numberOfTopLayers++;
         }
-    }
-
-    public void deleteBottomLayer(ActionEvent actionEvent) {
-        if (numberOfBottomLayers > 1) {
-            deleteReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox);
-            numberOfBottomLayers--;
+        if (numberOfTopLayers == 2) {
+            topLayersVerticalSpacingsTitle.getStyleClass().remove(CssStyleClasses.HIDDEN);
         }
     }
 
-    public void addBottomLayer(ActionEvent actionEvent) {
+    public void deleteLayerFromBottomReinforcement(ActionEvent actionEvent) {
+        if (numberOfBottomLayers > 1) {
+            deleteReinforcementLayerFromView(bottomLayersVBox, bottomLayersVerticalSpacingVBox);
+            numberOfBottomLayers--;
+        }
+        if (numberOfBottomLayers == 1) {
+            bottomLayersVerticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
+        }
+    }
+
+    public void addLayerToBottomReinforcement(ActionEvent actionEvent) {
         if (numberOfBottomLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, numberOfBottomLayers);
+            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, numberOfBottomLayers);
             numberOfBottomLayers++;
+        }
+        if (numberOfBottomLayers == 2) {
+            bottomLayersVerticalSpacingsTitle.getStyleClass().remove(CssStyleClasses.HIDDEN);
         }
     }
 

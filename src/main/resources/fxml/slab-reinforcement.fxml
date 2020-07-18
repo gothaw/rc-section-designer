@@ -22,13 +22,14 @@
             <VBox styleClass="section-wrapper">
                 <Label styleClass="heading" text="Top Layers" />
             </VBox>
+
             <VBox styleClass="section-wrapper, slab-top-reinforcement, border-separator-top" prefHeight="265">
                 <GridPane styleClass="slab-reinforcement-grid" >
                     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
                         <Label styleClass="label-small" text="Reinforcement layers:" />
                     </VBox>
                     <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
-                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
+                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="topLayersVerticalSpacingsTitle" styleClass="hidden">
                             <Label styleClass="label-small" text="Clear spacing" />
                             <Label styleClass="label-small" text="between layers:" />
                         </VBox>
@@ -37,22 +38,22 @@
                     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topLayersVerticalSpacingVBox" styleClass="slab-reinforcement-vertical-spacings" />
                 </GridPane>
                 <HBox styleClass="edit-slab-layers-button-wrapper">
-                    <Button fx:id="addTopLayerButton" onAction="#addTopLayer" text="Add" />
-                    <Button fx:id="deleteTopLayerButton" onAction="#deleteTopLayer" text="Delete" />
+                    <Button fx:id="addTopLayerButton" onAction="#addLayerToTopReinforcement" text="Add" />
+                    <Button fx:id="deleteTopLayerButton" onAction="#deleteLayerFromTopReinforcement" text="Delete" />
                 </HBox>
             </VBox>
 
             <VBox styleClass="section-wrapper">
                 <Label styleClass="heading" text="Bottom Layers" />
             </VBox>
-            <VBox styleClass="section-wrapper, slab-bottom-reinforcement, border-separator-top">
 
+            <VBox styleClass="section-wrapper, slab-bottom-reinforcement, border-separator-top">
                 <GridPane styleClass="slab-reinforcement-grid" >
                     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
                         <Label styleClass="label-small" text="Reinforcement layers:" />
                     </VBox>
-                    <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
-                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
+                    <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top" >
+                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="bottomLayersVerticalSpacingsTitle" styleClass="hidden">
                             <Label styleClass="label-small" text="Clear spacing" />
                             <Label styleClass="label-small" text="between layers:" />
                         </VBox>
@@ -62,8 +63,8 @@
                 </GridPane>
 
                 <HBox styleClass="edit-slab-layers-button-wrapper">
-                    <Button fx:id="addBottomLayerButton" onAction="#addBottomLayer" text="Add" />
-                    <Button fx:id="deleteBottomLayerButton" onAction="#deleteBottomLayer" text="Delete" />
+                    <Button fx:id="addBottomLayerButton" onAction="#addLayerToBottomReinforcement" text="Add" />
+                    <Button fx:id="deleteBottomLayerButton" onAction="#deleteLayerFromBottomReinforcement" text="Delete" />
                 </HBox>
             </VBox>
 
