@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -77,30 +76,32 @@ public class SlabReinforcementSetup extends Controller {
     @FXML
     public void initialize() {
         if (slabReinforcement == null) {
-            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, 0);
-            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, 0);
+            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, 0);
+            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, 0);
             numberOfTopLayers = 1;
             numberOfBottomLayers = 1;
-        } else {
+        } else if (this.slabReinforcement instanceof SlabReinforcement) {
             SlabReinforcement slabReinforcement = (SlabReinforcement) this.slabReinforcement;
-            numberOfTopLayers = slabReinforcement.getTopReinforcement().size();
-            numberOfBottomLayers = slabReinforcement.getBottomReinforcement().size();
-            List<Integer> topReinforcement = slabReinforcement.getTopReinforcement();
-            List<Integer> topReinforcementSpacing = slabReinforcement.getTopReinforcementSpacing();
-            List<Integer> topAdditionalReinforcement = slabReinforcement.getAdditionalTopReinforcement();
-            List<Integer> topVerticalSpacing = slabReinforcement.getTopReinforcementVerticalSpacing();
-            List<Integer> bottomReinforcement = slabReinforcement.getBottomReinforcement();
-            List<Integer> bottomReinforcementSpacing = slabReinforcement.getBottomReinforcementSpacing();
-            List<Integer> bottomAdditionalReinforcement = slabReinforcement.getAdditionalBottomReinforcement();
-            List<Integer> bottomVerticalSpacing = slabReinforcement.getBottomReinforcementVerticalSpacing();
+            numberOfTopLayers = slabReinforcement.getTopDiameters().size();
+            numberOfBottomLayers = slabReinforcement.getBottomDiameters().size();
+            List<Integer> topDiameters = slabReinforcement.getTopDiameters();
+            List<Integer> topSpacings = slabReinforcement.getTopSpacings();
+            List<Integer> additionalTopDiameters = slabReinforcement.getAdditionalTopDiameters();
+            List<Integer> topVerticalSpacing = slabReinforcement.getTopVerticalSpacings();
+            List<Integer> bottomDiameters = slabReinforcement.getBottomDiameters();
+            List<Integer> bottomSpacings = slabReinforcement.getBottomSpacings();
+            List<Integer> additionalBottomDiameters = slabReinforcement.getAdditionalBottomDiameters();
+            List<Integer> bottomVerticalSpacing = slabReinforcement.getBottomVerticalSpacings();
             IntStream.range(0, numberOfTopLayers).forEach(i -> {
-                addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, i);
-                initializeReinforcementLayerFields(topLayersVBox, topLayersVerticalSpacingVBox, i, topReinforcement, topAdditionalReinforcement, topReinforcementSpacing, topVerticalSpacing);
+                addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, i);
+                initializeReinforcementLayerFields(topLayersVBox, topLayersVerticalSpacingVBox, i, topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacing);
             });
             IntStream.range(0, numberOfBottomLayers).forEach(i -> {
-                addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i);
-                initializeReinforcementLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i, bottomReinforcement, bottomAdditionalReinforcement, bottomReinforcementSpacing, bottomVerticalSpacing);
+                addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, i);
+                initializeReinforcementLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacing);
             });
+        } else {
+            showAlertBox("Invalid slab reinforcement", AlertKind.ERROR);
         }
         Platform.runLater(() -> container.requestFocus());
     }
@@ -160,7 +161,7 @@ public class SlabReinforcementSetup extends Controller {
                 "verticalSpacings", verticalSpacings));
     }
 
-    private void addReinforcementLayerInView(VBox layersWrapper, VBox verticalSpacingsWrapper, int layerIndex) {
+    private void addReinforcementLayerInView(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle, int layerIndex) {
         Label layerLabel = new Label(Utility.capitalize(layerLabels.get(layerIndex)) + " layer:");
         layerLabel.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER_LABEL);
         Label spacingLabel = new Label("at");
@@ -192,14 +193,21 @@ public class SlabReinforcementSetup extends Controller {
             verticalSpacingsWrapper.getChildren().add(verticalSpacingHBox);
         }
 
+        if (layerIndex == 1) {
+            verticalSpacingsTitle.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        }
+
         layersWrapper.getChildren().add(layer);
     }
 
-    private void deleteReinforcementLayerFromView(VBox layersWrapper, VBox verticalSpacingsWrapper) {
+    private void deleteReinforcementLayerFromView(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle) {
         List<Node> layers = layersWrapper.getChildren();
         layers.remove(layers.size() - 1);
         List<Node> verticalSpacings = verticalSpacingsWrapper.getChildren();
         verticalSpacings.remove(verticalSpacings.size() - 1);
+        if (layers.size() == 1) {
+            verticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
+        }
     }
 
     private void initializeReinforcementLayerFields(VBox layersWrapper, VBox verticalSpacingsWrapper,
@@ -285,41 +293,29 @@ public class SlabReinforcementSetup extends Controller {
 
     public void deleteLayerFromTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers > 1) {
-            deleteReinforcementLayerFromView(topLayersVBox, topLayersVerticalSpacingVBox);
+            deleteReinforcementLayerFromView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle);
             numberOfTopLayers--;
-        }
-        if (numberOfTopLayers == 1) {
-            topLayersVerticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
         }
     }
 
     public void addLayerToTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, numberOfTopLayers);
+            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, numberOfTopLayers);
             numberOfTopLayers++;
-        }
-        if (numberOfTopLayers == 2) {
-            topLayersVerticalSpacingsTitle.getStyleClass().remove(CssStyleClasses.HIDDEN);
         }
     }
 
     public void deleteLayerFromBottomReinforcement(ActionEvent actionEvent) {
         if (numberOfBottomLayers > 1) {
-            deleteReinforcementLayerFromView(bottomLayersVBox, bottomLayersVerticalSpacingVBox);
+            deleteReinforcementLayerFromView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle);
             numberOfBottomLayers--;
-        }
-        if (numberOfBottomLayers == 1) {
-            bottomLayersVerticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
         }
     }
 
     public void addLayerToBottomReinforcement(ActionEvent actionEvent) {
         if (numberOfBottomLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, numberOfBottomLayers);
+            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, numberOfBottomLayers);
             numberOfBottomLayers++;
-        }
-        if (numberOfBottomLayers == 2) {
-            bottomLayersVerticalSpacingsTitle.getStyleClass().remove(CssStyleClasses.HIDDEN);
         }
     }
 

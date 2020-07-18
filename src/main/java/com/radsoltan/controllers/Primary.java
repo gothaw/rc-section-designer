@@ -4,6 +4,7 @@ import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
+import com.radsoltan.util.CssStyleClasses;
 import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
 import javafx.application.Platform;
@@ -78,13 +79,13 @@ public class Primary extends Controller {
             UlsShear.setText(project.getUlsShear());
         }
         if (project.getGeometry() == null) {
-            geometrySection.getStyleClass().add("not-defined");
+            geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         if (project.getReinforcement() == null) {
-            reinforcementSection.getStyleClass().add("not-defined");
+            reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         if (project.getDesignParameters() == null) {
-            designParametersSection.getStyleClass().add("not-defined");
+            designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         Platform.runLater(() -> container.requestFocus());
     }
@@ -148,20 +149,20 @@ public class Primary extends Controller {
             UlsShear.setText("");
             project.setUlsShear(null);
             if (UlsShearWrapper.getStyleClass().toString().isEmpty()) {
-                UlsShearWrapper.getStyleClass().add("hidden");
+                UlsShearWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
             }
             setMomentsUnit("kNm/m");
         } else if (elementType.equals("beam")) {
-            UlsShearWrapper.getStyleClass().remove("hidden");
+            UlsShearWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
             setMomentsUnit("kNm");
         }
         if (project.getElementType() != null && !project.getElementType().equals(elementType)) {
             project.setGeometry(null);
             project.setReinforcement(null);
             project.setDesignParameters(null);
-            geometrySection.getStyleClass().add("not-defined");
-            reinforcementSection.getStyleClass().add("not-defined");
-            designParametersSection.getStyleClass().add("not-defined");
+            geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         project.setElementType(elementType);
     }
