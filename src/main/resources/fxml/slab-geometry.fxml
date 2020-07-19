@@ -20,15 +20,15 @@
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <VBox styleClass="slab-geometry">
-            <VBox styleClass="section-wrapper">
+            <VBox styleClass="section-wrapper, padding-bottom">
                 <StackPane styleClass="canvas-wrapper">
                     <Canvas height="250" width="250"/>
                 </StackPane>
             </VBox>
-            <VBox styleClass="section-wrapper, border-separator-top">
+            <VBox styleClass="section-wrapper, border-separator-top, padding-top">
                 <Label styleClass="heading" text="Slab Geometry"/>
                 <HBox styleClass="field-wrapper">
-                    <Label styleClass="field-label" text="Slab thickness [t]:"/>
+                    <Label styleClass="field-label" text="Slab thickness [t]"/>
                     <PositiveIntegerField fx:id="slabThickness" styleClass="numerical-field"/>
                     <Label styleClass="unit-label" text="mm"/>
                 </HBox>

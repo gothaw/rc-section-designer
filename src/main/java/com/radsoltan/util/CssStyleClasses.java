@@ -15,4 +15,5 @@ public class CssStyleClasses {
     public static final String SLAB_ADDITIONAL_REINFORCEMENT_JOINING_LABEL = "slab-additional-reinforcement-joining-label";
     public static final String SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER = "slab-additional-reinforcement-diameter";
     public static final String SLAB_VERTICAL_SPACING_FIELD = "slab-vertical-spacing-field";
+    public static final String UNIT_LABEL = "unit-label";
 }

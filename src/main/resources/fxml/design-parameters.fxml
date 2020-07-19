@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.radsoltan.components.PositiveIntegerField?>
+<?import javafx.scene.canvas.Canvas?>
+<VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
+      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.radsoltan.controllers.DesignParametersSetup">
+    <MenuBar>
+        <Menu text="File">
+            <MenuItem text="New"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
+        </Menu>
+        <Menu text="About"/>
+        <Menu text="Help"/>
+    </MenuBar>
+    <ScrollPane fitToHeight="true" fitToWidth="true">
+        <VBox styleClass="design-parameters-wrapper">
+            <VBox styleClass="section-wrapper">
+                <Label styleClass="heading" text="Design Parameters"/>
+            </VBox>
+
+            <GridPane styleClass="section-wrapper, border-separator-top, design-parameters-grid">
+                <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <VBox styleClass="nominal-cover-wrapper, padding-bottom">
+                        <Label text="Nominal Cover" styleClass="subheading" />
+                        <HBox>
+                            <Label styleClass="field-label" text="Top" />
+                            <ComboBox fx:id="nominalCoverTop" />
+                            <Label styleClass="unit-label" text="mm" />
+                        </HBox>
+                        <HBox>
+                            <Label styleClass="field-label" text="Bottom" />
+                            <ComboBox fx:id="nominalCoverBottom" />
+                            <Label styleClass="unit-label" text="mm" />
+                        </HBox>
+                        <HBox>
+                            <Label styleClass="field-label" text="Sides" />
+                            <ComboBox fx:id="nominalCoverSides" />
+                            <Label styleClass="unit-label" text="mm" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="concrete-wrapper, border-separator-top, padding-bottom">
+                        <Label text="Concrete" styleClass="subheading" />
+                        <HBox>
+                            <Label styleClass="field-label" text="Class" />
+                            <ComboBox fx:id="concreteClass" />
+                        </HBox>
+                        <HBox>
+                            <Label styleClass="field-label" text="Aggregate size" />
+                            <PositiveIntegerField fx:id="aggregateSize" styleClass="numerical-field-small" />
+                            <Label styleClass="unit-label" text="mm" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="steel-wrapper, border-separator-top">
+                        <Label text="Steel" styleClass="subheading" />
+                        <HBox>
+                            <HBox styleClass="field-label">
+                                <Label text="Yield strength [f" />
+                                <Label styleClass="subscript" text="yk"/>
+                                <Label text="]" />
+                            </HBox>
+                            <PositiveIntegerField fx:id="yieldStrength" styleClass="numerical-field-small" />
+                            <Label styleClass="unit-label" text="MPa" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <VBox styleClass="partial-factors-wrapper, padding-bottom">
+                        <Label text="Partial Factors" styleClass="subheading" />
+                        <HBox>
+                            <HBox styleClass="field-label">
+                                <Label text="Steel [&#947;" />
+                                <Label styleClass="subscript" text="s"/>
+                                <Label text="]" />
+                            </HBox>
+                            <ComboBox fx:id="gammaS" />
+                        </HBox>
+                        <HBox>
+                            <HBox styleClass="field-label">
+                                <Label text="Concrete [&#947;" />
+                                <Label styleClass="subscript" text="c"/>
+                                <Label text="]" />
+                            </HBox>
+                            <ComboBox fx:id="gammaC" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="other-parameters-wrapper, border-separator-top">
+                        <HBox styleClass="padding-top">
+                            <Label styleClass="field-label" text="Redistribution ratio" />
+                            <PositiveIntegerField fx:id="redistributionRatio" styleClass="numerical-field-small" />
+                        </HBox>
+                        <HBox styleClass="padding-top">
+                            <CheckBox fx:id="isRecommendedRedistributionRatio" />
+                            <Label text="Use recommended redistribution ratio" />
+                        </HBox>
+                        <HBox styleClass="padding-top">
+                            <CheckBox fx:id="includeCrackingCalculations" />
+                            <Label text="Include cracking calculations" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+            </GridPane>
+            <HBox styleClass="section-wrapper, design-parameters-edit-buttons">
+                <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
+                <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</VBox>

@@ -5,18 +5,20 @@ public class DesignParameters {
     private int nominalCoverSides;
     private int nominalCoverBottom;
     private int yieldStrength;
+    private int aggregateSize;
     private double gammaC;
     private double gammaS;
     private double redistributionRatio;
     private boolean isRecommendedRatio;
     private boolean includeCrackingCalculations;
 
-    public DesignParameters(int nominalCoverTop, int nominalCoverSides, int nominalCoverBottom, int yieldStrength,
+    public DesignParameters(int nominalCoverTop, int nominalCoverSides, int nominalCoverBottom, int yieldStrength, int aggregateSize,
                             double gammaC, double gammaS, double redistributionRatio, boolean isRecommendedRatio, boolean includeCrackingCalculations) {
         this.nominalCoverTop = nominalCoverTop;
         this.nominalCoverSides = nominalCoverSides;
         this.nominalCoverBottom = nominalCoverBottom;
         this.yieldStrength = yieldStrength;
+        this.aggregateSize = aggregateSize;
         this.gammaC = gammaC;
         this.gammaS = gammaS;
         this.redistributionRatio = redistributionRatio;
@@ -62,5 +64,9 @@ public class DesignParameters {
 
     public boolean isIncludeCrackingCalculations() {
         return includeCrackingCalculations;
+    }
+
+    public int getAggregateSize() {
+        return aggregateSize;
     }
 }

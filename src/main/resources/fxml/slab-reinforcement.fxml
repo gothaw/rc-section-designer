@@ -2,9 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<?import com.radsoltan.components.PositiveIntegerField?>
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.radsoltan.controllers.SlabReinforcementSetup">
     <MenuBar>
         <Menu text="File">
@@ -23,15 +21,15 @@
                 <Label styleClass="heading" text="Top Layers" />
             </VBox>
 
-            <VBox styleClass="section-wrapper, slab-top-reinforcement, border-separator-top" prefHeight="265">
+            <VBox styleClass="section-wrapper, slab-top-reinforcement, border-separator-top">
                 <GridPane styleClass="slab-reinforcement-grid" >
                     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
-                        <Label styleClass="label-small" text="Reinforcement layers:" />
+                        <Label styleClass="label-small" text="Reinforcement layers" />
                     </VBox>
                     <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
                         <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="topLayersVerticalSpacingsTitle" styleClass="hidden">
                             <Label styleClass="label-small" text="Clear spacing" />
-                            <Label styleClass="label-small" text="between layers:" />
+                            <Label styleClass="label-small" text="between layers" />
                         </VBox>
                     </AnchorPane>
                     <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topLayersVBox" styleClass="slab-reinforcement-layers" />
@@ -50,12 +48,12 @@
             <VBox styleClass="section-wrapper, slab-bottom-reinforcement, border-separator-top">
                 <GridPane styleClass="slab-reinforcement-grid" >
                     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
-                        <Label styleClass="label-small" text="Reinforcement layers:" />
+                        <Label styleClass="label-small" text="Reinforcement layers" />
                     </VBox>
                     <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top" >
                         <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="bottomLayersVerticalSpacingsTitle" styleClass="hidden">
                             <Label styleClass="label-small" text="Clear spacing" />
-                            <Label styleClass="label-small" text="between layers:" />
+                            <Label styleClass="label-small" text="between layers" />
                         </VBox>
                     </AnchorPane>
                     <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomLayersVBox" styleClass="slab-reinforcement-layers" />

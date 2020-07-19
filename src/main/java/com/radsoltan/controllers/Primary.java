@@ -45,8 +45,10 @@ public class Primary extends Controller {
     private VBox forcesSection;
     @FXML
     private NumericalTextField UlsMoment;
+    private HBox UlsMomentWrapper;
     @FXML
     private NumericalTextField SlsMoment;
+    private HBox SlsMomentWrapper;
     @FXML
     private NumericalTextField UlsShear;
     private HBox UlsShearWrapper;
@@ -67,7 +69,11 @@ public class Primary extends Controller {
         }
         projectDescription.setText(project.getDescription());
         projectAuthor.setText(project.getAuthor());
+
+        UlsMomentWrapper = (HBox) UlsMoment.getParent();
+        SlsMomentWrapper = (HBox) SlsMoment.getParent();
         UlsShearWrapper = (HBox) UlsShear.getParent();
+
         elementTypeChoiceBox.setValue(Utility.capitalize(project.getElementType()));
         if (project.getUlsMoment() != null) {
             UlsMoment.setText(project.getUlsMoment());
@@ -98,10 +104,11 @@ public class Primary extends Controller {
         }
     }
 
-    public void setDesignParameters(ActionEvent actionEvent) {
+    public void setDesignParameters(ActionEvent actionEvent) throws IOException {
         if (elementTypeChoiceBox.getValue() != null) {
             System.out.println("Set design parameters");
             setProjectProperties();
+            App.setRoot("design-parameters");
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
@@ -179,11 +186,9 @@ public class Primary extends Controller {
     }
 
     private void setMomentsUnit(String unit) {
-        HBox UlsMomentWrapper = (HBox) forcesSection.getChildren().get(0);
-        Label UlsMomentUnits = (Label) UlsMomentWrapper.getChildren().get(2);
+        Label UlsMomentUnits = (Label) UlsMomentWrapper.lookup("." + CssStyleClasses.UNIT_LABEL);
         UlsMomentUnits.setText(unit);
-        HBox SlsMomentWrapper = (HBox) forcesSection.getChildren().get(1);
-        Label SlsMomentUnits = (Label) SlsMomentWrapper.getChildren().get(2);
+        Label SlsMomentUnits = (Label) SlsMomentWrapper.lookup("." + CssStyleClasses.UNIT_LABEL);
         SlsMomentUnits.setText(unit);
     }
 

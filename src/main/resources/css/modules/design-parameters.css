@@ -1,0 +1,19 @@
+/* ========= Design Parameters ========= */
+.design-parameters-wrapper {
+    -fx-padding: 10px;
+    -fx-alignment: center;
+}
+
+.design-parameters-grid {
+    -fx-hgap: 20px;
+}
+
+.nominal-cover-wrapper, .concrete-wrapper, .partial-factors-wrapper, .other-parameters {
+    -fx-spacing: 8px;
+}
+
+.design-parameters-edit-buttons {
+    -fx-pref-height: 350px;
+    -fx-spacing: 8px;
+    -fx-alignment: bottom-right;
+}

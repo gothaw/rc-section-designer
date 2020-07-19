@@ -18,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        scene = new Scene(loadFXML("primary"), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+        scene = new Scene(loadFXML("design-parameters"), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.setTitle(Constants.APP_TITLE);
         primaryStage.getIcons().add(new Image(getClass().getResource("/images/beam.png").toExternalForm()));
