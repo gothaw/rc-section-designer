@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SlabGeometrySetup extends Controller {
 
@@ -44,8 +45,7 @@ public class SlabGeometrySetup extends Controller {
     }
 
     public void applyChanges(ActionEvent actionEvent) throws IOException {
-        validationMessages = new ArrayList<>();
-        validateForEmptyFields();
+        List<String> validationMessages = getValidationMessagesForEmptyFields();
         if (validationMessages.isEmpty()) {
             SlabStrip slabStrip = new SlabStrip(Integer.parseInt(slabThickness.getText()));
             Geometry geometry = new Geometry(slabStrip);
@@ -61,9 +61,10 @@ public class SlabGeometrySetup extends Controller {
     }
 
     @Override
-    protected void validateForEmptyFields() {
+    protected List<String> getValidationMessagesForEmptyFields() {
         if (slabThickness.getText().equals("")) {
-            validationMessages.add("Please define slab thickness.");
+            return new ArrayList<>(List.of("Please define slab thickness."));
         }
+        return new ArrayList<>();
     }
 }

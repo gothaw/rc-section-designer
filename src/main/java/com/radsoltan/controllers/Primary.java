@@ -4,6 +4,7 @@ import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
+import com.radsoltan.util.CssStyleClasses;
 import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
 import javafx.application.Platform;
@@ -16,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Primary extends Controller {
 
@@ -43,8 +45,10 @@ public class Primary extends Controller {
     private VBox forcesSection;
     @FXML
     private NumericalTextField UlsMoment;
+    private HBox UlsMomentWrapper;
     @FXML
     private NumericalTextField SlsMoment;
+    private HBox SlsMomentWrapper;
     @FXML
     private NumericalTextField UlsShear;
     private HBox UlsShearWrapper;
@@ -65,7 +69,11 @@ public class Primary extends Controller {
         }
         projectDescription.setText(project.getDescription());
         projectAuthor.setText(project.getAuthor());
+
+        UlsMomentWrapper = (HBox) UlsMoment.getParent();
+        SlsMomentWrapper = (HBox) SlsMoment.getParent();
         UlsShearWrapper = (HBox) UlsShear.getParent();
+
         elementTypeChoiceBox.setValue(Utility.capitalize(project.getElementType()));
         if (project.getUlsMoment() != null) {
             UlsMoment.setText(project.getUlsMoment());
@@ -77,13 +85,13 @@ public class Primary extends Controller {
             UlsShear.setText(project.getUlsShear());
         }
         if (project.getGeometry() == null) {
-            geometrySection.getStyleClass().add("not-defined");
+            geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         if (project.getReinforcement() == null) {
-            reinforcementSection.getStyleClass().add("not-defined");
+            reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         if (project.getDesignParameters() == null) {
-            designParametersSection.getStyleClass().add("not-defined");
+            designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         Platform.runLater(() -> container.requestFocus());
     }
@@ -96,10 +104,11 @@ public class Primary extends Controller {
         }
     }
 
-    public void setDesignParameters(ActionEvent actionEvent) {
+    public void setDesignParameters(ActionEvent actionEvent) throws IOException {
         if (elementTypeChoiceBox.getValue() != null) {
             System.out.println("Set design parameters");
             setProjectProperties();
+            App.setRoot("design-parameters");
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
@@ -147,20 +156,20 @@ public class Primary extends Controller {
             UlsShear.setText("");
             project.setUlsShear(null);
             if (UlsShearWrapper.getStyleClass().toString().isEmpty()) {
-                UlsShearWrapper.getStyleClass().add("hidden");
+                UlsShearWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
             }
             setMomentsUnit("kNm/m");
         } else if (elementType.equals("beam")) {
-            UlsShearWrapper.getStyleClass().remove("hidden");
+            UlsShearWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
             setMomentsUnit("kNm");
         }
         if (project.getElementType() != null && !project.getElementType().equals(elementType)) {
             project.setGeometry(null);
             project.setReinforcement(null);
             project.setDesignParameters(null);
-            geometrySection.getStyleClass().add("not-defined");
-            reinforcementSection.getStyleClass().add("not-defined");
-            designParametersSection.getStyleClass().add("not-defined");
+            geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         project.setElementType(elementType);
     }
@@ -177,16 +186,14 @@ public class Primary extends Controller {
     }
 
     private void setMomentsUnit(String unit) {
-        HBox UlsMomentWrapper = (HBox) forcesSection.getChildren().get(0);
-        Label UlsMomentUnits = (Label) UlsMomentWrapper.getChildren().get(2);
+        Label UlsMomentUnits = (Label) UlsMomentWrapper.lookup("." + CssStyleClasses.UNIT_LABEL);
         UlsMomentUnits.setText(unit);
-        HBox SlsMomentWrapper = (HBox) forcesSection.getChildren().get(1);
-        Label SlsMomentUnits = (Label) SlsMomentWrapper.getChildren().get(2);
+        Label SlsMomentUnits = (Label) SlsMomentWrapper.lookup("." + CssStyleClasses.UNIT_LABEL);
         SlsMomentUnits.setText(unit);
     }
 
     @Override
-    protected void validateForEmptyFields() {
-
+    protected List<String> getValidationMessagesForEmptyFields() {
+        return null;
     }
 }

@@ -5,7 +5,7 @@
 }
 
 .slab-geometry-edit-buttons {
-    -fx-padding: 245px 0 0 0;
+    -fx-pref-height: 275px;
     -fx-spacing: 8px;
-    -fx-alignment: center-right;
+    -fx-alignment: bottom-right;
 }

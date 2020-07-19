@@ -9,6 +9,7 @@
 @import "modules/alert.css";
 @import "modules/geometry.css";
 @import "modules/reinforcement.css";
+@import "modules/design-parameters.css";
 /*============== Fonts ==============*/
 @font-face {
     src: url("../fonts/SourceSansPro-Regular.ttf");
@@ -32,6 +33,10 @@
 
 .padding-top {
     -fx-padding: 10px 0 0 0;
+}
+
+.padding-bottom {
+    -fx-padding: 0 0 10px 0;
 }
 
 .scroll-pane > .viewport {
@@ -78,6 +83,13 @@
     -fx-font-size: 12px;
     -fx-pref-height: 16px;
 }
+
+.subscript {
+    -fx-font-size: 11px;
+    -fx-pref-height: 26px;
+    -fx-content-display: bottom;
+}
+
 .label-small-checkbox{
     -fx-font-size: 12px;
 }
@@ -90,6 +102,10 @@
     -fx-pref-width: 85px;
 }
 
+.numerical-field-small {
+    -fx-pref-width: 60px;
+}
+
 .unit-label {
     -fx-padding: 0 0 0 5px;
 }
@@ -99,7 +115,7 @@
     -fx-padding: 0 0 5px 0;
 }
 
-.border-separator {
+.border-separator-bottom {
     -fx-border-color: #aeb2bd;
     -fx-border-style: solid;
     -fx-border-width: 0 0 1.5px 0;

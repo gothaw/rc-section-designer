@@ -15,6 +15,7 @@ public class Project {
     private Geometry geometry;
     private Reinforcement reinforcement;
     private DesignParameters designParameters;
+    private Concrete concrete;
 
     private static Project project;
 
@@ -115,5 +116,13 @@ public class Project {
 
     public void setDesignParameters(DesignParameters designParameters) {
         this.designParameters = designParameters;
+    }
+
+    public Concrete getConcrete() {
+        return concrete;
+    }
+
+    public void setConcrete(Concrete concrete) {
+        this.concrete = concrete;
     }
 }

@@ -2,6 +2,8 @@ package com.radsoltan.controllers;
 
 import javafx.event.ActionEvent;
 
+import java.util.List;
+
 public class BeamReinforcementSetup extends Controller {
 
     public void cancel(ActionEvent actionEvent) {
@@ -13,7 +15,7 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     @Override
-    protected void validateForEmptyFields() {
-
+    protected List<String> getValidationMessagesForEmptyFields() {
+        return null;
     }
 }
