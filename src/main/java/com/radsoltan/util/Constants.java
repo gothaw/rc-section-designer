@@ -19,6 +19,14 @@ public class Constants {
     public static final int SLAB_MIN_BAR_SPACING = 50;
     public static final int SLAB_MAX_BAR_SPACING = 750;
     public static final int SLAB_BAR_SPACING_STEP = 25;
+    public static final int MAX_NOMINAL_COVER = 100;
+    public static final int MIN_NOMINAL_COVER = 20;
+    public static final double GAMMA_C_PERSISTENT_TRANSIENT = 1.5;
+    public static final double GAMMA_C_ACCIDENTAL = 1.2;
+    public static final double GAMMA_S_PERSISTENT_TRANSIENT = 1.15;
+    public static final double GAMMA_S_ACCIDENTAL = 1.0;
+    public static final int DEFAULT_AGGREGATE_SIZE = 20;
+    public static final int NOMINAL_COVER_STEP = 5;
     public static final int MAX_NUMBER_OF_LAYERS = 6;
     public static final ArrayList<String> LAYERS_ORDINAL_LABELS = new ArrayList<>(List.of("1st", "2nd", "3rd", "4th", "5th", "6th"));
 }

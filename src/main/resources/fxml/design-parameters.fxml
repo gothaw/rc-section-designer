@@ -49,7 +49,7 @@
                         <Label text="Concrete" styleClass="subheading" />
                         <HBox>
                             <Label styleClass="field-label" text="Class" />
-                            <ComboBox fx:id="concreteClass" />
+                            <ComboBox fx:id="concreteClass" styleClass="combo-box-wide" />
                         </HBox>
                         <HBox>
                             <Label styleClass="field-label" text="Aggregate size" />
@@ -81,7 +81,7 @@
                                 <Label styleClass="subscript" text="s"/>
                                 <Label text="]" />
                             </HBox>
-                            <ComboBox fx:id="gammaS" />
+                            <ComboBox fx:id="gammaS" styleClass="combo-box-medium" />
                         </HBox>
                         <HBox>
                             <HBox styleClass="field-label">
@@ -89,14 +89,14 @@
                                 <Label styleClass="subscript" text="c"/>
                                 <Label text="]" />
                             </HBox>
-                            <ComboBox fx:id="gammaC" />
+                            <ComboBox fx:id="gammaC" styleClass="combo-box-medium" />
                         </HBox>
                     </VBox>
 
                     <VBox styleClass="other-parameters-wrapper, border-separator-top">
                         <HBox styleClass="padding-top">
                             <Label styleClass="field-label" text="Redistribution ratio" />
-                            <PositiveIntegerField fx:id="redistributionRatio" styleClass="numerical-field-small" />
+                            <PositiveIntegerField fx:id="redistributionRatio" styleClass="numerical-field-medium" />
                         </HBox>
                         <HBox styleClass="padding-top">
                             <CheckBox fx:id="isRecommendedRedistributionRatio" />

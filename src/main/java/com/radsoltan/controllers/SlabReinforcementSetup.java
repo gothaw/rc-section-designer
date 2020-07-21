@@ -65,10 +65,10 @@ public class SlabReinforcementSetup extends Controller {
 
         slabReinforcement = project.getReinforcement();
 
-        List<Integer> spacingsArray = new ArrayList<>();
+        List<Integer> spacingsList = new ArrayList<>();
         IntStream.iterate(Constants.SLAB_MIN_BAR_SPACING, spacing -> spacing <= Constants.SLAB_MAX_BAR_SPACING, spacing -> spacing + Constants.SLAB_BAR_SPACING_STEP)
-                .forEach(spacingsArray::add);
-        spacings = FXCollections.observableList(spacingsArray);
+                .forEach(spacingsList::add);
+        spacings = FXCollections.observableList(spacingsList);
         diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
         layerLabels = Constants.LAYERS_ORDINAL_LABELS;
     }
