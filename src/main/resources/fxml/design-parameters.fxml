@@ -5,6 +5,7 @@
 
 <?import com.radsoltan.components.PositiveIntegerField?>
 <?import javafx.scene.canvas.Canvas?>
+<?import com.radsoltan.components.NumericalTextField?>
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.radsoltan.controllers.DesignParametersSetup">
@@ -96,10 +97,10 @@
                     <VBox styleClass="other-parameters-wrapper, border-separator-top">
                         <HBox styleClass="padding-top">
                             <Label styleClass="field-label" text="Redistribution ratio" />
-                            <PositiveIntegerField fx:id="redistributionRatio" styleClass="numerical-field-medium" />
+                            <NumericalTextField fx:id="redistributionRatio" styleClass="numerical-field-medium" />
                         </HBox>
                         <HBox styleClass="padding-top">
-                            <CheckBox fx:id="isRecommendedRedistributionRatio" />
+                            <CheckBox fx:id="isRecommendedRedistributionRatio" onAction="#setRecommendedRedistributionRatio" />
                             <Label text="Use recommended redistribution ratio" />
                         </HBox>
                         <HBox styleClass="padding-top">

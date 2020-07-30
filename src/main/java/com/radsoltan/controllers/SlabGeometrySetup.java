@@ -6,6 +6,7 @@ import com.radsoltan.model.Project;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.Shape;
 import com.radsoltan.model.geometry.SlabStrip;
+import com.radsoltan.util.Messages;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +39,7 @@ public class SlabGeometrySetup extends Controller {
                 SlabStrip slabStrip = (SlabStrip) shape;
                 slabThickness.setText(Integer.toString(slabStrip.getDepth()));
             } else {
-                showAlertBox("Invalid slab geometry", AlertKind.ERROR);
+                showAlertBox(Messages.INVALID_SLAB_GEOMETRY, AlertKind.ERROR);
             }
         }
         Platform.runLater(() -> container.requestFocus());

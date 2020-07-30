@@ -7,6 +7,7 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
+import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -101,7 +102,7 @@ public class SlabReinforcementSetup extends Controller {
                 initializeReinforcementLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacing);
             });
         } else {
-            showAlertBox("Invalid slab reinforcement", AlertKind.ERROR);
+            showAlertBox(Messages.INVALID_SLAB_REINFORCEMENT, AlertKind.ERROR);
         }
         Platform.runLater(() -> container.requestFocus());
     }
