@@ -102,6 +102,10 @@
     -fx-pref-width: 85px;
 }
 
+.numerical-field-medium {
+    -fx-pref-width: 70px;
+}
+
 .numerical-field-small {
     -fx-pref-width: 60px;
 }
@@ -159,4 +163,12 @@
 
 .combo-box {
     -fx-pref-width: 60px;
+}
+
+.combo-box-medium {
+    -fx-pref-width: 70px;
+}
+
+.combo-box-wide {
+    -fx-pref-width: 80px;
 }

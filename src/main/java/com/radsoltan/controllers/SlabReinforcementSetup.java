@@ -7,6 +7,7 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
+import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -65,10 +66,10 @@ public class SlabReinforcementSetup extends Controller {
 
         slabReinforcement = project.getReinforcement();
 
-        List<Integer> spacingsArray = new ArrayList<>();
+        List<Integer> spacingsList = new ArrayList<>();
         IntStream.iterate(Constants.SLAB_MIN_BAR_SPACING, spacing -> spacing <= Constants.SLAB_MAX_BAR_SPACING, spacing -> spacing + Constants.SLAB_BAR_SPACING_STEP)
-                .forEach(spacingsArray::add);
-        spacings = FXCollections.observableList(spacingsArray);
+                .forEach(spacingsList::add);
+        spacings = FXCollections.observableList(spacingsList);
         diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
         layerLabels = Constants.LAYERS_ORDINAL_LABELS;
     }
@@ -101,7 +102,7 @@ public class SlabReinforcementSetup extends Controller {
                 initializeReinforcementLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacing);
             });
         } else {
-            showAlertBox("Invalid slab reinforcement", AlertKind.ERROR);
+            showAlertBox(Messages.INVALID_SLAB_REINFORCEMENT, AlertKind.ERROR);
         }
         Platform.runLater(() -> container.requestFocus());
     }
