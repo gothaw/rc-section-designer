@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
@@ -60,12 +61,9 @@ public class DesignParametersSetup extends Controller {
 
     public DesignParametersSetup() {
         project = Project.getInstance();
-//        designParameters = project.getDesignParameters();
-        designParameters = new DesignParameters(50, 0, 25, 500, 22, 1.2, 1.0, 0.9, true, true);
-        concrete = Concrete.C32_40;
-//        concrete = project.getConcrete();
-//        elementType = project.getElementType();
-        elementType = "slab";
+        designParameters = project.getDesignParameters();
+        concrete = project.getConcrete();
+        elementType = project.getElementType();
 
         List<Integer> nominalCoverList = new ArrayList<>();
         IntStream.iterate(Constants.MIN_NOMINAL_COVER, cover -> cover <= Constants.MAX_NOMINAL_COVER, cover -> cover + Constants.NOMINAL_COVER_STEP)
@@ -86,7 +84,7 @@ public class DesignParametersSetup extends Controller {
         concreteClass.getItems().addAll(concreteClasses);
         gammaC.getItems().addAll(Constants.GAMMA_C_PERSISTENT_TRANSIENT, Constants.GAMMA_C_ACCIDENTAL);
         gammaS.getItems().addAll(Constants.GAMMA_S_PERSISTENT_TRANSIENT, Constants.GAMMA_S_ACCIDENTAL);
-        if(elementType.equals("slab")){
+        if (elementType.equals("slab")) {
             nominalCoverSides.setValue(0);
             nominalCoverSides.getParent().getStyleClass().add(CssStyleClasses.HIDDEN);
         }
@@ -120,8 +118,36 @@ public class DesignParametersSetup extends Controller {
         App.setRoot("primary");
     }
 
-    public void applyChanges(ActionEvent actionEvent) {
-        System.out.println("Apply changes");
+    public void applyChanges(ActionEvent actionEvent) throws IOException {
+        List<String> validationMessages = getValidationMessagesForEmptyFields();
+        String validationMessageForRedistributionRatio = getValidationMessageForRedistributionRatio();
+        if (!validationMessageForRedistributionRatio.isEmpty()) {
+            validationMessages.add(validationMessageForRedistributionRatio);
+        }
+        if (validationMessages.isEmpty()) {
+            int nominalCoverTop = this.nominalCoverTop.getValue();
+            int nominalCoverSides = this.nominalCoverSides.getValue();
+            int nominalCoverBottom = this.nominalCoverBottom.getValue();
+            int yieldStrength = Integer.parseInt(this.yieldStrength.getText());
+            int aggregateSize = Integer.parseInt(this.aggregateSize.getText());
+            double gammaC = this.gammaC.getValue();
+            double gammaS = this.gammaS.getValue();
+            double redistributionRatio = Double.parseDouble(this.redistributionRatio.getText());
+            boolean isRecommendedRedistributionRatio = this.isRecommendedRedistributionRatio.isSelected();
+            boolean includeCrackingCalculations = this.includeCrackingCalculations.isSelected();
+
+            DesignParameters designParameters = new DesignParameters(nominalCoverTop, nominalCoverSides, nominalCoverBottom,
+                    yieldStrength, aggregateSize, gammaC, gammaS, redistributionRatio, isRecommendedRedistributionRatio, includeCrackingCalculations);
+
+            String concreteClass = this.concreteClass.getValue();
+            Concrete concrete = Concrete.valueOf(concreteClass.replace('/', '_'));
+
+            project.setDesignParameters(designParameters);
+            project.setConcrete(concrete);
+            App.setRoot("primary");
+        } else {
+            showAlertBox(validationMessages.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
+        }
     }
 
     public void setRecommendedRedistributionRatio(ActionEvent actionEvent) {
@@ -131,7 +157,23 @@ public class DesignParametersSetup extends Controller {
 
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
-        return null;
+        List<String> validationMessages = new ArrayList<>();
+        if (nominalCoverTop.getValue() == null || nominalCoverBottom.getValue() == null || nominalCoverSides.getValue() == null) {
+            validationMessages.add(Messages.SETUP_NOMINAL_COVER);
+        }
+        if (concreteClass.getValue() == null) {
+            validationMessages.add(Messages.SETUP_CONCRETE_CLASS);
+        }
+        if (aggregateSize.getText().isEmpty()) {
+            validationMessages.add(Messages.SETUP_AGGREGATE);
+        }
+        if (yieldStrength.getText().isEmpty()) {
+            validationMessages.add(Messages.SETUP_YIELD_STRENGTH);
+        }
+        if (gammaS.getValue() == null || gammaC.getValue() == null) {
+            validationMessages.add(Messages.SETUP_PARTIAL_FACTORS);
+        }
+        return validationMessages;
     }
 
     private String getValidationMessageForRedistributionRatio() {

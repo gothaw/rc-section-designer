@@ -40,7 +40,7 @@ public class Beam implements Flexure, Shear, Cracking {
                 BeamReinforcement reinforcement,
                 DesignParameters designParameters) {
         this.UlsMoment = UlsMoment;
-        this.UlsShear = UlsShear;
+        this.UlsShear = Math.abs(UlsShear);
         this.SlsMoment = SlsMoment;
         this.reinforcement = reinforcement;
         this.shearLinks = reinforcement.getShearLinks();

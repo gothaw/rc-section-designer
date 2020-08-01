@@ -106,7 +106,6 @@ public class Primary extends Controller {
 
     public void setDesignParameters(ActionEvent actionEvent) throws IOException {
         if (elementTypeChoiceBox.getValue() != null) {
-            System.out.println("Set design parameters");
             setProjectProperties();
             App.setRoot("design-parameters");
         } else {
@@ -153,13 +152,14 @@ public class Primary extends Controller {
     public void setElementTypeChoiceBox(ActionEvent actionEvent) {
         String elementType = elementTypeChoiceBox.getValue().toLowerCase();
         if (elementType.equals("slab")) {
-            UlsShear.setText("");
+            UlsShear.setText("0");
             project.setUlsShear(null);
             if (UlsShearWrapper.getStyleClass().toString().isEmpty()) {
                 UlsShearWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
             }
             setMomentsUnit("kNm/m");
         } else if (elementType.equals("beam")) {
+            UlsShear.setText("");
             UlsShearWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
             setMomentsUnit("kNm");
         }
