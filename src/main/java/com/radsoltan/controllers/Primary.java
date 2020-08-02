@@ -86,9 +86,13 @@ public class Primary extends Controller {
         }
         if (project.getGeometry() == null) {
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+        } else {
+            geometryText.setText(project.getGeometry().getDescription());
         }
         if (project.getReinforcement() == null) {
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+        } else {
+            reinforcementText.setText(project.getReinforcement().getDescription());
         }
         if (project.getDesignParameters() == null) {
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
@@ -167,8 +171,11 @@ public class Primary extends Controller {
             project.setGeometry(null);
             project.setReinforcement(null);
             project.setDesignParameters(null);
+            project.setConcrete(null);
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            geometryText.setText(Messages.ENTER_GEOMETRY);
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            reinforcementText.setText(Messages.ENTER_REINFORCEMENT);
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         project.setElementType(elementType);

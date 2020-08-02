@@ -7,6 +7,11 @@ public class LShape extends TShape{
     }
 
     @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
     public void draw() {
         // TODO: 18/05/2020
     }

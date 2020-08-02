@@ -98,6 +98,12 @@ public class BeamReinforcement extends Reinforcement {
         return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
+    @Override
+    public String getDescription() {
+        // TODO: 02/08/2020
+        return null;
+    }
+
     public List<List<Double>> getAreaOfReinforcementBars(List<List<Integer>> reinforcement) {
         return reinforcement.stream()
                 .map(row -> row.stream()

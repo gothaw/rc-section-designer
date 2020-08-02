@@ -11,4 +11,6 @@ public abstract class Reinforcement implements Drawable {
     public abstract double getTotalAreaOfBottomReinforcement();
 
     public abstract double getCentroidOfBottomReinforcement(int nominalCoverBottom);
+
+    public abstract String getDescription();
 }

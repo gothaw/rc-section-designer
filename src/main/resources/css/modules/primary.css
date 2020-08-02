@@ -5,33 +5,52 @@
     -fx-vgap: 5px;
 }
 
+.element-type {
+    -fx-min-width: 90px;
+    -fx-cursor: hand;
+}
+
+.element-type-wrapper {
+    -fx-padding: 7px 10px 7px 0;
+}
+
 .geometry {
     -fx-padding: 5px 0 0 0;
-    -fx-min-height: 80px;
+}
+
+.geometry .geometry-text {
+    -fx-min-height: 70px;
+    -fx-alignment: top-left;
 }
 
 .reinforcement {
     -fx-padding: 5px 0 0 0;
-    -fx-min-height: 100px;
+}
+
+.reinforcement .reinforcement-text {
+    -fx-pref-height: 136px;
+    -fx-alignment: top-left;
 }
 
 .design-parameters {
-    -fx-padding: 7px 0 0 0;
+    -fx-padding: 10px 0 7px 0;
 }
 
 .not-defined {
     -fx-text-base-color: red;
 }
 
-.analysis-results {
-    -fx-min-height: 96px;
-}
-
 .results-wrapper {
     -fx-background-color: #fff;
+    -fx-pref-height: 75px;
     -fx-padding: 5px 10px 5px 10px;
-    -fx-min-height: 60px;
-    -fx-alignment: center-left;
+}
+
+.results-message {
+    -fx-min-height: 46px;
+    -fx-max-height: 46px;
+    -fx-padding: 5px 0 0 0;
+    -fx-alignment: top-left;
 }
 
 .utilization-note{
@@ -40,7 +59,7 @@
 }
 
 .project-details-field{
-    -fx-pref-width: 160px;
+    -fx-pref-width: 270px;
 }
 
 .pass{
@@ -52,7 +71,8 @@
 }
 
 .primary-button-wrapper {
-    -fx-padding: 15px 0 0 0;
-    -fx-alignment: center-right;
+    -fx-pref-height: 100px;
+    -fx-alignment: bottom-right;
+    -fx-padding: 10px 0 0 0;
     -fx-spacing: 10;
 }

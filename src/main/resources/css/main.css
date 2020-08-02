@@ -48,12 +48,7 @@
 }
 
 .grid-cell {
-    -fx-pref-width: 280px;
-}
-
-.element-type {
-    -fx-min-width: 90px;
-    -fx-cursor: hand;
+    -fx-pref-width: 400px;
 }
 
 .button {
@@ -77,6 +72,7 @@
 .label {
     -fx-pref-height: 24px;
     -fx-content-display: center;
+    -fx-wrap-text: true;
 }
 
 .label-small {
@@ -132,7 +128,7 @@
 }
 
 .section-wrapper {
-    -fx-max-width: 580px;
+    -fx-max-width: 800px;
 }
 
 .large-button {

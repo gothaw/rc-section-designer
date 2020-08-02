@@ -74,6 +74,11 @@ public class SlabReinforcement extends Reinforcement {
         return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
+    @Override
+    public String getDescription() {
+        return "All good \nAll good";
+    }
+
     public List<Double> getAreaOfReinforcementLayers(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> spacing) {
 
         return IntStream.range(0, reinforcement.size())

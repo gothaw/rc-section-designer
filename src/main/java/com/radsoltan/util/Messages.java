@@ -1,6 +1,8 @@
 package com.radsoltan.util;
 
 public class Messages {
+    public static final String ENTER_GEOMETRY = "Enter geometry...";
+    public static final String ENTER_REINFORCEMENT = "Enter reinforcement...";
     public static final String INVALID_REDISTRIBUTION_RATIO = "Redistribution ratio must be between 0.7 and 1.0.";
     public static final String INVALID_SLAB_REINFORCEMENT = "Invalid slab reinforcement.";
     public static final String INVALID_SLAB_GEOMETRY = "Invalid slab geometry.";

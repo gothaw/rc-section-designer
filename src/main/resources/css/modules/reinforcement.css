@@ -6,11 +6,11 @@
 }
 
 .slab-top-reinforcement, .slab-bottom-reinforcement {
-    -fx-pref-height: 265px;
+    -fx-pref-height: 320px;
 }
 
 .slab-reinforcement-layers {
-    -fx-pref-width: 500px;
+    -fx-pref-width: 700px;
 }
 
 .slab-reinforcement-vertical-spacings {

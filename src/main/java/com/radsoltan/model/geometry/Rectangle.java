@@ -67,6 +67,11 @@ public class Rectangle extends Shape {
     }
 
     @Override
+    public String getDescription() {
+        return String.format("Rectangle: %d mm deep x %d mm wide.", depth, width);
+    }
+
+    @Override
     public void draw() {
         // TODO: 18/05/2020
     }

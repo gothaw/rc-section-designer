@@ -86,6 +86,11 @@ public class TShape extends Shape implements Flanged {
     }
 
     @Override
+    public String getDescription() {
+        return null;
+    }
+
+    @Override
     public int getDepth() {
         return depth;
     }

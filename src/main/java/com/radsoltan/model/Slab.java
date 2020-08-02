@@ -5,7 +5,7 @@ import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Messages;
 
-public class Slab implements Flexure {
+public class Slab implements Flexure, Cracking {
     private final double UlsMoment;
     private final double SlsMoment;
     private final Geometry geometry;
@@ -60,6 +60,11 @@ public class Slab implements Flexure {
         } else {
             throw new IllegalArgumentException(Messages.WRONG_CONCRETE_CLASS);
         }
+    }
+
+    @Override
+    public void calculateCracks() {
+
     }
 
     public double getProvidedTensileReinforcement() {
