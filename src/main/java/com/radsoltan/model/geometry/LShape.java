@@ -7,8 +7,8 @@ public class LShape extends TShape{
     }
 
     @Override
-    public String toString() {
-        return super.toString();
+    public String getDescription() {
+        return String.format("L shape: %d mm downstand x %d mm web width + flange %d mm wide x %d mm thick.", getDownstandDepth(), getWebWidth(), getFlangeWidth(), getFlangeThickness());
     }
 
     @Override

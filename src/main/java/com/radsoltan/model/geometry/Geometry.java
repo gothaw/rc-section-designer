@@ -39,7 +39,7 @@ public class Geometry {
     }
 
     public int getWidth() {
-        return shape.getWidth();
+        return shape.getWebWidth();
     }
 
     public double getArea() {

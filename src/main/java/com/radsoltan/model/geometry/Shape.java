@@ -6,7 +6,7 @@ public abstract class Shape implements Drawable {
 
     public abstract int getDepth();
 
-    public abstract int getWidth();
+    public abstract int getWebWidth();
 
     public abstract double getArea();
 

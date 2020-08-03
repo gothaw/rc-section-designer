@@ -19,7 +19,7 @@
 }
 
 .geometry .geometry-text {
-    -fx-min-height: 70px;
+    -fx-min-height: 45px;
     -fx-alignment: top-left;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .reinforcement .reinforcement-text {
-    -fx-pref-height: 136px;
+    -fx-pref-height: 162px;
     -fx-alignment: top-left;
 }
 
@@ -47,8 +47,8 @@
 }
 
 .results-message {
-    -fx-min-height: 46px;
-    -fx-max-height: 46px;
+    -fx-min-height: 47px;
+    -fx-max-height: 47px;
     -fx-padding: 5px 0 0 0;
     -fx-alignment: top-left;
 }
