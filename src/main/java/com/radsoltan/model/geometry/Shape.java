@@ -23,4 +23,6 @@ public abstract class Shape implements Drawable {
     public abstract double getFactorForNonUniformSelfEquilibratingStresses(double UlsMoment);
 
     public abstract double getFactorForStressDistributionPriorCracking(double UlsMoment);
+
+    public abstract String getDescription();
 }

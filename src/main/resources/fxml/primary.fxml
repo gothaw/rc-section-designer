@@ -12,120 +12,127 @@
       fx:controller="com.radsoltan.controllers.Primary">
     <MenuBar>
         <Menu text="File">
-            <MenuItem text="New" />
-            <MenuItem text="Open" />
-            <MenuItem text="Save" />
-            <MenuItem text="Save As" />
+            <MenuItem text="New"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
         </Menu>
-        <Menu text="About" />
-        <Menu text="Help" />
+        <Menu text="About"/>
+        <Menu text="Help"/>
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <GridPane styleClass="primary-grid">
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                <Label styleClass="heading" text="Project Details" />
+                <Label styleClass="heading" text="Project Details"/>
                 <VBox styleClass="field-wrapper, border-separator-bottom">
                     <HBox>
-                        <Label styleClass="field-label" text="Project" />
+                        <Label styleClass="field-label" text="Project"/>
                         <TextField fx:id="projectName" styleClass="project-details-field"/>
                     </HBox>
                     <HBox>
-                        <Label styleClass="field-label" text="Project Number" />
-                        <PositiveIntegerField fx:id="projectNumber" styleClass="project-details-field" />
+                        <Label styleClass="field-label" text="Project Number"/>
+                        <PositiveIntegerField fx:id="projectNumber" styleClass="project-details-field"/>
                     </HBox>
                     <HBox>
-                        <Label styleClass="field-label" text="Description" />
-                        <TextField fx:id="projectDescription" styleClass="project-details-field" />
+                        <Label styleClass="field-label" text="Description"/>
+                        <TextField fx:id="projectDescription" styleClass="project-details-field"/>
                     </HBox>
                     <HBox>
-                        <Label styleClass="field-label" text="Author" />
-                        <TextField fx:id="projectAuthor" styleClass="project-details-field" />
+                        <Label styleClass="field-label" text="Author"/>
+                        <TextField fx:id="projectAuthor" styleClass="project-details-field"/>
                     </HBox>
                 </VBox>
-                <Label styleClass="heading" text="Analysis Results" />
+                <Label styleClass="heading" text="Analysis Results"/>
                 <VBox fx:id="forcesSection" styleClass="field-wrapper, border-separator-bottom, analysis-results">
                     <HBox>
-                        <Label styleClass="field-label" text="ULS Moment" />
-                        <NumericalTextField fx:id="UlsMoment" styleClass="numerical-field" />
-                        <Label styleClass="unit-label" text="kNm" />
+                        <Label styleClass="field-label" text="ULS Moment"/>
+                        <NumericalTextField fx:id="UlsMoment" styleClass="numerical-field"/>
+                        <Label styleClass="unit-label" text="kNm"/>
                     </HBox>
                     <HBox>
-                        <Label styleClass="field-label" text="QLS Moment" />
-                        <NumericalTextField fx:id="SlsMoment" styleClass="numerical-field" />
-                        <Label styleClass="unit-label" text="kNm" />
+                        <Label styleClass="field-label" text="QLS Moment"/>
+                        <NumericalTextField fx:id="SlsMoment" styleClass="numerical-field"/>
+                        <Label styleClass="unit-label" text="kNm"/>
                     </HBox>
                     <HBox>
-                        <Label styleClass="field-label" text="Shear Force" />
-                        <NumericalTextField fx:id="UlsShear" styleClass="numerical-field" />
-                        <Label styleClass="unit-label" text="kN" />
+                        <Label styleClass="field-label" text="Shear Force"/>
+                        <NumericalTextField fx:id="UlsShear" styleClass="numerical-field"/>
+                        <Label styleClass="unit-label" text="kN"/>
                     </HBox>
                 </VBox>
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <Label styleClass="heading" text="Element Type" />
-                <VBox styleClass="field-wrapper, border-separator-bottom">
-                    <ChoiceBox fx:id="elementTypeChoiceBox" styleClass="element-type" onAction="#setElementTypeChoiceBox">
+                <AnchorPane styleClass="element-type-wrapper, border-separator-bottom">
+                    <Label styleClass="heading" text="Element Type" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="2"/>
+                    <ChoiceBox fx:id="elementTypeChoiceBox" onAction="#setElementTypeChoiceBox"
+                               styleClass="element-type" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Beam" />
-                                <String fx:value="Slab" />
+                                <String fx:value="Beam"/>
+                                <String fx:value="Slab"/>
                             </FXCollections>
                         </items>
                     </ChoiceBox>
-                </VBox>
+                </AnchorPane>
+            </VBox>
+            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
+
                 <VBox fx:id="geometrySection" styleClass="geometry, border-separator-bottom">
                     <AnchorPane>
-                        <Label styleClass="heading" text="Geometry" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-                        <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setGeometry"/>
+                        <Label styleClass="heading" text="Geometry" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0"/>
+                        <Button onAction="#setGeometry" text="Edit" AnchorPane.rightAnchor="0"
+                                AnchorPane.topAnchor="0"/>
                     </AnchorPane>
-                    <Label fx:id="geometryText" text="Enter geometry..." />
+                    <Label fx:id="geometryText" styleClass="geometry-text" text="Enter geometry..."/>
                 </VBox>
                 <VBox fx:id="reinforcementSection" styleClass="reinforcement, border-separator-bottom">
                     <AnchorPane>
-                        <Label styleClass="heading" text="Reinforcement" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-                        <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setReinforcement"/>
+                        <Label styleClass="heading" text="Reinforcement" AnchorPane.leftAnchor="0"
+                               AnchorPane.topAnchor="0"/>
+                        <Button onAction="#setReinforcement" text="Edit" AnchorPane.rightAnchor="0"
+                                AnchorPane.topAnchor="0"/>
                     </AnchorPane>
-                    <Label fx:id="reinforcementText" text="Enter reinforcement..." />
+                    <Label fx:id="reinforcementText" styleClass="reinforcement-text" text="Enter reinforcement..."/>
                 </VBox>
                 <AnchorPane fx:id="designParametersSection" styleClass="design-parameters, border-separator-bottom">
-                    <Label styleClass="heading" text="Design Parameters" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-                    <Button text="Edit" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" onAction="#setDesignParameters"/>
+                    <Label styleClass="heading" text="Design Parameters" AnchorPane.leftAnchor="0"
+                           AnchorPane.topAnchor="-2"/>
+                    <Button onAction="#setDesignParameters" text="Edit" AnchorPane.rightAnchor="0"
+                            AnchorPane.topAnchor="0"/>
                 </AnchorPane>
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                <Label styleClass="heading" text="Section Preview" />
+                <Label styleClass="heading" text="Section Preview"/>
                 <StackPane styleClass="canvas-wrapper">
-                    <Canvas height="250" width="250" />
+                    <Canvas height="300" width="300"/>
                 </StackPane>
             </VBox>
             <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Label styleClass="heading" text="Design Results" />
-                <Label styleClass="subheading" text="Flexure" />
+                <Label styleClass="heading" text="Design Results"/>
+                <Label styleClass="subheading" text="Flexure"/>
                 <VBox styleClass="results-wrapper">
                     <HBox>
-                        <Label text="0.84 &lt; 1.00" />
-                        <Label styleClass="utilization-note, pass" text="Pass" />
+                        <Label text="0.84 &lt; 1.00"/>
+                        <Label styleClass="utilization-note, pass" text="Pass"/>
                     </HBox>
-                    <Label text="Section Adequate" />
+                    <Label styleClass="results-message" text="Section Adequate"/>
                 </VBox>
-                <Label styleClass="subheading" text="Shear" />
+                <Label styleClass="subheading" text="Shear"/>
                 <VBox styleClass="results-wrapper">
                     <HBox>
-                        <Label text="1.10 &gt; 1.00" />
-                        <Label styleClass="utilization-note, fail" text="Fail" />
+                        <Label text="1.10 &gt; 1.00"/>
+                        <Label styleClass="utilization-note, fail" text="Fail"/>
                     </HBox>
-                    <Label text="Increase shear reinforcement" />
+                    <Label styleClass="results-message" text="Increase shear reinforcement"/>
                 </VBox>
-                <Label styleClass="subheading" text="Cracking" />
+                <Label styleClass="subheading" text="Cracking"/>
                 <VBox styleClass="results-wrapper">
                     <HBox>
-                        <Label text="0.2 mm &lt; 0.3 mm" />
-                        <Label styleClass="utilization-note, pass" text="Pass" />
+                        <Label text="0.2 mm &lt; 0.3 mm"/>
+                        <Label styleClass="utilization-note, pass" text="Pass"/>
                     </HBox>
-                    <Label text="Section Adequate" />
+                    <Label styleClass="results-message" text="Section Adequate"/>
                 </VBox>
                 <VBox styleClass="primary-button-wrapper">
-                    <Button styleClass="large-button" text="Calculate" onAction="#calculate"/>
+                    <Button onAction="#calculate" styleClass="large-button" text="Calculate"/>
                 </VBox>
             </VBox>
         </GridPane>

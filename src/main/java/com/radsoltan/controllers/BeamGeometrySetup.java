@@ -2,13 +2,12 @@ package com.radsoltan.controllers;
 
 import com.radsoltan.App;
 import com.radsoltan.model.Project;
-import com.radsoltan.model.geometry.Geometry;
-import com.radsoltan.model.geometry.Rectangle;
 import javafx.event.ActionEvent;
 
 import java.io.IOException;
+import java.util.List;
 
-public class BeamGeometrySetup {
+public class BeamGeometrySetup extends Controller {
 
     private final Project project;
 
@@ -17,14 +16,15 @@ public class BeamGeometrySetup {
     }
 
     public void applyChanges(ActionEvent actionEvent) throws IOException {
-        Rectangle rectangle = new Rectangle(200, 500);
-        Geometry geometry = new Geometry(rectangle);
-        project.setGeometry(geometry);
-        System.out.println("Applied");
         App.setRoot("primary");
     }
 
     public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
+    }
+
+    @Override
+    protected List<String> getValidationMessagesForEmptyFields() {
+        return null;
     }
 }

@@ -90,4 +90,8 @@ public class Geometry {
         }
         return 0;
     }
+
+    public String getDescription() {
+        return shape.getDescription();
+    }
 }

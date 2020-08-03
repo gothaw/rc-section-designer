@@ -86,9 +86,13 @@ public class Primary extends Controller {
         }
         if (project.getGeometry() == null) {
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+        } else {
+            geometryText.setText(project.getGeometry().getDescription());
         }
         if (project.getReinforcement() == null) {
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+        } else {
+            reinforcementText.setText(project.getReinforcement().getDescription());
         }
         if (project.getDesignParameters() == null) {
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
@@ -106,7 +110,6 @@ public class Primary extends Controller {
 
     public void setDesignParameters(ActionEvent actionEvent) throws IOException {
         if (elementTypeChoiceBox.getValue() != null) {
-            System.out.println("Set design parameters");
             setProjectProperties();
             App.setRoot("design-parameters");
         } else {
@@ -153,13 +156,14 @@ public class Primary extends Controller {
     public void setElementTypeChoiceBox(ActionEvent actionEvent) {
         String elementType = elementTypeChoiceBox.getValue().toLowerCase();
         if (elementType.equals("slab")) {
-            UlsShear.setText("");
+            UlsShear.setText("0");
             project.setUlsShear(null);
             if (UlsShearWrapper.getStyleClass().toString().isEmpty()) {
                 UlsShearWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
             }
             setMomentsUnit("kNm/m");
         } else if (elementType.equals("beam")) {
+            UlsShear.setText("");
             UlsShearWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
             setMomentsUnit("kNm");
         }
@@ -167,8 +171,11 @@ public class Primary extends Controller {
             project.setGeometry(null);
             project.setReinforcement(null);
             project.setDesignParameters(null);
+            project.setConcrete(null);
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            geometryText.setText(Messages.ENTER_GEOMETRY);
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            reinforcementText.setText(Messages.ENTER_REINFORCEMENT);
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         project.setElementType(elementType);
