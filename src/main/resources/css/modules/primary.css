@@ -40,7 +40,7 @@
     -fx-text-base-color: red;
 }
 
-.results-wrapper {
+.results {
     -fx-background-color: #fff;
     -fx-pref-height: 75px;
     -fx-padding: 5px 10px 5px 10px;
@@ -53,9 +53,8 @@
     -fx-alignment: top-left;
 }
 
-.utilization-note{
-    -fx-padding: 0 0 0 15px;
-    -fx-font-weight: bold;
+.utilization-note-wrapper{
+    -fx-spacing: 15px;
 }
 
 .project-details-field{
@@ -63,10 +62,12 @@
 }
 
 .pass{
+    -fx-font-weight: bold;
     -fx-text-fill: green;
 }
 
 .fail{
+    -fx-font-weight: bold;
     -fx-text-fill: red;
 }
 
