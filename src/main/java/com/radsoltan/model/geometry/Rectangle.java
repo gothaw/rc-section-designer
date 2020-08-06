@@ -16,7 +16,7 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public int getWidth() {
+    public int getWebWidth() {
         return width;
     }
 
@@ -37,12 +37,12 @@ public class Rectangle extends Shape {
 
     @Override
     public int getWidthInCompressionZone(double UlsMoment) {
-        return getWidth();
+        return getWebWidth();
     }
 
     @Override
     public int getWidthInTensionZone(double UlsMoment) {
-        return getWidth();
+        return getWebWidth();
     }
 
     @Override

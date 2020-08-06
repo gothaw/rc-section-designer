@@ -105,32 +105,40 @@
                     <Canvas height="300" width="300"/>
                 </StackPane>
             </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <VBox fx:id="designResultsWrapper" styleClass="grid-cell, hidden" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <Label styleClass="heading" text="Design Results"/>
-                <Label styleClass="subheading" text="Flexure"/>
-                <VBox styleClass="results-wrapper">
-                    <HBox>
-                        <Label text="0.84 &lt; 1.00"/>
-                        <Label styleClass="utilization-note, pass" text="Pass"/>
-                    </HBox>
-                    <Label styleClass="results-message" text="Section Adequate"/>
+                <VBox fx:id="flexureResults">
+                    <Label styleClass="subheading" text="Flexure"/>
+                    <VBox styleClass="results">
+                        <HBox styleClass="utilization-note-wrapper">
+                            <Label text="0.84 &lt; 1.00"/>
+                            <Label styleClass="pass" text="Pass"/>
+                        </HBox>
+                        <Label styleClass="results-message" text="Section Adequate"/>
+                    </VBox>
                 </VBox>
-                <Label styleClass="subheading" text="Shear"/>
-                <VBox styleClass="results-wrapper">
-                    <HBox>
-                        <Label text="1.10 &gt; 1.00"/>
-                        <Label styleClass="utilization-note, fail" text="Fail"/>
-                    </HBox>
-                    <Label styleClass="results-message" text="Increase shear reinforcement"/>
+                <VBox fx:id="shearResults">
+                    <Label styleClass="subheading" text="Shear"/>
+                    <VBox styleClass="results">
+                        <HBox styleClass="utilization-note-wrapper">
+                            <Label text="1.10 &gt; 1.00"/>
+                            <Label styleClass="fail" text="Fail"/>
+                        </HBox>
+                        <Label styleClass="results-message" text="Increase shear reinforcement"/>
+                    </VBox>
                 </VBox>
-                <Label styleClass="subheading" text="Cracking"/>
-                <VBox styleClass="results-wrapper">
-                    <HBox>
-                        <Label text="0.2 mm &lt; 0.3 mm"/>
-                        <Label styleClass="utilization-note, pass" text="Pass"/>
-                    </HBox>
-                    <Label styleClass="results-message" text="Section Adequate"/>
+                <VBox fx:id="crackingResults" >
+                    <Label styleClass="subheading" text="Cracking"/>
+                    <VBox styleClass="results">
+                        <HBox styleClass="utilization-note-wrapper">
+                            <Label text="0.2 mm &lt; 0.3 mm"/>
+                            <Label styleClass="pass" text="Pass"/>
+                        </HBox>
+                        <Label styleClass="results-message" text="Section Adequate"/>
+                    </VBox>
                 </VBox>
+            </VBox>
+            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <VBox styleClass="primary-button-wrapper">
                     <Button onAction="#calculate" styleClass="large-button" text="Calculate"/>
                 </VBox>

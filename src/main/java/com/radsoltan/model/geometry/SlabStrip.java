@@ -8,7 +8,7 @@ public class SlabStrip extends Rectangle {
 
     @Override
     public String getDescription() {
-        return String.format("Slab %d mm deep.", getDepth());
+        return String.format("Slab: %d mm thick", getDepth());
     }
 
     @Override

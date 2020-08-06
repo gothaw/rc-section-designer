@@ -1,5 +1,7 @@
 package com.radsoltan.model.reinforcement;
 
+import com.radsoltan.util.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,29 +78,49 @@ public class SlabReinforcement extends Reinforcement {
 
     @Override
     public String getDescription() {
-        return "All good \nAll good";
+        String descriptionTopLayers = "Top layers:\n" + getDescriptionForReinforcementLayers(topDiameters, additionalTopDiameters, topSpacings);
+        String descriptionBottomLayers = "Bottom layers:\n" + getDescriptionForReinforcementLayers(bottomDiameters, additionalBottomDiameters, bottomSpacings);
+        return descriptionTopLayers + "\n" + descriptionBottomLayers;
     }
 
-    public List<Double> getAreaOfReinforcementLayers(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> spacing) {
+    private String getDescriptionForReinforcementLayers(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings) {
+        String layersDescription = "";
 
-        return IntStream.range(0, reinforcement.size())
-                .mapToObj(i -> 0.25 * Math.PI * (reinforcement.get(i) * reinforcement.get(i) + additionalReinforcement.get(i) * additionalReinforcement.get(i)) * 1000 / spacing.get(i))
+        for (int i = 0; i < diameters.size(); i++) {
+            int diameter = diameters.get(i);
+            int additionalDiameter = additionalDiameters.get(i);
+            int spacing = spacings.get(i);
+            String description = (additionalDiameter == 0)
+                    ? String.format("%s layer: \u03c6%d@%d", Constants.LAYERS_ORDINAL_LABELS.get(i), diameter, spacing)
+                    : String.format("%s layer: \u03c6%d@%d + \u03c6%d@%d", Constants.LAYERS_ORDINAL_LABELS.get(i), diameter, spacing, additionalDiameter, spacing);
+            if (i < diameters.size() - 1){
+                description = description.concat(",  ");
+            }
+            layersDescription = layersDescription.concat(description);
+        }
+
+        return layersDescription;
+    }
+
+    public List<Double> getAreaOfReinforcementLayers(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings) {
+
+        return IntStream.range(0, diameters.size())
+                .mapToObj(i -> 0.25 * Math.PI * (diameters.get(i) * diameters.get(i) + additionalDiameters.get(i) * additionalDiameters.get(i)) * 1000 / spacings.get(i))
                 .collect(Collectors.toList());
-
     }
 
     // TODO: 10/06/2020 Encapsulation
-    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover) {
+    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
 
         List<Double> distanceFromCentroidOfEachLayerToEdge = new ArrayList<>();
 
-        double distanceForFirstLayer = 0.5 * Math.max(reinforcement.get(0), additionalReinforcement.get(0)) + nominalCover;
+        double distanceForFirstLayer = 0.5 * Math.max(diameters.get(0), additionalDiameters.get(0)) + nominalCover;
 
         distanceFromCentroidOfEachLayerToEdge.add(distanceForFirstLayer);
 
         List<Double> distanceForSubsequentLayers = IntStream
-                .range(0, verticalSpacing.size())
-                .mapToObj(i -> distanceForFirstLayer + verticalSpacing.get(i) + verticalSpacing.stream()
+                .range(0, verticalSpacings.size())
+                .mapToObj(i -> distanceForFirstLayer + verticalSpacings.get(i) + verticalSpacings.stream()
                         .limit(i)
                         .reduce(0, Integer::sum))
                 .collect(Collectors.toList());
@@ -108,8 +130,8 @@ public class SlabReinforcement extends Reinforcement {
         return distanceFromCentroidOfEachLayerToEdge;
     }
 
-    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> reinforcement, List<Integer> additionalReinforcement, List<Integer> verticalSpacing, int nominalCover) {
-        List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(reinforcement, additionalReinforcement, verticalSpacing, nominalCover);
+    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
+        List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(diameters, additionalDiameters, verticalSpacings, nominalCover);
 
         return IntStream
                 .range(0, distanceFromEachLayerToEdge.size())

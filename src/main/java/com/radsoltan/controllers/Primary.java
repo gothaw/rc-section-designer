@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Primary extends Controller {
@@ -102,7 +103,13 @@ public class Primary extends Controller {
 
     public void calculate(ActionEvent actionEvent) {
         if (elementTypeChoiceBox.getValue() != null) {
-            setProjectProperties();
+            List<String> validationMessages = getValidationMessagesForEmptyFields();
+            if(validationMessages.isEmpty()) {
+                setProjectProperties();
+                System.out.println("Ok.");
+            } else {
+                showAlertBox(validationMessages.get(0), AlertKind.INFO);
+            }
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
@@ -128,7 +135,7 @@ public class Primary extends Controller {
                     App.setRoot("beam-reinforcement");
                     break;
                 default:
-                    showAlertBox("Wrong element type.", AlertKind.ERROR);
+                    showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
             }
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
@@ -146,7 +153,7 @@ public class Primary extends Controller {
                     App.setRoot("beam-geometry");
                     break;
                 default:
-                    showAlertBox("Wrong element type.", AlertKind.ERROR);
+                    showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
             }
         } else {
             showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
@@ -201,6 +208,19 @@ public class Primary extends Controller {
 
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
-        return null;
+        List<String> validationMessages = new ArrayList<>();
+        if (UlsMoment.getText().isEmpty() || SlsMoment.getText().isEmpty() || UlsShear.getText().isEmpty()) {
+            validationMessages.add(Messages.SETUP_ANALYSIS_FORCES);
+        }
+        if (project.getGeometry() == null) {
+            validationMessages.add(Messages.SETUP_GEOMETRY);
+        }
+        if (project.getReinforcement() == null) {
+            validationMessages.add(Messages.SETUP_REINFORCEMENT);
+        }
+        if (project.getDesignParameters() == null) {
+            validationMessages.add(Messages.SETUP_DESIGN_PARAMETERS);
+        }
+        return validationMessages;
     }
 }

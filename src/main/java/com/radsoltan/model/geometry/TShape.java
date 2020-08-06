@@ -87,7 +87,7 @@ public class TShape extends Shape implements Flanged {
 
     @Override
     public String getDescription() {
-        return null;
+        return String.format("T shape: %d mm downstand x %d mm web width + flange %d mm wide x %d mm thick.", downstandDepth, webWidth, flangeWidth, flangeThickness);
     }
 
     @Override
@@ -96,8 +96,12 @@ public class TShape extends Shape implements Flanged {
     }
 
     @Override
-    public int getWidth() {
+    public int getWebWidth() {
         return webWidth;
+    }
+
+    public int getDownstandDepth() {
+        return downstandDepth;
     }
 
     @Override
