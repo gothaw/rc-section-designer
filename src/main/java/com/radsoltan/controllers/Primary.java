@@ -4,6 +4,11 @@ import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
+import com.radsoltan.model.ValidateBeam;
+import com.radsoltan.model.ValidateSlab;
+import com.radsoltan.model.reinforcement.BeamReinforcement;
+import com.radsoltan.model.reinforcement.SlabReinforcement;
+import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
 import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
@@ -104,9 +109,29 @@ public class Primary extends Controller {
     public void calculate(ActionEvent actionEvent) {
         if (elementTypeChoiceBox.getValue() != null) {
             List<String> validationMessages = getValidationMessagesForEmptyFields();
-            if(validationMessages.isEmpty()) {
-                setProjectProperties();
-                System.out.println("Ok.");
+            if (validationMessages.isEmpty()) {
+                List<String> elementValidationMessages = new ArrayList<>();
+                switch (project.getElementType()) {
+                    case "slab":
+                        if (project.getReinforcement() instanceof SlabReinforcement) {
+                            ValidateSlab validateSlab = new ValidateSlab(project.getGeometry().getDepth(), (SlabReinforcement) project.getReinforcement(), project.getDesignParameters());
+                            elementValidationMessages.addAll(validateSlab.getValidationMessages());
+                        }
+                        break;
+                    case "beam":
+                        if (project.getReinforcement() instanceof BeamReinforcement) {
+                            ValidateBeam validateBeam = new ValidateBeam(project.getGeometry(), (BeamReinforcement) project.getReinforcement(), project.getDesignParameters());
+                            elementValidationMessages.addAll(validateBeam.getValidationMessages());
+                        }
+                        break;
+                    default:
+                        showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
+                }
+                if (elementValidationMessages.isEmpty()) {
+                    System.out.println("Ok");
+                } else {
+                    showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
+                }
             } else {
                 showAlertBox(validationMessages.get(0), AlertKind.INFO);
             }
@@ -116,7 +141,7 @@ public class Primary extends Controller {
     }
 
     public void setDesignParameters(ActionEvent actionEvent) throws IOException {
-        if (elementTypeChoiceBox.getValue() != null) {
+        if (project.getElementType() != null) {
             setProjectProperties();
             App.setRoot("design-parameters");
         } else {
@@ -125,9 +150,9 @@ public class Primary extends Controller {
     }
 
     public void setReinforcement(ActionEvent actionEvent) throws IOException {
-        if (elementTypeChoiceBox.getValue() != null) {
+        if (project.getElementType() != null) {
             setProjectProperties();
-            switch (elementTypeChoiceBox.getValue().toLowerCase()) {
+            switch (project.getElementType().toLowerCase()) {
                 case "slab":
                     App.setRoot("slab-reinforcement");
                     break;
@@ -143,9 +168,9 @@ public class Primary extends Controller {
     }
 
     public void setGeometry(ActionEvent actionEvent) throws IOException {
-        if (elementTypeChoiceBox.getValue() != null) {
+        if (project.getElementType() != null) {
             setProjectProperties();
-            switch (elementTypeChoiceBox.getValue().toLowerCase()) {
+            switch (project.getElementType().toLowerCase()) {
                 case "slab":
                     App.setRoot("slab-geometry");
                     break;
