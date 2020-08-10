@@ -1,7 +1,10 @@
 package com.radsoltan.model;
 
 import com.radsoltan.model.geometry.Geometry;
+import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.Reinforcement;
+import com.radsoltan.model.reinforcement.SlabReinforcement;
+import com.radsoltan.util.Messages;
 
 public class Project {
     private String name;
@@ -16,6 +19,16 @@ public class Project {
     private Reinforcement reinforcement;
     private DesignParameters designParameters;
     private Concrete concrete;
+    /* Results */
+    private double flexureCapacity;
+    private double shearCapacity;
+    private double crackWidths;
+    private String flexureCapacityCheckMessage;
+    private String shearCapacityCheckMessage;
+    private String crackingCheckMessage;
+    private String flexureResultsAdditionalMessage;
+    private String shearResultsAdditionalMessage;
+    private String crackingResultsAdditionalMessage;
 
     private static Project project;
 
@@ -27,7 +40,42 @@ public class Project {
     }
 
     public void calculate() {
-        // TODO: 16/06/2020 do calcs
+        switch (elementType.toLowerCase()) {
+            case "slab":
+                calculateSlabProject();
+                break;
+            case "beam":
+                calculateBeamProject();
+                break;
+            default:
+                throw new IllegalArgumentException(Messages.INVALID_ELEMENT_TYPE);
+        }
+    }
+
+    private void calculateSlabProject() {
+        if (!(geometry.getShape() instanceof SlabStrip)) {
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_GEOMETRY);
+        }
+        if (!(reinforcement instanceof SlabReinforcement)) {
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
+        }
+        SlabStrip slabStrip = (SlabStrip) geometry.getShape();
+        SlabReinforcement slabReinforcement = (SlabReinforcement) reinforcement;
+        Slab slab = new Slab(Double.parseDouble(UlsMoment), Double.parseDouble(SlsMoment), slabStrip, concrete, slabReinforcement, designParameters);
+        try {
+            slab.calculateBendingCapacity();
+        } catch (IllegalArgumentException e) {
+
+        }
+        if (designParameters.isIncludeCrackingCalculations()) {
+            slab.calculateCracks();
+        }
+        System.out.println(slab.getBendingCapacity());
+
+    }
+
+    private void calculateBeamProject() {
+
     }
 
     public String getName() {

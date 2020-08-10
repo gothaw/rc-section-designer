@@ -128,7 +128,11 @@ public class Primary extends Controller {
                         showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
                 }
                 if (elementValidationMessages.isEmpty()) {
-                    System.out.println("Ok");
+                    try {
+                        project.calculate();
+                    } catch (IllegalArgumentException e) {
+                        showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
+                    }
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                 }
