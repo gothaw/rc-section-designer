@@ -61,21 +61,29 @@ public class Project {
         }
         SlabStrip slabStrip = (SlabStrip) geometry.getShape();
         SlabReinforcement slabReinforcement = (SlabReinforcement) reinforcement;
-        Slab slab = new Slab(Double.parseDouble(UlsMoment), Double.parseDouble(SlsMoment), slabStrip, concrete, slabReinforcement, designParameters);
+        double UlsMomentValue = Double.parseDouble(UlsMoment);
+        double SlsMomentValue = Double.parseDouble(SlsMoment);
+        Slab slab = new Slab(UlsMomentValue, SlsMomentValue, slabStrip, concrete, slabReinforcement, designParameters);
         try {
             slab.calculateBendingCapacity();
+            flexureCapacity = slab.getBendingCapacity();
+            flexureCapacityCheckMessage = (UlsMomentValue <= flexureCapacity) ?
+                    String.format("%.0f kNm/m \u003c %.0f kNm/m", UlsMomentValue, flexureCapacity) :
+                    String.format("%.0f kNm/m \u003e %.0f kNm/m", UlsMomentValue, flexureCapacity);
+            flexureResultsAdditionalMessage = Messages.SECTION_ADEQUATE;
         } catch (IllegalArgumentException e) {
-
+            flexureCapacity = 0;
+            flexureCapacityCheckMessage = Messages.CALCULATIONS_ERROR;
+            flexureResultsAdditionalMessage = e.getMessage();
         }
         if (designParameters.isIncludeCrackingCalculations()) {
+            // TODO: 11/08/2020 Wrap in try catch and implement method
             slab.calculateCracks();
         }
-        System.out.println(slab.getBendingCapacity());
-
     }
 
     private void calculateBeamProject() {
-
+        // TODO: 11/08/2020 Implement method
     }
 
     public String getName() {
@@ -172,5 +180,41 @@ public class Project {
 
     public void setConcrete(Concrete concrete) {
         this.concrete = concrete;
+    }
+
+    public double getFlexureCapacity() {
+        return flexureCapacity;
+    }
+
+    public double getShearCapacity() {
+        return shearCapacity;
+    }
+
+    public double getCrackWidths() {
+        return crackWidths;
+    }
+
+    public String getFlexureCapacityCheckMessage() {
+        return flexureCapacityCheckMessage;
+    }
+
+    public String getShearCapacityCheckMessage() {
+        return shearCapacityCheckMessage;
+    }
+
+    public String getCrackingCheckMessage() {
+        return crackingCheckMessage;
+    }
+
+    public String getFlexureResultsAdditionalMessage() {
+        return flexureResultsAdditionalMessage;
+    }
+
+    public String getShearResultsAdditionalMessage() {
+        return shearResultsAdditionalMessage;
+    }
+
+    public String getCrackingResultsAdditionalMessage() {
+        return crackingResultsAdditionalMessage;
     }
 }

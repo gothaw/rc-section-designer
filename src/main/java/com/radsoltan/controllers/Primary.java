@@ -133,6 +133,15 @@ public class Primary extends Controller {
                     } catch (IllegalArgumentException e) {
                         showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                     }
+                    if (project.getFlexureCapacityCheckMessage() != null) {
+
+                    }
+                    if (project.getShearCapacityCheckMessage() != null) {
+
+                    }
+                    if (project.getCrackingCheckMessage() != null) {
+
+                    }
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                 }
