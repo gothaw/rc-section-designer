@@ -28,6 +28,14 @@ import java.util.List;
 public class Primary extends Controller {
 
     @FXML
+    public VBox designResultsWrapper;
+    @FXML
+    public VBox flexureResultsWrapper;
+    @FXML
+    public VBox shearResultsWrapper;
+    @FXML
+    public VBox crackingResultsWrapper;
+    @FXML
     private VBox container;
     @FXML
     private VBox geometrySection;
@@ -110,6 +118,7 @@ public class Primary extends Controller {
         if (elementTypeChoiceBox.getValue() != null) {
             List<String> validationMessages = getValidationMessagesForEmptyFields();
             if (validationMessages.isEmpty()) {
+                setProjectProperties();
                 List<String> elementValidationMessages = new ArrayList<>();
                 switch (project.getElementType()) {
                     case "slab":
@@ -130,11 +139,16 @@ public class Primary extends Controller {
                 if (elementValidationMessages.isEmpty()) {
                     try {
                         project.calculate();
+                        designResultsWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
                     } catch (IllegalArgumentException e) {
                         showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                     }
+                    if (flexureResultsWrapper.getChildren().size() != 0) {
+                        flexureResultsWrapper.getChildren().remove(0);
+                    }
                     if (project.getFlexureCapacityCheckMessage() != null) {
-
+                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), "Flexure", project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage());
+                        flexureResultsWrapper.getChildren().add(flexureResults);
                     }
                     if (project.getShearCapacityCheckMessage() != null) {
 
@@ -243,6 +257,22 @@ public class Primary extends Controller {
         Label SlsMomentUnits = (Label) SlsMomentWrapper.lookup("." + CssStyleClasses.UNIT_LABEL);
         SlsMomentUnits.setText(unit);
     }
+
+    private VBox generateResultsArea(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage) {
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add(CssStyleClasses.SUBHEADING);
+        Label capacityLabel = new Label(capacityMessage);
+        Label passFailLabel = new Label((designValue <= maxValue) ? "Pass" : "Fail");
+        passFailLabel.getStyleClass().add((designValue <= maxValue) ? CssStyleClasses.PASS : CssStyleClasses.FAIL);
+        HBox utilizationNoteWrapper = new HBox(capacityLabel, passFailLabel);
+        utilizationNoteWrapper.getStyleClass().add(CssStyleClasses.UTILIZATION_WRAPPER);
+        Label additionalMessageLabel = new Label(additionalMessage);
+        additionalMessageLabel.getStyleClass().add(CssStyleClasses.RESULTS_MESSAGE);
+        VBox results = new VBox(utilizationNoteWrapper, additionalMessageLabel);
+        results.getStyleClass().add(CssStyleClasses.RESULTS);
+        return new VBox(titleLabel, results);
+    }
+
 
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {

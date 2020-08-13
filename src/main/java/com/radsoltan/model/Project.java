@@ -67,10 +67,10 @@ public class Project {
         try {
             slab.calculateBendingCapacity();
             flexureCapacity = slab.getBendingCapacity();
-            flexureCapacityCheckMessage = (UlsMomentValue <= flexureCapacity) ?
-                    String.format("%.0f kNm/m \u003c %.0f kNm/m", UlsMomentValue, flexureCapacity) :
-                    String.format("%.0f kNm/m \u003e %.0f kNm/m", UlsMomentValue, flexureCapacity);
-            flexureResultsAdditionalMessage = Messages.SECTION_ADEQUATE;
+            flexureCapacityCheckMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ?
+                    String.format("%.0f kNm/m \u003c %.0f kNm/m", Math.abs(UlsMomentValue), flexureCapacity) :
+                    String.format("%.0f kNm/m \u003e %.0f kNm/m", Math.abs(UlsMomentValue), flexureCapacity);
+            flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? Messages.SECTION_ADEQUATE : Messages.FLEXURE_FAIL_MESSAGE;
         } catch (IllegalArgumentException e) {
             flexureCapacity = 0;
             flexureCapacityCheckMessage = Messages.CALCULATIONS_ERROR;

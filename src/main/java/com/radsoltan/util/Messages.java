@@ -4,6 +4,7 @@ public class Messages {
     public static final String CALCULATIONS_ERROR = "Calculations error";
     public static final String ENTER_GEOMETRY = "Enter geometry...";
     public static final String ENTER_REINFORCEMENT = "Enter reinforcement...";
+    public static final String FLEXURE_FAIL_MESSAGE = "Increase reinforcement or redesign section.";
     public static final String INVALID_ELEMENT_TYPE = "Invalid element type.";
     public static final String INVALID_REDISTRIBUTION_RATIO = "Redistribution ratio must be between 0.7 and 1.0.";
     public static final String INVALID_SLAB_REINFORCEMENT = "Invalid slab reinforcement.";

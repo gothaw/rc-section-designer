@@ -6,6 +6,10 @@ public class CssStyleClasses {
     public static final String ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER = "additional-slab-reinforcement-button-wrapper";
     public static final String ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON = "add-additional-slab-reinforcement";
     public static final String DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON = "delete-additional-slab-reinforcement";
+    public static final String FAIL = "fail";
+    public static final String PASS = "pass";
+    public static final String RESULTS = "results";
+    public static final String RESULTS_MESSAGE = "results-message";
     public static final String SLAB_REINFORCEMENT_LAYER_LABEL = "slab-layer-label";
     public static final String SLAB_REINFORCEMENT_LAYER = "slab-layer";
     public static final String SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX = "slab-reinforcement-diameter-combo-box";
@@ -15,5 +19,7 @@ public class CssStyleClasses {
     public static final String SLAB_ADDITIONAL_REINFORCEMENT_JOINING_LABEL = "slab-additional-reinforcement-joining-label";
     public static final String SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER = "slab-additional-reinforcement-diameter";
     public static final String SLAB_VERTICAL_SPACING_FIELD = "slab-vertical-spacing-field";
+    public static final String SUBHEADING = "subheading";
     public static final String UNIT_LABEL = "unit-label";
+    public static final String UTILIZATION_WRAPPER = "utilization-note-wrapper";
 }
