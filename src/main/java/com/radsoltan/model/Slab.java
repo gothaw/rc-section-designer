@@ -22,6 +22,7 @@ public class Slab implements Flexure, Cracking {
     /* Provided Reinforcement */
     private final double providedTensileReinforcement;
     /* Results */
+    private double crackWidth;
     private double bendingCapacity;
     private double requiredTensileReinforcement;
 

@@ -68,8 +68,8 @@ public class Project {
             slab.calculateBendingCapacity();
             flexureCapacity = slab.getBendingCapacity();
             flexureCapacityCheckMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ?
-                    String.format("%.0f kNm/m \u003c %.0f kNm/m", Math.abs(UlsMomentValue), flexureCapacity) :
-                    String.format("%.0f kNm/m \u003e %.0f kNm/m", Math.abs(UlsMomentValue), flexureCapacity);
+                    String.format("%.2f kNm/m \u003c %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity) :
+                    String.format("%.2f kNm/m \u003e %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity);
             flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? Messages.SECTION_ADEQUATE : Messages.FLEXURE_FAIL_MESSAGE;
         } catch (IllegalArgumentException e) {
             flexureCapacity = 0;
@@ -79,6 +79,7 @@ public class Project {
         if (designParameters.isIncludeCrackingCalculations()) {
             // TODO: 11/08/2020 Wrap in try catch and implement method
             slab.calculateCracks();
+
         }
     }
 

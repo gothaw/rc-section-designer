@@ -11,6 +11,7 @@ public class DesignParameters {
     private double redistributionRatio;
     private boolean isRecommendedRatio;
     private boolean includeCrackingCalculations;
+    private double crackWidthLimit;
 
     public DesignParameters(int nominalCoverTop, int nominalCoverSides, int nominalCoverBottom, int yieldStrength, int aggregateSize,
                             double gammaC, double gammaS, double redistributionRatio, boolean isRecommendedRatio, boolean includeCrackingCalculations) {
@@ -68,5 +69,9 @@ public class DesignParameters {
 
     public int getAggregateSize() {
         return aggregateSize;
+    }
+
+    public double getCrackWidthLimit() {
+        return crackWidthLimit;
     }
 }
