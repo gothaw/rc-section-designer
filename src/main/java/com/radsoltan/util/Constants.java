@@ -3,6 +3,9 @@ package com.radsoltan.util;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class that includes constants used in the project.
+ */
 public class Constants {
     public static final String APP_TITLE = "RC Section Designer";
     public static final int WINDOW_WIDTH = 1024;

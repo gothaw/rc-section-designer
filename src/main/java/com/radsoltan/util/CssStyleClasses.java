@@ -1,5 +1,8 @@
 package com.radsoltan.util;
 
+/**
+ * Utility class that includes Css class names as String constants.
+ */
 public class CssStyleClasses {
     public static final String HIDDEN = "hidden";
     public static final String NOT_DEFINED = "not-defined";

@@ -1,5 +1,8 @@
 package com.radsoltan.util;
 
+/**
+ * Utility class that includes String constants for various alerts messages, warnings and errors.
+ */
 public class Messages {
     public static final String CALCULATIONS_ERROR = "Calculations error";
     public static final String ENTER_GEOMETRY = "Enter geometry...";

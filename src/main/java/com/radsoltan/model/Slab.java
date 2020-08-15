@@ -65,7 +65,7 @@ public class Slab implements Flexure, Cracking {
 
     @Override
     public void calculateCracks() {
-
+        // TODO: 15/08/2020 Future functionality calculate cracks.
     }
 
     public double getProvidedTensileReinforcement() {
