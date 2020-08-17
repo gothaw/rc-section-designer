@@ -2,9 +2,12 @@ package com.radsoltan.components;
 
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
-
 import java.text.DecimalFormat;
 
+/**
+ * Text Input FXML component that allows for entering valid positive integer.
+ * Extends NumericalTextField.
+ */
 public class PositiveIntegerField extends NumericalTextField {
 
     /**

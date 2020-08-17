@@ -1,7 +1,10 @@
 package com.radsoltan.model;
 
 import com.radsoltan.model.geometry.Geometry;
+import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.Reinforcement;
+import com.radsoltan.model.reinforcement.SlabReinforcement;
+import com.radsoltan.util.Messages;
 
 public class Project {
     private String name;
@@ -16,6 +19,16 @@ public class Project {
     private Reinforcement reinforcement;
     private DesignParameters designParameters;
     private Concrete concrete;
+    /* Results */
+    private double flexureCapacity;
+    private double shearCapacity;
+    private double crackWidths;
+    private String flexureCapacityCheckMessage;
+    private String shearCapacityCheckMessage;
+    private String crackingCheckMessage;
+    private String flexureResultsAdditionalMessage;
+    private String shearResultsAdditionalMessage;
+    private String crackingResultsAdditionalMessage;
 
     private static Project project;
 
@@ -27,7 +40,51 @@ public class Project {
     }
 
     public void calculate() {
-        // TODO: 16/06/2020 do calcs
+        switch (elementType.toLowerCase()) {
+            case "slab":
+                calculateSlabProject();
+                break;
+            case "beam":
+                calculateBeamProject();
+                break;
+            default:
+                throw new IllegalArgumentException(Messages.INVALID_ELEMENT_TYPE);
+        }
+    }
+
+    private void calculateSlabProject() {
+        if (!(geometry.getShape() instanceof SlabStrip)) {
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_GEOMETRY);
+        }
+        if (!(reinforcement instanceof SlabReinforcement)) {
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
+        }
+        SlabStrip slabStrip = (SlabStrip) geometry.getShape();
+        SlabReinforcement slabReinforcement = (SlabReinforcement) reinforcement;
+        double UlsMomentValue = Double.parseDouble(UlsMoment);
+        double SlsMomentValue = Double.parseDouble(SlsMoment);
+        Slab slab = new Slab(UlsMomentValue, SlsMomentValue, slabStrip, concrete, slabReinforcement, designParameters);
+        try {
+            slab.calculateBendingCapacity();
+            flexureCapacity = slab.getBendingCapacity();
+            flexureCapacityCheckMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ?
+                    String.format("%.2f kNm/m \u003c %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity) :
+                    String.format("%.2f kNm/m \u003e %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity);
+            flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? Messages.SECTION_ADEQUATE : Messages.FLEXURE_FAIL_MESSAGE;
+        } catch (IllegalArgumentException e) {
+            flexureCapacity = 0;
+            flexureCapacityCheckMessage = Messages.CALCULATIONS_ERROR;
+            flexureResultsAdditionalMessage = e.getMessage();
+        }
+        if (designParameters.isIncludeCrackingCalculations()) {
+            // TODO: 11/08/2020 Wrap in try catch and implement method
+            slab.calculateCracks();
+
+        }
+    }
+
+    private void calculateBeamProject() {
+        // TODO: 11/08/2020 Implement method
     }
 
     public String getName() {
@@ -124,5 +181,41 @@ public class Project {
 
     public void setConcrete(Concrete concrete) {
         this.concrete = concrete;
+    }
+
+    public double getFlexureCapacity() {
+        return flexureCapacity;
+    }
+
+    public double getShearCapacity() {
+        return shearCapacity;
+    }
+
+    public double getCrackWidths() {
+        return crackWidths;
+    }
+
+    public String getFlexureCapacityCheckMessage() {
+        return flexureCapacityCheckMessage;
+    }
+
+    public String getShearCapacityCheckMessage() {
+        return shearCapacityCheckMessage;
+    }
+
+    public String getCrackingCheckMessage() {
+        return crackingCheckMessage;
+    }
+
+    public String getFlexureResultsAdditionalMessage() {
+        return flexureResultsAdditionalMessage;
+    }
+
+    public String getShearResultsAdditionalMessage() {
+        return shearResultsAdditionalMessage;
+    }
+
+    public String getCrackingResultsAdditionalMessage() {
+        return crackingResultsAdditionalMessage;
     }
 }

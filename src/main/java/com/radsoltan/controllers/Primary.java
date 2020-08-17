@@ -28,6 +28,14 @@ import java.util.List;
 public class Primary extends Controller {
 
     @FXML
+    public VBox designResultsWrapper;
+    @FXML
+    public VBox flexureResultsWrapper;
+    @FXML
+    public VBox shearResultsWrapper;
+    @FXML
+    public VBox crackingResultsWrapper;
+    @FXML
     private VBox container;
     @FXML
     private VBox geometrySection;
@@ -110,25 +118,27 @@ public class Primary extends Controller {
         if (elementTypeChoiceBox.getValue() != null) {
             List<String> validationMessages = getValidationMessagesForEmptyFields();
             if (validationMessages.isEmpty()) {
-                List<String> elementValidationMessages = new ArrayList<>();
-                switch (project.getElementType()) {
-                    case "slab":
-                        if (project.getReinforcement() instanceof SlabReinforcement) {
-                            ValidateSlab validateSlab = new ValidateSlab(project.getGeometry().getDepth(), (SlabReinforcement) project.getReinforcement(), project.getDesignParameters());
-                            elementValidationMessages.addAll(validateSlab.getValidationMessages());
-                        }
-                        break;
-                    case "beam":
-                        if (project.getReinforcement() instanceof BeamReinforcement) {
-                            ValidateBeam validateBeam = new ValidateBeam(project.getGeometry(), (BeamReinforcement) project.getReinforcement(), project.getDesignParameters());
-                            elementValidationMessages.addAll(validateBeam.getValidationMessages());
-                        }
-                        break;
-                    default:
-                        showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
-                }
+                setProjectProperties();
+                clearResultsArea();
+                List<String> elementValidationMessages = getValidationMessagesBasedOnElementType(project.getElementType());
                 if (elementValidationMessages.isEmpty()) {
-                    System.out.println("Ok");
+                    try {
+                        project.calculate();
+                        designResultsWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
+                    } catch (IllegalArgumentException e) {
+                        showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
+                    }
+                    if (project.getFlexureCapacityCheckMessage() != null) {
+                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), "Flexure", project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage());
+                        flexureResultsWrapper.getChildren().add(flexureResults);
+                    }
+                    if (project.getShearCapacityCheckMessage() != null) {
+                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), "Shear", project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage());
+                        shearResultsWrapper.getChildren().add(shearResults);
+                    }
+                    if (project.getCrackingCheckMessage() != null) {
+                        // TODO: 13/08/2020 Implement
+                    }
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                 }
@@ -209,6 +219,7 @@ public class Primary extends Controller {
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
             reinforcementText.setText(Messages.ENTER_REINFORCEMENT);
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            clearResultsArea();
         }
         project.setElementType(elementType);
     }
@@ -230,6 +241,53 @@ public class Primary extends Controller {
         Label SlsMomentUnits = (Label) SlsMomentWrapper.lookup("." + CssStyleClasses.UNIT_LABEL);
         SlsMomentUnits.setText(unit);
     }
+
+    private VBox generateResultsArea(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage) {
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add(CssStyleClasses.SUBHEADING);
+        Label capacityLabel = new Label(capacityMessage);
+        Label passFailLabel = new Label((designValue <= maxValue) ? "Pass" : "Fail");
+        passFailLabel.getStyleClass().add((designValue <= maxValue) ? CssStyleClasses.PASS : CssStyleClasses.FAIL);
+        HBox utilizationNoteWrapper = new HBox(capacityLabel, passFailLabel);
+        utilizationNoteWrapper.getStyleClass().add(CssStyleClasses.UTILIZATION_WRAPPER);
+        Label additionalMessageLabel = new Label(additionalMessage);
+        additionalMessageLabel.getStyleClass().add(CssStyleClasses.RESULTS_MESSAGE);
+        VBox results = new VBox(utilizationNoteWrapper, additionalMessageLabel);
+        results.getStyleClass().add(CssStyleClasses.RESULTS);
+        return new VBox(titleLabel, results);
+    }
+
+
+    private List<String> getValidationMessagesBasedOnElementType(String elementType) {
+        List<String> elementValidationMessages = new ArrayList<>();
+        switch (elementType) {
+            case "slab":
+                if (project.getReinforcement() instanceof SlabReinforcement) {
+                    ValidateSlab validateSlab = new ValidateSlab(project.getGeometry().getDepth(), (SlabReinforcement) project.getReinforcement(), project.getDesignParameters());
+                    elementValidationMessages.addAll(validateSlab.getValidationMessages());
+                }
+                break;
+            case "beam":
+                if (project.getReinforcement() instanceof BeamReinforcement) {
+                    ValidateBeam validateBeam = new ValidateBeam(project.getGeometry(), (BeamReinforcement) project.getReinforcement(), project.getDesignParameters());
+                    elementValidationMessages.addAll(validateBeam.getValidationMessages());
+                }
+                break;
+            default:
+                elementValidationMessages.add(Messages.INVALID_ELEMENT_TYPE);
+        }
+        return elementValidationMessages;
+    }
+
+    private void clearResultsArea() {
+        if (!designResultsWrapper.getStyleClass().contains(CssStyleClasses.HIDDEN)) {
+            designResultsWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
+        }
+        flexureResultsWrapper.getChildren().clear();
+        shearResultsWrapper.getChildren().clear();
+        crackingResultsWrapper.getChildren().clear();
+    }
+
 
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {

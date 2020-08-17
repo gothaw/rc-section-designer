@@ -22,18 +22,19 @@ public class Slab implements Flexure, Cracking {
     /* Provided Reinforcement */
     private final double providedTensileReinforcement;
     /* Results */
+    private double crackWidth;
     private double bendingCapacity;
     private double requiredTensileReinforcement;
 
     public Slab(double UlsMoment, double SlsMoment,
-                SlabStrip strip, Concrete concrete,
+                SlabStrip slabStrip, Concrete concrete,
                 SlabReinforcement reinforcement,
                 DesignParameters designParameters) {
         this.UlsMoment = UlsMoment;
         this.SlsMoment = SlsMoment;
         this.reinforcement = reinforcement;
         this.designParameters = designParameters;
-        this.geometry = new Geometry(strip);
+        this.geometry = new Geometry(slabStrip);
         this.fck = concrete.getCompressiveStrength();
         this.fcd = concrete.getDesignCompressiveResistance(designParameters.getPartialFactorOfSafetyForConcrete());
         this.fctm = concrete.getMeanAxialTensileStrength();
@@ -64,7 +65,7 @@ public class Slab implements Flexure, Cracking {
 
     @Override
     public void calculateCracks() {
-
+        // TODO: 15/08/2020 Future functionality calculate cracks.
     }
 
     public double getProvidedTensileReinforcement() {

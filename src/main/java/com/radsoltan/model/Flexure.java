@@ -22,8 +22,8 @@ public interface Flexure {
 
     default double getLeverArm(double effectiveDepth, double kFactor, double kDashFactor) {
         return (kFactor <= kDashFactor) ?
-                Math.min(effectiveDepth / 2 * (1 + Math.sqrt(1 - 3.53 * kFactor)), 0.95) :
-                effectiveDepth / 2 * (1 + Math.sqrt(1 - 3.53 * kDashFactor));
+                Math.min(0.5 * effectiveDepth * (1 + Math.sqrt(1 - 3.53 * kFactor)), 0.95 * effectiveDepth) :
+                0.5 * effectiveDepth * (1 + Math.sqrt(1 - 3.53 * kDashFactor));
     }
 
     default double getMinimumReinforcement(double UlsMoment, double fctm, int fy, double effectiveDepth, Geometry geometry) {

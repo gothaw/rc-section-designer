@@ -2,7 +2,6 @@ package com.radsoltan.model;
 
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
-
 import java.util.List;
 
 public class ValidateBeam implements Validation {

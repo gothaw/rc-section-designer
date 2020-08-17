@@ -3,7 +3,6 @@ package com.radsoltan.components;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
-
 import java.text.DecimalFormat;
 
 /**
