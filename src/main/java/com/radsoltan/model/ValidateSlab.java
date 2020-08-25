@@ -75,10 +75,10 @@ public class ValidateSlab implements Validation {
 
             double clearSpacing = (additionalDiameters.get(i) == 0) ?
                     spacings.get(i) - diameters.get(i) :
-                    spacings.get(i) - 0.5 * diameters.get(i) - 0.5 * additionalDiameters.get(i);
+                    0.5 * spacings.get(i) - 0.5 * diameters.get(i) - 0.5 * additionalDiameters.get(i);
 
-            if (clearSpacing <= minSpacing) {
-                validationMessages.add(String.format("Reinforcement spacing for %s %s layer is less than minimum required - %d mm.", Constants.LAYERS_ORDINAL_LABELS.get(i), location.toLowerCase(), minSpacing));
+            if (clearSpacing < minSpacing) {
+                validationMessages.add(String.format("Reinforcement spacing for the %s %s layer is less than minimum required - %d mm.", Constants.LAYERS_ORDINAL_LABELS.get(i), location.toLowerCase(), minSpacing));
             }
         }
 
