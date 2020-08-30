@@ -5,6 +5,11 @@ import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Messages;
 
+/**
+ * Class that describes a slab with given geometry, materials, reinforcement and internal forces.
+ * It implements Flexure and Cracking interfaces.
+ * Includes methods that calculate bending capacity and crack widths.
+ */
 public class Slab implements Flexure, Cracking {
     private final double UlsMoment;
     private final double SlsMoment;
@@ -26,6 +31,15 @@ public class Slab implements Flexure, Cracking {
     private double bendingCapacity;
     private double requiredTensileReinforcement;
 
+    /**
+     * Slab constructor. It includes internal forces, slab geometry, reinforcement, materials and all design parameters.
+     * @param UlsMoment ULS bending moment
+     * @param SlsMoment SLS bending moment
+     * @param slabStrip SlabStrip geometry object
+     * @param concrete Concrete enum
+     * @param reinforcement Slab reinforcement object
+     * @param designParameters Design parameters object
+     */
     public Slab(double UlsMoment, double SlsMoment,
                 SlabStrip slabStrip, Concrete concrete,
                 SlabReinforcement reinforcement,
@@ -44,8 +58,14 @@ public class Slab implements Flexure, Cracking {
         this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters);
     }
 
+    /**
+     * Calculates bending capacity of the slab with accordance to Eurocode 2. Calculations support only singly reinforced section and are valid for concrete with fck less than 50 MPa.
+     * The method calculates required section properties such as minimum reinforcement, width in compression zone and lever arm.
+     * Based on these bendingCapacity and requiredTensileReinforcement fields are set up with relevant bending capacity and reinforcement required for bending.
+     * @throws IllegalArgumentException exception if wrong concrete class or compressive force too large
+     */
     @Override
-    public void calculateBendingCapacity() {
+    public void calculateBendingCapacity() throws IllegalArgumentException {
         if (fck <= 50) {
             int widthInCompressiveZone = geometry.getWidthInCompressionZone(UlsMoment);
             double kFactor = getKFactor(UlsMoment, widthInCompressiveZone, effectiveDepth, fck);
@@ -68,14 +88,26 @@ public class Slab implements Flexure, Cracking {
         // TODO: 15/08/2020 Future functionality calculate cracks.
     }
 
+    /**
+     * Getter for provided tensile reinforcement.
+     * @return providedTensileReinforcement
+     */
     public double getProvidedTensileReinforcement() {
         return providedTensileReinforcement;
     }
 
+    /**
+     * Getter for bending Capacity.
+     * @return bendingCapacity
+     */
     public double getBendingCapacity() {
         return bendingCapacity;
     }
 
+    /**
+     * Getter for required tensile reinforcement.
+     * @return requiredTensileReinforcement
+     */
     public double getRequiredTensileReinforcement() {
         return requiredTensileReinforcement;
     }
