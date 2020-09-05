@@ -112,22 +112,17 @@ public class SlabReinforcement extends Reinforcement {
     // TODO: 10/06/2020 Encapsulation
     public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
 
-        List<Double> distanceFromCentroidOfEachLayerToEdge = new ArrayList<>();
-
-        double distanceForFirstLayer = 0.5 * Math.max(diameters.get(0), additionalDiameters.get(0)) + nominalCover;
-
-        distanceFromCentroidOfEachLayerToEdge.add(distanceForFirstLayer);
-
-        List<Double> distanceForSubsequentLayers = IntStream
-                .range(0, verticalSpacings.size())
-                .mapToObj(i -> distanceForFirstLayer + verticalSpacings.get(i) + verticalSpacings.stream()
-                        .limit(i)
-                        .reduce(0, Integer::sum))
+        List<Integer> maxDiameters = IntStream
+                .range(0, diameters.size())
+                .mapToObj(i -> Math.max(diameters.get(i), additionalDiameters.get(i)))
                 .collect(Collectors.toList());
 
-        distanceFromCentroidOfEachLayerToEdge.addAll(distanceForSubsequentLayers);
-
-        return distanceFromCentroidOfEachLayerToEdge;
+        return IntStream
+                .range(0, maxDiameters.size())
+                .mapToObj(i -> nominalCover + 0.5 * maxDiameters.get(i)
+                        + verticalSpacings.stream().limit(i).reduce(0, Integer::sum)
+                        + maxDiameters.stream().limit(i).reduce(0, Integer::sum))
+                .collect(Collectors.toList());
     }
 
     public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
