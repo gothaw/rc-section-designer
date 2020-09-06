@@ -3,6 +3,9 @@ package com.radsoltan.model;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.reinforcement.Reinforcement;
 
+/**
+ *
+ */
 public interface Flexure {
     void calculateBendingCapacity();
 
@@ -39,10 +42,23 @@ public interface Flexure {
         return 0.04 * concreteArea;
     }
 
+    /**
+     * Calculates depth of plastic neutral axis for the section.
+     * @param effectiveDepth effective depth in mm
+     * @param leverArm
+     * @return
+     */
     default double getDepthOfPlasticNeutralAxis(double effectiveDepth, double leverArm) {
         return (effectiveDepth - leverArm) / 0.4;
     }
 
+    /**
+     * Gets centroid of compression reinforcement based on the sign of the ULS moment.
+     * @param UlsMoment ULS moment in kNm
+     * @param reinforcement Reinforcement object
+     * @param designParameters DesignParameters object
+     * @return centroid of compression reinforcement
+     */
     default double getCentroidOfCompressionReinforcement(double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters) {
         return (UlsMoment >= 0) ?
                 reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverBottom()) :

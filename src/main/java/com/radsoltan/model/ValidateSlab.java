@@ -18,7 +18,7 @@ public class ValidateSlab implements Validation {
     /**
      * Constructor. It invokes method to validate both horizontal and vertical bar spacings and method to validate slab thickness.
      * These methods add messages to the validationMessages list if some of the spacings or slab geometry is invalid.
-     * @param slabThickness slab thickness as an int
+     * @param slabThickness slab thickness in mm as an integer
      * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
      * @param designParameters design parameters used in project defined in DesignParameters object
      */
@@ -62,7 +62,7 @@ public class ValidateSlab implements Validation {
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
      * @param spacings spacings between main bar centers in subsequent layers as a list
      * @param aggregateSize aggregate size in mm
-     * @return List
+     * @return List of validation messages for horizontal spacing
      */
     private List<String> getValidationMessagesForSlabReinforcementHorizontalSpacings(String location, List<Integer> diameters, List<Integer> additionalDiameters,
                                                                                      List<Integer> spacings, int aggregateSize) {
@@ -95,7 +95,7 @@ public class ValidateSlab implements Validation {
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
      * @param verticalSpacings clear vertical spacing between layers
      * @param aggregateSize aggregate size in mm
-     * @return List
+     * @return list of validation messages for vertical spacing
      */
     private List<String> getValidateMessagesForSlabReinforcementVerticalSpacings(String location, List<Integer> diameters, List<Integer> additionalDiameters,
                                                                                  List<Integer> verticalSpacings, int aggregateSize) {
@@ -116,7 +116,7 @@ public class ValidateSlab implements Validation {
      * Method that sets validation message for slab thickness.
      * It checks whether slab defined in Geometry object is thick enough to accommodate vertical spacing between bars, bar diameters, nominal cover etc.
      * If slab is not thick enough, a message is added to the validationMessages field to inform the user.
-     * @param slabThickness slab thickness as int
+     * @param slabThickness slab thickness in mm as an integer
      * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
      * @param designParameters design parameters used in project defined in DesignParameters object
      */
@@ -159,7 +159,7 @@ public class ValidateSlab implements Validation {
 
     /**
      * Getter for validationMessages.
-     * @return List
+     * @return List of validation messages
      */
     public List<String> getValidationMessages() {
         return validationMessages;

@@ -90,7 +90,7 @@ public class Slab implements Flexure, Cracking {
 
     /**
      * Getter for provided tensile reinforcement.
-     * @return providedTensileReinforcement
+     * @return Provided tensile reinforcement area
      */
     public double getProvidedTensileReinforcement() {
         return providedTensileReinforcement;
@@ -98,7 +98,7 @@ public class Slab implements Flexure, Cracking {
 
     /**
      * Getter for bending Capacity.
-     * @return bendingCapacity
+     * @return Bending capacity in kNm
      */
     public double getBendingCapacity() {
         return bendingCapacity;
@@ -106,7 +106,7 @@ public class Slab implements Flexure, Cracking {
 
     /**
      * Getter for required tensile reinforcement.
-     * @return requiredTensileReinforcement
+     * @return Required tensile reinforcement area
      */
     public double getRequiredTensileReinforcement() {
         return requiredTensileReinforcement;

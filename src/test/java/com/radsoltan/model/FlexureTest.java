@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FlexureTest {
 
-
-
     @Test
     void name() {
     }

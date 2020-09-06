@@ -18,7 +18,7 @@ public class ValidateBeam implements Validation {
 
     /**
      * Getter for validation messages.
-     * @return validationMessages
+     * @return List of validation messages
      */
     public List<String> getValidationMessages() {
         return validationMessages;
