@@ -5,7 +5,7 @@ public class Utility {
     /**
      * Utility method that takes a string and capitalizes the first letter.
      * @param string String to be capitalized
-     * @return String
+     * @return capitalized string
      */
     public static String capitalize(String string) {
         if (string != null){

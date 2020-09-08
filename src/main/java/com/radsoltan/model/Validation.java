@@ -8,8 +8,8 @@ import java.util.List;
 public interface Validation {
 
     /**
-     * Method to return validation Messages for the element.
-     * @return List
+     * Method to return validation messages for the element.
+     * @return List of validation messages
      */
     List<String> getValidationMessages();
 }

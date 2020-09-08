@@ -31,7 +31,6 @@ public class Beam implements Flexure, Shear, Cracking {
     private double requiredCompressionReinforcement;
     private final double maximumReinforcement;
     /* Results Shear */
-    private double shearCapacity;
     private final double maximumLinksSpacing;
     private double requiredShearReinforcement;
 
