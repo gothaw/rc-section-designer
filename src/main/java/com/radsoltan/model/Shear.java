@@ -7,7 +7,8 @@ public interface Shear {
 
     /**
      * Interface method to calculate shear capacity.
-     * The method implementation to calculate required shear reinforcement and assign it to a member variable.
+     * The method implementation to calculate required shear reinforcement.
+     * This should be assigned to a member variable and accessed using a getter.
      */
     void calculateShearCapacity();
 
