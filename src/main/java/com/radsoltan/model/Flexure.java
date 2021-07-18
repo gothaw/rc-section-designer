@@ -114,7 +114,7 @@ public interface Flexure {
      */
     default double getCentroidOfCompressionReinforcement(double UlsMoment, Reinforcement reinforcement, DesignParameters designParameters) {
         return (UlsMoment >= 0) ?
-                reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverBottom()) :
-                reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverTop());
+                reinforcement.getCentroidOfTopReinforcement(designParameters.getNominalCoverTop()) :
+                reinforcement.getCentroidOfBottomReinforcement(designParameters.getNominalCoverBottom());
     }
 }

@@ -113,32 +113,52 @@ class FlexureTest {
     }
 
     @Test
-    void minimumReinforcementIsCalculatedCorrectlyForPositiveMoment() {
+    void minimumReinforcementIsCalculatedCorrectlyUsingSectionNineFormulas() {
         double effectiveDepth = flexure.getEffectiveDepth(depth, UlsMomentPositive, reinforcement, designParameters);
         double minimumReinforcementArea = flexure.getMinimumReinforcement(UlsMomentPositive, concrete.getMeanAxialTensileStrength(), yieldStrength, effectiveDepth, geometry);
 
-
+        assertEquals(650.1467, Double.parseDouble(decimalFormat.format(minimumReinforcementArea)));
     }
 
     @Test
-    void minimumReinforcementIsCalculatedCorrectlyForNegativeMoment() {
+    void minimumReinforcementIsCalculatedCorrectlyUsingSectionSevenFormulas() {
+        Geometry thinnerSlab = new Geometry(new SlabStrip(300));
+        double effectiveDepth = flexure.getEffectiveDepth(thinnerSlab.getDepth(), UlsMomentPositive, reinforcement, designParameters);
+        double minimumReinforcementArea = flexure.getMinimumReinforcement(UlsMomentPositive, concrete.getMeanAxialTensileStrength(), yieldStrength, effectiveDepth, thinnerSlab);
 
+        assertEquals(360, Double.parseDouble(decimalFormat.format(minimumReinforcementArea)));
     }
 
     @Test
     void maximumReinforcementIsCalculatedCorrectly() {
+        double concreteArea = geometry.getArea() - reinforcement.getTotalAreaOfTopReinforcement() - reinforcement.getTotalAreaOfBottomReinforcement();
+        double maximumReinforcement = flexure.getMaximumReinforcement(concreteArea);
 
+        assertEquals(19749.7512, Double.parseDouble(decimalFormat.format(maximumReinforcement)));
     }
 
     @Test
     void depthOfPlasticNeutralAxisIsCalculatedCorrectly() {
+        double effectiveDepth = flexure.getEffectiveDepth(depth, UlsMomentPositive, reinforcement, designParameters);
+        double kFactor = flexure.getKFactor(UlsMomentPositive, widthInCompressionZonePositiveMoment, effectiveDepth, concrete.getCompressiveStrength());
+        double kDashFactor = flexure.getKDashFactor(true, 0.85);
+        double leverArm = flexure.getLeverArm(effectiveDepth, kFactor, kDashFactor);
+        double depthOfPlasticNeutralAxis = flexure.getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
+
+        assertEquals(111.1072,Double.parseDouble(decimalFormat.format(depthOfPlasticNeutralAxis)));
     }
 
     @Test
     void centroidOfCompressiveReinforcementIsCorrectForPositiveMoment() {
+        double centroidOfCompressiveReinforcement = flexure.getCentroidOfCompressionReinforcement(UlsMomentPositive, reinforcement, designParameters);
+
+        assertEquals(37.5, Double.parseDouble(decimalFormat.format(centroidOfCompressiveReinforcement)));
     }
 
     @Test
     void centroidOfCompressiveReinforcementIsCorrectForNegativeMoment() {
+        double centroidOfCompressiveReinforcement = flexure.getCentroidOfCompressionReinforcement(UlsMomentNegative, reinforcement, designParameters);
+
+        assertEquals(83.2393, Double.parseDouble(decimalFormat.format(centroidOfCompressiveReinforcement)));
     }
 }
