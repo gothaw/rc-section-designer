@@ -9,12 +9,12 @@ import com.radsoltan.model.Project;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
 import com.radsoltan.util.Messages;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
@@ -25,6 +25,18 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * Controller for Design Parameters view. The view is used to set up all the necessary parameters that are used in ULS, SLS calculations.
+ * This includes:
+ * - nominal cover
+ * - concrete (class, aggregate size)
+ * - steel (yield strength)
+ * - partial factors of safety for steel and concrete
+ * - redistribution ratio
+ * - option to exclude cracking calculations
+ * The controller also does validation if any of the fields are empty when user presses okay button.
+ * It allows for creating designParameters and concrete objects in project instance.
+ */
 public class DesignParametersSetup extends Controller {
 
     @FXML
@@ -59,16 +71,23 @@ public class DesignParametersSetup extends Controller {
     private final ObservableList<Integer> nominalCovers;
     private final ObservableList<String> concreteClasses;
 
+    /**
+     * Constructor. It gets project instance and based on the instance it gets specific properties related to design parameters.
+     * It also creates lists for nominal covers and concrete classes.
+     */
     public DesignParametersSetup() {
         project = Project.getInstance();
         designParameters = project.getDesignParameters();
         concrete = project.getConcrete();
         elementType = project.getElementType();
 
+        // List of nominal covers populated using IntStream
         List<Integer> nominalCoverList = new ArrayList<>();
         IntStream.iterate(Constants.MIN_NOMINAL_COVER, cover -> cover <= Constants.MAX_NOMINAL_COVER, cover -> cover + Constants.NOMINAL_COVER_STEP)
                 .forEach(nominalCoverList::add);
 
+        // List of concrete classes created using stream of enum values for Concrete enum
+        // These include '_' as separator instead of '/'
         List<String> concreteClassesList = new ArrayList<>();
         Stream.of(Concrete.values()).forEach(concreteClass -> concreteClassesList.add(concreteClass.toString()));
 
@@ -76,8 +95,14 @@ public class DesignParametersSetup extends Controller {
         concreteClasses = FXCollections.observableArrayList(concreteClassesList);
     }
 
+    /**
+     * Initialize method that is run after calling the constructor. It sets up drop down lists.
+     * If designParameters and concrete objects were instantiated before it takes their properties and set them in the fields.
+     * Otherwise, it sets the input fields to default values.
+     */
     @FXML
     public void initialize() {
+        // Filling drop down lists
         nominalCoverTop.getItems().addAll(nominalCovers);
         nominalCoverBottom.getItems().addAll(nominalCovers);
         nominalCoverSides.getItems().addAll(nominalCovers);
@@ -85,16 +110,19 @@ public class DesignParametersSetup extends Controller {
         gammaC.getItems().addAll(Constants.GAMMA_C_PERSISTENT_TRANSIENT, Constants.GAMMA_C_ACCIDENTAL);
         gammaS.getItems().addAll(Constants.GAMMA_S_PERSISTENT_TRANSIENT, Constants.GAMMA_S_ACCIDENTAL);
         if (elementType.equals("slab")) {
+            // If slab ignore nominal cover for sides
             nominalCoverSides.setValue(0);
             nominalCoverSides.getParent().getStyleClass().add(CssStyleClasses.HIDDEN);
         }
         if (designParameters == null) {
+            // If design parameters were not set, show default values
             gammaC.setValue(Constants.GAMMA_C_PERSISTENT_TRANSIENT);
             gammaS.setValue(Constants.GAMMA_S_PERSISTENT_TRANSIENT);
             aggregateSize.setText(Integer.toString(Constants.DEFAULT_AGGREGATE_SIZE));
             redistributionRatio.setText(Double.toString(Constants.DEFAULT_REDISTRIBUTION_RATIO));
             isRecommendedRedistributionRatio.selectedProperty().setValue(true);
         } else {
+            // If design parameters set, show values that are stored in the instance
             nominalCoverTop.setValue(designParameters.getNominalCoverTop());
             nominalCoverBottom.setValue(designParameters.getNominalCoverBottom());
             nominalCoverSides.setValue(designParameters.getNominalCoverSides());
@@ -111,20 +139,36 @@ public class DesignParametersSetup extends Controller {
         }
         redistributionRatio.setDisable(isRecommendedRedistributionRatio.selectedProperty().get());
 
+        // Focusing window instead of first component
         Platform.runLater(() -> container.requestFocus());
     }
 
+    /**
+     * Method that handles cancel button click. It redirects to primary controller by using setRoot method.
+     * @param actionEvent Cancel button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
     public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
 
+    /**
+     * Method that handles ok button click. It requires all values to be set (not empty) before redirecting to primary controller.
+     * In addition to empty field validation, it includes validation of redistribution ratio value.
+     * Values from fields are saved to designParameters instance.
+     * @param actionEvent Ok button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
     public void applyChanges(ActionEvent actionEvent) throws IOException {
+        // Validating for empty fields
         List<String> validationMessages = getValidationMessagesForEmptyFields();
+        // Validating redistribution ratio
         String validationMessageForRedistributionRatio = getValidationMessageForRedistributionRatio();
         if (!validationMessageForRedistributionRatio.isEmpty()) {
             validationMessages.add(validationMessageForRedistributionRatio);
         }
         if (validationMessages.isEmpty()) {
+            // Creating designParameters and concrete objects based on values provided
             int nominalCoverTop = this.nominalCoverTop.getValue();
             int nominalCoverSides = this.nominalCoverSides.getValue();
             int nominalCoverBottom = this.nominalCoverBottom.getValue();
@@ -146,15 +190,26 @@ public class DesignParametersSetup extends Controller {
             project.setConcrete(concrete);
             App.setRoot("primary");
         } else {
+            // Show validation message
             showAlertBox(validationMessages.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
         }
     }
 
+    /**
+     * Handler for redistribution ratio checkbox. It disables and enables redistribution ratio input field.
+     * It also resets the value in the input field to default value.
+     * @param actionEvent Redistribution ratio checkbox click
+     */
     public void setRecommendedRedistributionRatio(ActionEvent actionEvent) {
         redistributionRatio.setDisable(isRecommendedRedistributionRatio.selectedProperty().get());
         redistributionRatio.setText(Double.toString(Constants.DEFAULT_REDISTRIBUTION_RATIO));
     }
 
+    /**
+     * Checks the fields in the view if they are empty or don't have any value set.
+     * If this is the case a message is added to the list of validation messages.
+     * @return list of validation messages
+     */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
         List<String> validationMessages = new ArrayList<>();
@@ -176,6 +231,11 @@ public class DesignParametersSetup extends Controller {
         return validationMessages;
     }
 
+    /**
+     * Checks the redistribution ratio input field if it has correct value. According to EC2, this should be between 0.7 and 1.0.
+     * If the value is within limits an empty string is returned. Otherwise, a validation message as a string is returned from the method.
+     * @return validation message for the redistribution ratio
+     */
     private String getValidationMessageForRedistributionRatio() {
         double redistributionRatioValue = Double.parseDouble(redistributionRatio.getText());
         return redistributionRatioValue > 1.0 || redistributionRatioValue < 0.7 ? Messages.INVALID_REDISTRIBUTION_RATIO : "";
