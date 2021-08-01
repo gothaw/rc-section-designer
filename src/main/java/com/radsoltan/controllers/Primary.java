@@ -12,11 +12,11 @@ import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
 import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,6 +25,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller to main view of the application. This includes handling logic for:
+ * - setting element type
+ * - setting project information
+ * - specifying analysis forces
+ * - redirecting to design parameters, geometry and reinforcement controllers
+ * - running project calculations
+ */
 public class Primary extends Controller {
 
     @FXML
@@ -59,24 +67,36 @@ public class Primary extends Controller {
     private VBox forcesSection;
     @FXML
     private NumericalTextField UlsMoment;
+    @FXML
     private HBox UlsMomentWrapper;
     @FXML
     private NumericalTextField SlsMoment;
+    @FXML
     private HBox SlsMomentWrapper;
     @FXML
     private NumericalTextField UlsShear;
+    @FXML
     private HBox UlsShearWrapper;
     @FXML
     private ChoiceBox<String> elementTypeChoiceBox;
 
     private final Project project;
 
+    /**
+     * Constructor. Gets project instance.
+     */
     public Primary() {
         project = Project.getInstance();
     }
 
+    /**
+     * Initialize method that is run after calling the constructor.
+     * It sets up input fields for project details and analysis forces to values set up in the project instance.
+     * It also sets description and styling for geometry, reinforcement and design parameters sections.
+     */
     @FXML
     public void initialize() {
+        // Setting project details
         projectName.setText(project.getName());
         if (project.getId() != null) {
             projectNumber.setText(project.getId());
@@ -88,7 +108,9 @@ public class Primary extends Controller {
         SlsMomentWrapper = (HBox) SlsMoment.getParent();
         UlsShearWrapper = (HBox) UlsShear.getParent();
 
+        // Setting element type
         elementTypeChoiceBox.setValue(Utility.capitalize(project.getElementType()));
+        // Setting analysis forces
         if (project.getUlsMoment() != null) {
             UlsMoment.setText(project.getUlsMoment());
         }
@@ -98,6 +120,7 @@ public class Primary extends Controller {
         if (project.getUlsShear() != null) {
             UlsShear.setText(project.getUlsShear());
         }
+        // Setting geometry, reinforcement and design parameters sections
         if (project.getGeometry() == null) {
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         } else {
@@ -114,13 +137,29 @@ public class Primary extends Controller {
         Platform.runLater(() -> container.requestFocus());
     }
 
+    /**
+     * Method that handles calculate button click.
+     *
+     * Following things are checked before calculations are run:
+     * - element type needs to be set up
+     * - all necessary project properties must by set up (geometry, reinforcement, forces etc.) this is carried out using
+     * getValidationMessagesForEmptyFields method.
+     * - project properties must be valid. This is carried out by calling getValidationMessagesBasedOnElementType method
+     * If any of these conditions are not met, an alert box is shown to the user
+     *
+     * Project is calculated and then results for flexure, shear and cracking are shown in results area.
+     * @param actionEvent Calculate button click event.
+     */
     public void calculate(ActionEvent actionEvent) {
+        // Checking if element type is set up
         if (elementTypeChoiceBox.getValue() != null) {
             List<String> validationMessages = getValidationMessagesForEmptyFields();
+            // Checking if project properties are set
             if (validationMessages.isEmpty()) {
                 setProjectProperties();
                 clearResultsArea();
                 List<String> elementValidationMessages = getValidationMessagesBasedOnElementType(project.getElementType());
+                // Checking if project properties are valid
                 if (elementValidationMessages.isEmpty()) {
                     try {
                         project.calculate();
@@ -150,8 +189,15 @@ public class Primary extends Controller {
         }
     }
 
+    /**
+     * Method that handles edit button for Design Parameters.
+     * It redirects to controller that handles setting up design parameters.
+     * @param actionEvent Edit button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
     public void setDesignParameters(ActionEvent actionEvent) throws IOException {
         if (project.getElementType() != null) {
+            // Saving project properties before redirect
             setProjectProperties();
             App.setRoot("design-parameters");
         } else {
@@ -159,8 +205,15 @@ public class Primary extends Controller {
         }
     }
 
+    /**
+     * Method that handles edit button for Reinforcement.
+     * It redirects to controller that handles setting up reinforcement. This depends on element type i.e. slab or beam.
+     * @param actionEvent Edit button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
     public void setReinforcement(ActionEvent actionEvent) throws IOException {
         if (project.getElementType() != null) {
+            // Saving project properties before redirect
             setProjectProperties();
             switch (project.getElementType().toLowerCase()) {
                 case "slab":
@@ -177,8 +230,15 @@ public class Primary extends Controller {
         }
     }
 
+    /**
+     * Method that handles edit button for Geometry.
+     * It redirects to controller that handles setting up geometry. This depends on element type i.e. slab or beam.
+     * @param actionEvent Edit button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
     public void setGeometry(ActionEvent actionEvent) throws IOException {
         if (project.getElementType() != null) {
+            // Saving project properties before redirect
             setProjectProperties();
             switch (project.getElementType().toLowerCase()) {
                 case "slab":
