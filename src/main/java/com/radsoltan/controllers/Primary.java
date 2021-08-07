@@ -3,6 +3,7 @@ package com.radsoltan.controllers;
 import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
+import com.radsoltan.model.Concrete;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
@@ -168,11 +169,11 @@ public class Primary extends Controller {
                         showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                     }
                     if (project.getFlexureCapacityCheckMessage() != null) {
-                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), "Flexure", project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage());
+                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), Messages.FLEXURE, project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage());
                         flexureResultsWrapper.getChildren().add(flexureResults);
                     }
                     if (project.getShearCapacityCheckMessage() != null) {
-                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), "Shear", project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage());
+                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), Messages.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage());
                         shearResultsWrapper.getChildren().add(shearResults);
                     }
                     if (project.getCrackingCheckMessage() != null) {
@@ -216,10 +217,10 @@ public class Primary extends Controller {
             // Saving project properties before redirect
             setProjectProperties();
             switch (project.getElementType().toLowerCase()) {
-                case "slab":
+                case Constants.ELEMENT_TYPE_SLAB:
                     App.setRoot("slab-reinforcement");
                     break;
-                case "beam":
+                case Constants.ELEMENT_TYPE_BEAM:
                     App.setRoot("beam-reinforcement");
                     break;
                 default:
@@ -241,10 +242,10 @@ public class Primary extends Controller {
             // Saving project properties before redirect
             setProjectProperties();
             switch (project.getElementType().toLowerCase()) {
-                case "slab":
+                case Constants.ELEMENT_TYPE_SLAB:
                     App.setRoot("slab-geometry");
                     break;
-                case "beam":
+                case Constants.ELEMENT_TYPE_BEAM:
                     App.setRoot("beam-geometry");
                     break;
                 default:
@@ -255,21 +256,28 @@ public class Primary extends Controller {
         }
     }
 
+    /**
+     * Method that handles drop down list for the element type.
+     * It sets the element type, handles what units should be shown next analysis forces and whether or not shear input field for shear should be shown.
+     * When switching between element types, method resets some of the project properties. This includes geometry, reinforcement, design parameters.
+     * @param actionEvent Dropdown list click event
+     */
     public void setElementTypeChoiceBox(ActionEvent actionEvent) {
         String elementType = elementTypeChoiceBox.getValue().toLowerCase();
-        if (elementType.equals("slab")) {
+        if (elementType.equals(Constants.ELEMENT_TYPE_SLAB)) {
             UlsShear.setText("0");
             project.setUlsShear(null);
             if (UlsShearWrapper.getStyleClass().toString().isEmpty()) {
                 UlsShearWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
             }
-            setMomentsUnit("kNm/m");
-        } else if (elementType.equals("beam")) {
+            setMomentsUnit(Messages.UNIT_MOMENT_SLAB);
+        } else if (elementType.equals(Constants.ELEMENT_TYPE_BEAM)) {
             UlsShear.setText("");
             UlsShearWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
-            setMomentsUnit("kNm");
+            setMomentsUnit(Messages.UNIT_MOMENT_BEAM);
         }
         if (project.getElementType() != null && !project.getElementType().equals(elementType)) {
+            // Resetting when switching between element types
             project.setGeometry(null);
             project.setReinforcement(null);
             project.setDesignParameters(null);
@@ -284,6 +292,9 @@ public class Primary extends Controller {
         project.setElementType(elementType);
     }
 
+    /**
+     * Sets project properties. It takes values from the input fields and sets them in project instance properties.
+     */
     private void setProjectProperties() {
         project.setName(projectName.getText());
         project.setId(projectNumber.getText());
@@ -295,6 +306,10 @@ public class Primary extends Controller {
         project.setElementType(elementTypeChoiceBox.getValue().toLowerCase());
     }
 
+    /**
+     * Sets units for moment labels next to ULS and QLS
+     * @param unit Units for moment. Either 'kNm' or 'kNm/m'
+     */
     private void setMomentsUnit(String unit) {
         Label UlsMomentUnits = (Label) UlsMomentWrapper.lookup("." + CssStyleClasses.UNIT_LABEL);
         UlsMomentUnits.setText(unit);
@@ -302,11 +317,23 @@ public class Primary extends Controller {
         SlsMomentUnits.setText(unit);
     }
 
+    /**
+     * It creates a wrapper VBox that includes a title and an inner VBox with results.
+     * The inner VBox includes:
+     * - capacity note with a pass and fail text, for example: '12 kNm < 15 kNm Pass'
+     * - additional message, which can include info why design is failing
+     * @param designValue Design value of the analysis force/moment
+     * @param maxValue Design capacity
+     * @param title Title for the analysis result area, for example, 'Flexure', 'Shear' etc.
+     * @param capacityMessage Message that that includes comparison of designValue and maxValue. for instance: '12 kNm < 15 kNm'
+     * @param additionalMessage Additional message for the user if section fails. For example: 'Increase reinforcement or redesign section.'
+     * @return Wrapper VBox
+     */
     private VBox generateResultsArea(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage) {
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add(CssStyleClasses.SUBHEADING);
         Label capacityLabel = new Label(capacityMessage);
-        Label passFailLabel = new Label((designValue <= maxValue) ? "Pass" : "Fail");
+        Label passFailLabel = new Label((designValue <= maxValue) ? Messages.PASS : Messages.FAIL);
         passFailLabel.getStyleClass().add((designValue <= maxValue) ? CssStyleClasses.PASS : CssStyleClasses.FAIL);
         HBox utilizationNoteWrapper = new HBox(capacityLabel, passFailLabel);
         utilizationNoteWrapper.getStyleClass().add(CssStyleClasses.UTILIZATION_WRAPPER);
@@ -317,17 +344,22 @@ public class Primary extends Controller {
         return new VBox(titleLabel, results);
     }
 
-
+    /**
+     * Gets validation messages for element type. This is carried out by creating an instance of ValidateSlab or ValidateBeam.
+     * These include validation messages for geometry, reinforcement spacing or design parameters.
+     * @param elementType structure element type. This can be either 'beam' or 'slab'
+     * @return list of validation messages based on element type
+     */
     private List<String> getValidationMessagesBasedOnElementType(String elementType) {
         List<String> elementValidationMessages = new ArrayList<>();
         switch (elementType) {
-            case "slab":
+            case Constants.ELEMENT_TYPE_SLAB:
                 if (project.getReinforcement() instanceof SlabReinforcement) {
                     ValidateSlab validateSlab = new ValidateSlab(project.getGeometry().getDepth(), (SlabReinforcement) project.getReinforcement(), project.getDesignParameters());
                     elementValidationMessages.addAll(validateSlab.getValidationMessages());
                 }
                 break;
-            case "beam":
+            case Constants.ELEMENT_TYPE_BEAM:
                 if (project.getReinforcement() instanceof BeamReinforcement) {
                     ValidateBeam validateBeam = new ValidateBeam(project.getGeometry(), (BeamReinforcement) project.getReinforcement(), project.getDesignParameters());
                     elementValidationMessages.addAll(validateBeam.getValidationMessages());
@@ -339,6 +371,9 @@ public class Primary extends Controller {
         return elementValidationMessages;
     }
 
+    /**
+     * Method that clears and hides the results area.
+     */
     private void clearResultsArea() {
         if (!designResultsWrapper.getStyleClass().contains(CssStyleClasses.HIDDEN)) {
             designResultsWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
@@ -349,6 +384,10 @@ public class Primary extends Controller {
     }
 
 
+    /**
+     * Gets a list of validation messages if analysis forces, geometry, reinforcement and design parameters are not set up.
+     * @return list of validation messages for empty fields
+     */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
         List<String> validationMessages = new ArrayList<>();

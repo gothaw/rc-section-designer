@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class Constants {
     public static final String APP_TITLE = "RC Section Designer";
+    public static final String ELEMENT_TYPE_BEAM = "beam";
+    public static final String ELEMENT_TYPE_SLAB = "slab";
     public static final int WINDOW_WIDTH = 1024;
     public static final int WINDOW_HEIGHT = 768;
     public static final int MIN_WINDOW_WIDTH = 900;
