@@ -7,6 +7,7 @@ import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.Shape;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.util.Messages;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

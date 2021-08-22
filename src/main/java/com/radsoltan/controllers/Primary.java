@@ -383,7 +383,6 @@ public class Primary extends Controller {
         crackingResultsWrapper.getChildren().clear();
     }
 
-
     /**
      * Gets a list of validation messages if analysis forces, geometry, reinforcement and design parameters are not set up.
      * @return list of validation messages for empty fields
