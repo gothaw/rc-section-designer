@@ -19,12 +19,12 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     // TODO: 17/07/2021 Navigation to primary controller only
-    public void cancel(ActionEvent actionEvent) throws IOException {
+    public void applyChanges(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
 
     // TODO: 17/07/2021 Navigation to primary controller only
-    public void applyChanges(ActionEvent actionEvent) throws IOException {
+    public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
 

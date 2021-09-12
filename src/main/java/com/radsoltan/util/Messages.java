@@ -4,6 +4,10 @@ package com.radsoltan.util;
  * Utility class that includes String constants for various alerts messages, warnings and errors.
  */
 public class Messages {
+    public static final String ERROR = "Error!";
+    public static final String INFO = "Info";
+    public static final String WARNING = "Warning!";
+    public static final String OK = "OK";
     public static final String CALCULATIONS_ERROR = "Calculations error";
     public static final String ENTER_GEOMETRY = "Enter geometry...";
     public static final String ENTER_REINFORCEMENT = "Enter reinforcement...";
@@ -27,6 +31,7 @@ public class Messages {
     public static final String SETUP_GEOMETRY = "Please set up geometry";
     public static final String SETUP_REINFORCEMENT = "Please set up reinforcement";
     public static final String SETUP_DESIGN_PARAMETERS = "Please set up design parameters";
+    public static final String SETUP_SLAB_THICKNESS = "Please set up slab thickness";
     public static final String SETUP_YIELD_STRENGTH = "Please set up steel yield strength.";
     public static final String SETUP_PARTIAL_FACTORS = "Please set up partial factors for steel and concrete.";
     public static final String UNIT_MOMENT_BEAM = "kNm";

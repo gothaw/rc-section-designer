@@ -109,7 +109,7 @@ public class DesignParametersSetup extends Controller {
         concreteClass.getItems().addAll(concreteClasses);
         gammaC.getItems().addAll(Constants.GAMMA_C_PERSISTENT_TRANSIENT, Constants.GAMMA_C_ACCIDENTAL);
         gammaS.getItems().addAll(Constants.GAMMA_S_PERSISTENT_TRANSIENT, Constants.GAMMA_S_ACCIDENTAL);
-        if (elementType.equals("slab")) {
+        if (elementType.equals(Constants.ELEMENT_TYPE_SLAB)) {
             // If slab ignore nominal cover for sides
             nominalCoverSides.setValue(0);
             nominalCoverSides.getParent().getStyleClass().add(CssStyleClasses.HIDDEN);
@@ -141,15 +141,6 @@ public class DesignParametersSetup extends Controller {
 
         // Focusing window instead of first component
         Platform.runLater(() -> container.requestFocus());
-    }
-
-    /**
-     * Method that handles cancel button click. It redirects to primary controller by using setRoot method.
-     * @param actionEvent Cancel button click event.
-     * @throws IOException Exception for failed or interrupted I/O operation.
-     */
-    public void cancel(ActionEvent actionEvent) throws IOException {
-        App.setRoot("primary");
     }
 
     /**
@@ -196,6 +187,15 @@ public class DesignParametersSetup extends Controller {
     }
 
     /**
+     * Method that handles cancel button click. It redirects to primary controller by using setRoot method.
+     * @param actionEvent Cancel button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
+    public void cancel(ActionEvent actionEvent) throws IOException {
+        App.setRoot("primary");
+    }
+
+    /**
      * Handler for redistribution ratio checkbox. It disables and enables redistribution ratio input field.
      * It also resets the value in the input field to default value.
      * @param actionEvent Redistribution ratio checkbox click
@@ -206,7 +206,7 @@ public class DesignParametersSetup extends Controller {
     }
 
     /**
-     * Checks the fields in the view if they are empty or don't have any value set.
+     * Checks if the fields in view are empty or don't have any value set.
      * If this is the case a message is added to the list of validation messages.
      * @return list of validation messages
      */

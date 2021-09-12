@@ -3,6 +3,7 @@ package com.radsoltan.controllers;
 import com.radsoltan.App;
 import com.radsoltan.util.Constants;
 
+import com.radsoltan.util.Messages;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -35,13 +36,13 @@ public abstract class Controller {
      * @param prefHeight Height in pixels.
      */
     protected void showAlertBox(String message, AlertKind kind, double prefWidth, double prefHeight){
-        Alert alert = new Alert(Alert.AlertType.NONE, message, new ButtonType("OK"));
+        Alert alert = new Alert(Alert.AlertType.NONE, message, new ButtonType(Messages.OK));
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         // Setting the icon
         stage.getIcons().add(new Image(getClass().getResource(kind.getUrl()).toExternalForm()));
         // Setting css stylesheet
         loadAlertStylesheets(alert);
-        alert.getButtonTypes().set(0, new ButtonType("OK", ButtonBar.ButtonData.LEFT));
+        alert.getButtonTypes().set(0, new ButtonType(Messages.OK, ButtonBar.ButtonData.LEFT));
         alert.setTitle(kind.getTitle());
         alert.getDialogPane().setPrefSize(prefWidth, prefHeight);
         centerAlertBox(alert);

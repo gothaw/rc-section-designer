@@ -107,10 +107,6 @@ public class SlabReinforcementSetup extends Controller {
         Platform.runLater(() -> container.requestFocus());
     }
 
-    public void cancel(ActionEvent actionEvent) throws IOException {
-        App.setRoot("primary");
-    }
-
     public void applyChanges(ActionEvent actionEvent) throws IOException {
         List<String> validationMessagesForEmptyFields = getValidationMessagesForEmptyFields();
         if (validationMessagesForEmptyFields.isEmpty()) {
@@ -128,6 +124,9 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
+    public void cancel(ActionEvent actionEvent) throws IOException {
+        App.setRoot("primary");
+    }
 
     private Map<String, List<Integer>> getSlabReinforcementDataFromLayerFields(VBox layerWrapper, VBox verticalSpacingsWrapper, int numberOfLayers) {
 
