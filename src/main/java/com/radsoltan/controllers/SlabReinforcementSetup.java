@@ -9,6 +9,7 @@ import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
 import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +28,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+/**
+ * Controller for the view that sets up slab reinforcement.
+ * Some key notes with regards to how the slab reinforcement is set up:
+ * - The app allows for setting up reinforcement for both top and bottom layers
+ * - For each slab face (top/bottom), it is possible to specify up to 6 layers
+ * - When specifying multiple layers, it is required to provide a clear spacing between layers
+ * - For each layer it is possible to specify alternate reinforcement by pressing 'Add' button.
+ *   This alternate reinforcement will have the same spacing as the main reinforcement layer but it can have different diameter.
+ * - The secondary reinforcement is ignored for the purpose of bending calculations.
+ */
 public class SlabReinforcementSetup extends Controller {
 
     @FXML
@@ -60,25 +71,35 @@ public class SlabReinforcementSetup extends Controller {
     private final ObservableList<Integer> diameters;
     private final ArrayList<String> layerLabels;
 
-
+    /**
+     * Constructor. It gets project instance and using the instance it gets the reinforcement.
+     * It also creates lists for reinforcement spacings and diameters.
+     */
     public SlabReinforcementSetup() {
         project = Project.getInstance();
 
         slabReinforcement = project.getReinforcement();
 
+        // creating list for bar spacings
         List<Integer> spacingsList = new ArrayList<>();
         IntStream.iterate(Constants.SLAB_MIN_BAR_SPACING, spacing -> spacing <= Constants.SLAB_MAX_BAR_SPACING, spacing -> spacing + Constants.SLAB_BAR_SPACING_STEP)
                 .forEach(spacingsList::add);
         spacings = FXCollections.observableList(spacingsList);
+        // creating list for bar diameters
         diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
+        // list for reinforcement layer labels
         layerLabels = Constants.LAYERS_ORDINAL_LABELS;
     }
 
+    /**
+     * Initialize method that is run after calling the constructor.
+     * // TODO: 19/09/2021 Update doc.
+     */
     @FXML
     public void initialize() {
         if (slabReinforcement == null) {
-            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, 0);
-            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, 0);
+            addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, 0);
+            addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, 0);
             numberOfTopLayers = 1;
             numberOfBottomLayers = 1;
         } else if (this.slabReinforcement instanceof SlabReinforcement) {
@@ -94,11 +115,11 @@ public class SlabReinforcementSetup extends Controller {
             List<Integer> additionalBottomDiameters = slabReinforcement.getAdditionalBottomDiameters();
             List<Integer> bottomVerticalSpacing = slabReinforcement.getBottomVerticalSpacings();
             IntStream.range(0, numberOfTopLayers).forEach(i -> {
-                addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, i);
+                addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, i);
                 initializeReinforcementLayerFields(topLayersVBox, topLayersVerticalSpacingVBox, i, topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacing);
             });
             IntStream.range(0, numberOfBottomLayers).forEach(i -> {
-                addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, i);
+                addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, i);
                 initializeReinforcementLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacing);
             });
         } else {
@@ -161,7 +182,7 @@ public class SlabReinforcementSetup extends Controller {
                 "verticalSpacings", verticalSpacings));
     }
 
-    private void addReinforcementLayerInView(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle, int layerIndex) {
+    private void addReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle, int layerIndex) {
         Label layerLabel = new Label(Utility.capitalize(layerLabels.get(layerIndex)) + " layer:");
         layerLabel.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER_LABEL);
         Label spacingLabel = new Label("at");
@@ -200,7 +221,7 @@ public class SlabReinforcementSetup extends Controller {
         layersWrapper.getChildren().add(layer);
     }
 
-    private void deleteReinforcementLayerFromView(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle) {
+    private void deleteReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle) {
         List<Node> layers = layersWrapper.getChildren();
         layers.remove(layers.size() - 1);
         List<Node> verticalSpacings = verticalSpacingsWrapper.getChildren();
@@ -293,28 +314,28 @@ public class SlabReinforcementSetup extends Controller {
 
     public void deleteLayerFromTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers > 1) {
-            deleteReinforcementLayerFromView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle);
+            deleteReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle);
             numberOfTopLayers--;
         }
     }
 
     public void addLayerToTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayerInView(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, numberOfTopLayers);
+            addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, numberOfTopLayers);
             numberOfTopLayers++;
         }
     }
 
     public void deleteLayerFromBottomReinforcement(ActionEvent actionEvent) {
         if (numberOfBottomLayers > 1) {
-            deleteReinforcementLayerFromView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle);
+            deleteReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle);
             numberOfBottomLayers--;
         }
     }
 
     public void addLayerToBottomReinforcement(ActionEvent actionEvent) {
         if (numberOfBottomLayers < Constants.MAX_NUMBER_OF_LAYERS) {
-            addReinforcementLayerInView(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, numberOfBottomLayers);
+            addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, numberOfBottomLayers);
             numberOfBottomLayers++;
         }
     }

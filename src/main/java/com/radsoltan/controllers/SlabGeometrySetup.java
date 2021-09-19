@@ -35,7 +35,7 @@ public class SlabGeometrySetup extends Controller {
     private final Geometry geometry;
 
     /**
-     * Constructor. It gets project instance and based on the instance it gets the geometry.
+     * Constructor. It gets project instance and using the instance it gets the geometry.
      */
     public SlabGeometrySetup() {
         this.project = Project.getInstance();
@@ -95,6 +95,7 @@ public class SlabGeometrySetup extends Controller {
      */
     private void draw() {
         // TODO: 12/09/2021 Create method that would draw the slab schematic with symbols. This can create a separate slab strip and draw it
+
     }
 
     /**
