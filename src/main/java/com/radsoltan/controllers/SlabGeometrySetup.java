@@ -12,7 +12,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ public class SlabGeometrySetup extends Controller {
 
     @FXML
     public Canvas slabImage;
+    public StackPane slabImageWrapper;
     @FXML
     private VBox container;
     @FXML
@@ -66,8 +71,9 @@ public class SlabGeometrySetup extends Controller {
      * Method that handles ok button click. It requires slab thickness to be set (not empty) before redirecting to the main controller.
      * If non empty, it creates SlabStrip object with given thickness.
      * It then creates Geometry object and saves it in the project instance.
+     *
      * @param actionEvent Ok button click event
-     * @throws IOException  Exception for failed or interrupted I/O operation.
+     * @throws IOException Exception for failed or interrupted I/O operation.
      */
     public void applyChanges(ActionEvent actionEvent) throws IOException {
         List<String> validationMessages = getValidationMessagesForEmptyFields();
@@ -83,6 +89,7 @@ public class SlabGeometrySetup extends Controller {
 
     /**
      * Method that handles cancel button click. It redirects to primary controller by using setRoot method.
+     *
      * @param actionEvent Cancel button click event.
      * @throws IOException Exception for failed or interrupted I/O operation.
      */
@@ -94,13 +101,42 @@ public class SlabGeometrySetup extends Controller {
      * // TODO: 12/09/2021 Update documentation
      */
     private void draw() {
-        // TODO: 12/09/2021 Create method that would draw the slab schematic with symbols. This can create a separate slab strip and draw it
+        GraphicsContext gc = slabImage.getGraphicsContext2D();
+        double canvasWidth = slabImage.getWidth();
+        double canvasHeight = slabImage.getHeight();
+        double slabEndArchDepth = 15;
+        double slabWidth = 0.6 * canvasWidth;
+        double slabDepth = 0.3 * canvasHeight;
+        double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabWidth;
+        double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabDepth;
+        double slabRightEdgeX = slabLeftEdgeX + slabWidth;
+        double slabBottomEdgeY = slabTopEdgeY + slabDepth;
 
+        gc.setFill(Color.LIGHTGRAY);
+        gc.setStroke(Color.BLACK);
+
+        gc.beginPath();
+        // Top Edge
+        gc.moveTo(slabLeftEdgeX, slabTopEdgeY);
+        gc.lineTo(slabRightEdgeX, slabTopEdgeY);
+        // Right Edge
+        gc.quadraticCurveTo(slabRightEdgeX - slabEndArchDepth, slabTopEdgeY + 0.25 * slabDepth, slabRightEdgeX, slabTopEdgeY + 0.5 * slabDepth);
+        gc.quadraticCurveTo(slabRightEdgeX + slabEndArchDepth, slabTopEdgeY + 0.75 * slabDepth, slabRightEdgeX, slabBottomEdgeY);
+        // Bottom Edge
+        gc.lineTo(slabLeftEdgeX, slabBottomEdgeY);
+        // Left Edge
+        gc.quadraticCurveTo(slabLeftEdgeX + slabEndArchDepth, slabBottomEdgeY - 0.25 * slabDepth, slabLeftEdgeX, slabBottomEdgeY - 0.5 * slabDepth);
+        gc.quadraticCurveTo(slabLeftEdgeX - slabEndArchDepth, slabBottomEdgeY - 0.75 * slabDepth, slabLeftEdgeX, slabTopEdgeY);
+
+        gc.stroke();
+        gc.fill();
+        gc.closePath();
     }
 
     /**
      * Checks if slab thickness field is empty.
      * If this is the case a message is added to the list of validation messages.
+     *
      * @return list of validation messages
      */
     @Override

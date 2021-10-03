@@ -14,7 +14,7 @@ public class Project {
     private String UlsMoment;
     private String SlsMoment;
     private String UlsShear;
-    private String elementType;
+    private String elementType = "slab";
     private Geometry geometry;
     private Reinforcement reinforcement;
     private DesignParameters designParameters;

@@ -9,3 +9,7 @@
     -fx-spacing: 8px;
     -fx-alignment: bottom-right;
 }
+
+.slab-image {
+    -fx-background-color: #000;
+}

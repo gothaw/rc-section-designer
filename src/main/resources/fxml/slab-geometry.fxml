@@ -21,8 +21,8 @@
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <VBox styleClass="slab-geometry">
             <VBox styleClass="section-wrapper, padding-bottom">
-                <StackPane styleClass="canvas-wrapper">
-                    <Canvas fx:id="slabImage" height="250" width="250"/>
+                <StackPane fx:id="slabImageWrapper" styleClass="canvas-wrapper">
+                    <Canvas styleClass="slab-image" fx:id="slabImage" height="350" width="800"/>
                 </StackPane>
             </VBox>
             <VBox styleClass="section-wrapper, border-separator-top, padding-top">
