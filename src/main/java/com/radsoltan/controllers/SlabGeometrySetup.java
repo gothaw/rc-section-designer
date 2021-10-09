@@ -111,10 +111,14 @@ public class SlabGeometrySetup extends Controller {
         double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabDepth;
         double slabRightEdgeX = slabLeftEdgeX + slabWidth;
         double slabBottomEdgeY = slabTopEdgeY + slabDepth;
+        double dimensionLineOffset = 50;
+        double dimensionLineExtension = 20;
+        double dimensionLineScale = 5;
 
         gc.setFill(Color.LIGHTGRAY);
         gc.setStroke(Color.BLACK);
 
+        // Drawing Slab
         gc.beginPath();
         // Top Edge
         gc.moveTo(slabLeftEdgeX, slabTopEdgeY);
@@ -131,6 +135,21 @@ public class SlabGeometrySetup extends Controller {
         gc.stroke();
         gc.fill();
         gc.closePath();
+
+        // TODO: 09/10/2021 Create a class for dimension line (vertical and horizontal) that would implement drawable
+        // Drawing
+        gc.beginPath();
+        // Horizontal line
+        gc.moveTo(slabLeftEdgeX - dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
+        gc.lineTo(slabRightEdgeX + dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
+        // Vertical End Line Left
+        gc.moveTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
+        gc.lineTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
+        // Vertical End Line Right
+        gc.moveTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
+        gc.lineTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
+
+        gc.stroke();
     }
 
     /**
