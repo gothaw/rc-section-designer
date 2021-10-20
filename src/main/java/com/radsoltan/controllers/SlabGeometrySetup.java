@@ -17,6 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.transform.Rotate;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class SlabGeometrySetup extends Controller {
         double slabRightEdgeX = slabLeftEdgeX + slabWidth;
         double slabBottomEdgeY = slabTopEdgeY + slabDepth;
         double dimensionLineOffset = 50;
-        double dimensionLineExtension = 20;
+        double dimensionLineExtension = 15;
         double dimensionLineScale = 5;
 
         gc.setFill(Color.LIGHTGRAY);
@@ -148,8 +149,29 @@ public class SlabGeometrySetup extends Controller {
         // Vertical End Line Right
         gc.moveTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
         gc.lineTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
-
         gc.stroke();
+        gc.closePath();
+        // Left Tick
+        gc.beginPath();
+        rotate(gc, 45, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
+        gc.translate(-2, -18);
+        gc.rect(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
+        gc.setFill(Color.BLACK);
+        gc.fill();
+        gc.closePath();
+        // Right Tick
+        gc.beginPath();
+        rotate(gc, 45, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
+        gc.translate(-2, -18);
+        gc.rect(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
+        gc.setFill(Color.BLACK);
+        gc.fill();
+        gc.closePath();
+    }
+
+    private void rotate(GraphicsContext gc, double angle, double px, double py) {
+        Rotate r = new Rotate(angle, px, py);
+        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
     }
 
     /**
