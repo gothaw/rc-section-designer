@@ -1,7 +1,5 @@
 package com.radsoltan.model.geometry;
 
-import com.radsoltan.model.Drawable;
-
 public abstract class Shape implements Drawable {
 
     public abstract int getDepth();

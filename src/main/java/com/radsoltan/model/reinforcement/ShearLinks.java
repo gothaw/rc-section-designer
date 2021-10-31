@@ -1,6 +1,6 @@
 package com.radsoltan.model.reinforcement;
 
-import com.radsoltan.model.Drawable;
+import com.radsoltan.model.geometry.Drawable;
 
 public class ShearLinks implements Drawable {
 
