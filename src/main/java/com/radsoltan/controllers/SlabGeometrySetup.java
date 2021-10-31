@@ -17,6 +17,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 
 import java.io.IOException;
@@ -138,19 +140,23 @@ public class SlabGeometrySetup extends Controller {
         gc.closePath();
 
         // TODO: 09/10/2021 Create a class for dimension line (vertical and horizontal) that would implement drawable
-        // Drawing
-        gc.beginPath();
+        // Horizontal Dimension Line
+
         // Horizontal line
+        gc.beginPath();
         gc.moveTo(slabLeftEdgeX - dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
         gc.lineTo(slabRightEdgeX + dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
+
         // Vertical End Line Left
         gc.moveTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
         gc.lineTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
+
         // Vertical End Line Right
         gc.moveTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
         gc.lineTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
         gc.stroke();
         gc.closePath();
+
         // Left Tick
         gc.beginPath();
         rotate(gc, 45, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
@@ -158,7 +164,11 @@ public class SlabGeometrySetup extends Controller {
         gc.rect(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
         gc.setFill(Color.BLACK);
         gc.fill();
+        // Clean up
+        gc.translate(2, 18);
+        rotate(gc, 0, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
         gc.closePath();
+
         // Right Tick
         gc.beginPath();
         rotate(gc, 45, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
@@ -166,7 +176,20 @@ public class SlabGeometrySetup extends Controller {
         gc.rect(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
         gc.setFill(Color.BLACK);
         gc.fill();
+        // Clean up
+        gc.translate(2, 18);
+        rotate(gc, 0, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
         gc.closePath();
+
+        // Text
+        gc.beginPath();
+        Font font = new Font("Source Sans Pro", 26);
+        gc.setFont(font);
+        gc.setFill(Color.BLACK);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText("1000", 0.5 * (slabLeftEdgeX + slabRightEdgeX), slabTopEdgeY - dimensionLineOffset - 10);
+        gc.closePath();
+
     }
 
     private void rotate(GraphicsContext gc, double angle, double px, double py) {
