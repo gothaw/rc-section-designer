@@ -4,6 +4,7 @@ import com.radsoltan.App;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.geometry.Geometry;
+import com.radsoltan.model.geometry.HorizontalDimensionLine;
 import com.radsoltan.model.geometry.Shape;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.util.Messages;
@@ -141,55 +142,56 @@ public class SlabGeometrySetup extends Controller {
 
         // TODO: 09/10/2021 Create a class for dimension line (vertical and horizontal) that would implement drawable
         // Horizontal Dimension Line
+//
+//        // Horizontal line
+//        gc.beginPath();
+//        gc.moveTo(slabLeftEdgeX - dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
+//        gc.lineTo(slabRightEdgeX + dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
+//
+//        // Vertical End Line Left
+//        gc.moveTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
+//        gc.lineTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
+//
+//        // Vertical End Line Right
+//        gc.moveTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
+//        gc.lineTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
+//        gc.stroke();
+//        gc.closePath();
+//
+//        // Left Tick
+//        gc.beginPath();
+//        rotate(gc, 45, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
+//        gc.translate(-2, -18);
+//        gc.rect(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
+//        gc.setFill(Color.BLACK);
+//        gc.fill();
+//        // Clean up
+//        gc.translate(2, 18);
+//        rotate(gc, 0, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
+//        gc.closePath();
+//
+//        // Right Tick
+//        gc.beginPath();
+//        rotate(gc, 45, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
+//        gc.translate(-2, -18);
+//        gc.rect(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
+//        gc.setFill(Color.BLACK);
+//        gc.fill();
+//        // Clean up
+//        gc.translate(2, 18);
+//        rotate(gc, 0, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
+//        gc.closePath();
+//
+//        // Text
+//        gc.beginPath();
+//        Font font = new Font("Source Sans Pro", 26);
+//        gc.setFont(font);
+//        gc.setTextAlign(TextAlignment.CENTER);
+//        gc.fillText("1000", 0.5 * (slabLeftEdgeX + slabRightEdgeX), slabTopEdgeY - dimensionLineOffset - 10);
+//        gc.closePath();
 
-        // Horizontal line
-        gc.beginPath();
-        gc.moveTo(slabLeftEdgeX - dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
-        gc.lineTo(slabRightEdgeX + dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
-
-        // Vertical End Line Left
-        gc.moveTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
-        gc.lineTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
-
-        // Vertical End Line Right
-        gc.moveTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
-        gc.lineTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
-        gc.stroke();
-        gc.closePath();
-
-        // Left Tick
-        gc.beginPath();
-        rotate(gc, 45, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
-        gc.translate(-2, -18);
-        gc.rect(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
-        gc.setFill(Color.BLACK);
-        gc.fill();
-        // Clean up
-        gc.translate(2, 18);
-        rotate(gc, 0, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
-        gc.closePath();
-
-        // Right Tick
-        gc.beginPath();
-        rotate(gc, 45, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
-        gc.translate(-2, -18);
-        gc.rect(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
-        gc.setFill(Color.BLACK);
-        gc.fill();
-        // Clean up
-        gc.translate(2, 18);
-        rotate(gc, 0, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
-        gc.closePath();
-
-        // Text
-        gc.beginPath();
-        Font font = new Font("Source Sans Pro", 26);
-        gc.setFont(font);
-        gc.setFill(Color.BLACK);
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("1000", 0.5 * (slabLeftEdgeX + slabRightEdgeX), slabTopEdgeY - dimensionLineOffset - 10);
-        gc.closePath();
-
+        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine("1000", Color.BLACK, gc, slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, -dimensionLineOffset, 1.0);
+        horizontalDimensionLine.draw();
     }
 
     private void rotate(GraphicsContext gc, double angle, double px, double py) {
