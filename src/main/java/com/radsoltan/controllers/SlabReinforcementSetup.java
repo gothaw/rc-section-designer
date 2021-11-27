@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
  * - For each slab face (top/bottom), it is possible to specify up to 6 layers
  * - When specifying multiple layers, it is required to provide a clear spacing between layers
  * - For each layer it is possible to specify alternate reinforcement by pressing 'Add' button.
- *   This alternate reinforcement will have the same spacing as the main reinforcement layer but it can have different diameter.
+ * This alternate reinforcement will have the same spacing as the main reinforcement layer but it can have different diameter.
  * - The secondary reinforcement is ignored for the purpose of bending calculations.
  */
 public class SlabReinforcementSetup extends Controller {

@@ -3,10 +3,7 @@ package com.radsoltan.controllers;
 import com.radsoltan.App;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
-import com.radsoltan.model.geometry.Geometry;
-import com.radsoltan.model.geometry.HorizontalDimensionLine;
-import com.radsoltan.model.geometry.Shape;
-import com.radsoltan.model.geometry.SlabStrip;
+import com.radsoltan.model.geometry.*;
 import com.radsoltan.util.Messages;
 
 import javafx.application.Platform;
@@ -42,6 +39,10 @@ public class SlabGeometrySetup extends Controller {
 
     private final Project project;
     private final Geometry geometry;
+
+    private static final double END_ARCH_DEPTH = 50;
+    private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.6;
+    private static final double SLAB_IMAGE_VERTICAL_RATIO = 0.3;
 
     /**
      * Constructor. It gets project instance and using the instance it gets the geometry.
@@ -101,23 +102,21 @@ public class SlabGeometrySetup extends Controller {
         App.setRoot("primary");
     }
 
+
     /**
-     * // TODO: 12/09/2021 Update documentation
+     * Draws slab image along with dimension lines.
+     * Slab image is drawn relatively to the canvas size using the ratios defined in constants.
      */
     private void draw() {
         GraphicsContext gc = slabImage.getGraphicsContext2D();
         double canvasWidth = slabImage.getWidth();
         double canvasHeight = slabImage.getHeight();
-        double slabEndArchDepth = 15;
-        double slabWidth = 0.6 * canvasWidth;
-        double slabDepth = 0.3 * canvasHeight;
+        double slabWidth = SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth;
+        double slabDepth = SLAB_IMAGE_VERTICAL_RATIO * canvasHeight;
         double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabWidth;
         double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabDepth;
         double slabRightEdgeX = slabLeftEdgeX + slabWidth;
         double slabBottomEdgeY = slabTopEdgeY + slabDepth;
-        double dimensionLineOffset = 50;
-        double dimensionLineExtension = 15;
-        double dimensionLineScale = 5;
 
         gc.setFill(Color.LIGHTGRAY);
         gc.setStroke(Color.BLACK);
@@ -128,75 +127,23 @@ public class SlabGeometrySetup extends Controller {
         gc.moveTo(slabLeftEdgeX, slabTopEdgeY);
         gc.lineTo(slabRightEdgeX, slabTopEdgeY);
         // Right Edge
-        gc.quadraticCurveTo(slabRightEdgeX - slabEndArchDepth, slabTopEdgeY + 0.25 * slabDepth, slabRightEdgeX, slabTopEdgeY + 0.5 * slabDepth);
-        gc.quadraticCurveTo(slabRightEdgeX + slabEndArchDepth, slabTopEdgeY + 0.75 * slabDepth, slabRightEdgeX, slabBottomEdgeY);
+        gc.quadraticCurveTo(slabRightEdgeX - END_ARCH_DEPTH, slabTopEdgeY + 0.25 * slabDepth, slabRightEdgeX, slabTopEdgeY + 0.5 * slabDepth);
+        gc.quadraticCurveTo(slabRightEdgeX + END_ARCH_DEPTH, slabTopEdgeY + 0.75 * slabDepth, slabRightEdgeX, slabBottomEdgeY);
         // Bottom Edge
         gc.lineTo(slabLeftEdgeX, slabBottomEdgeY);
         // Left Edge
-        gc.quadraticCurveTo(slabLeftEdgeX + slabEndArchDepth, slabBottomEdgeY - 0.25 * slabDepth, slabLeftEdgeX, slabBottomEdgeY - 0.5 * slabDepth);
-        gc.quadraticCurveTo(slabLeftEdgeX - slabEndArchDepth, slabBottomEdgeY - 0.75 * slabDepth, slabLeftEdgeX, slabTopEdgeY);
-
+        gc.quadraticCurveTo(slabLeftEdgeX + END_ARCH_DEPTH, slabBottomEdgeY - 0.25 * slabDepth, slabLeftEdgeX, slabBottomEdgeY - 0.5 * slabDepth);
+        gc.quadraticCurveTo(slabLeftEdgeX - END_ARCH_DEPTH, slabBottomEdgeY - 0.75 * slabDepth, slabLeftEdgeX, slabTopEdgeY);
+        // Draw Slab and clean up
         gc.stroke();
         gc.fill();
         gc.closePath();
 
-        // TODO: 09/10/2021 Create a class for dimension line (vertical and horizontal) that would implement drawable
-        // Horizontal Dimension Line
-//
-//        // Horizontal line
-//        gc.beginPath();
-//        gc.moveTo(slabLeftEdgeX - dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
-//        gc.lineTo(slabRightEdgeX + dimensionLineExtension, slabTopEdgeY - dimensionLineOffset);
-//
-//        // Vertical End Line Left
-//        gc.moveTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
-//        gc.lineTo(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
-//
-//        // Vertical End Line Right
-//        gc.moveTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset + 20);
-//        gc.lineTo(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset - 20);
-//        gc.stroke();
-//        gc.closePath();
-//
-//        // Left Tick
-//        gc.beginPath();
-//        rotate(gc, 45, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
-//        gc.translate(-2, -18);
-//        gc.rect(slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
-//        gc.setFill(Color.BLACK);
-//        gc.fill();
-//        // Clean up
-//        gc.translate(2, 18);
-//        rotate(gc, 0, slabLeftEdgeX, slabTopEdgeY - dimensionLineOffset);
-//        gc.closePath();
-//
-//        // Right Tick
-//        gc.beginPath();
-//        rotate(gc, 45, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
-//        gc.translate(-2, -18);
-//        gc.rect(slabRightEdgeX, slabTopEdgeY - dimensionLineOffset, 4, 36);
-//        gc.setFill(Color.BLACK);
-//        gc.fill();
-//        // Clean up
-//        gc.translate(2, 18);
-//        rotate(gc, 0, slabRightEdgeX, slabTopEdgeY - dimensionLineOffset);
-//        gc.closePath();
-//
-//        // Text
-//        gc.beginPath();
-//        Font font = new Font("Source Sans Pro", 26);
-//        gc.setFont(font);
-//        gc.setTextAlign(TextAlignment.CENTER);
-//        gc.fillText("1000", 0.5 * (slabLeftEdgeX + slabRightEdgeX), slabTopEdgeY - dimensionLineOffset - 10);
-//        gc.closePath();
-
-        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine("1000", Color.BLACK, gc, slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, -dimensionLineOffset, 1.0);
+        // Draw Horizontal Dimension Line
+        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine("1000", Color.BLACK, gc, slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, -DimensionLine.DEFAULT_OFFSET, 0.8);
         horizontalDimensionLine.draw();
-    }
 
-    private void rotate(GraphicsContext gc, double angle, double px, double py) {
-        Rotate r = new Rotate(angle, px, py);
-        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+        // Draw Vertical Dimension Line
     }
 
     /**

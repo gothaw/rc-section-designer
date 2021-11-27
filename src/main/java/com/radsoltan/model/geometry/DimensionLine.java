@@ -36,6 +36,14 @@ public abstract class DimensionLine implements Drawable {
         graphicsContext.closePath();
     }
 
+    /**
+     * Draws a dimension line tick in a given point
+     *
+     * @param graphicsContext graphics context to draw tick on
+     * @param x               x coordinate of the point
+     * @param y               y coordinate of the point
+     * @param scale           dimension line scale
+     */
     protected void drawTick(GraphicsContext graphicsContext, double x, double y, double scale) {
         double width = DEFAULT_TICK_WIDTH * scale;
         double length = DEFAULT_TICK_LENGTH * scale;
