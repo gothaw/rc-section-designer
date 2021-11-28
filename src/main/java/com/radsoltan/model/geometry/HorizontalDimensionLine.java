@@ -6,7 +6,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 /**
- * Class used for creating horizontal dimension line
+ * Class used for creating horizontal dimension line.
  */
 public class HorizontalDimensionLine extends DimensionLine {
 
@@ -26,7 +26,7 @@ public class HorizontalDimensionLine extends DimensionLine {
      * @param color           dimension line colour
      * @param graphicsContext graphics context to draw the dimension line on
      * @param startX          dimension line start point - x coordinate
-     * @param endX            dimension line end point - y coordinate
+     * @param endX            dimension line end point - x coordinate
      * @param y               dimension line y coordinate
      * @param offsetY         offset in y direction from y coordinate
      * @param scale           dimension line scale
@@ -89,9 +89,9 @@ public class HorizontalDimensionLine extends DimensionLine {
     }
 
     /**
-     * Draws dimension line.
+     * Draws the dimension line.
      * It sets stroke and fill colour. It draws the main horizontal line, draws two vertical end lines along with two ticks.
-     * Finally, it draws a text in the centre above above the dimension line.
+     * Finally, it draws a text in the centre above the dimension line.
      */
     @Override
     public void draw() {

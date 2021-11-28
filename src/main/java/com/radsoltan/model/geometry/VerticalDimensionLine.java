@@ -6,6 +6,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Class used for creating a vertical dimension line.
+ */
 public class VerticalDimensionLine extends DimensionLine {
 
     private final String text;
@@ -18,6 +21,19 @@ public class VerticalDimensionLine extends DimensionLine {
     private final double scale;
     private final boolean isTextAligned;
 
+    /**
+     * Constructor. Sets required dimension line properties.
+     *
+     * @param text            text to be displayed next to dimension line
+     * @param color           dimension line colour
+     * @param graphicsContext graphics context to draw the dimension line on
+     * @param startY          dimension line start point - y coordinate
+     * @param endY            dimension line end point - y coordinate
+     * @param x               dimension line x coordinate
+     * @param offsetX         offset in x direction from x coordinate
+     * @param scale           dimension line scale
+     * @param isTextAligned   specifies whether the text should be aligned with the dimension line (vertical) or horizontal
+     */
     public VerticalDimensionLine(String text, Color color, GraphicsContext graphicsContext, double startY, double endY, double x, double offsetX, double scale, boolean isTextAligned) {
         this.text = text;
         this.color = color;
@@ -30,15 +46,43 @@ public class VerticalDimensionLine extends DimensionLine {
         this.isTextAligned = isTextAligned;
     }
 
+    /**
+     * Constructor. Uses default offset in X and default scale
+     *
+     * @param text            text to be displayed next to dimension line
+     * @param color           dimension line colour
+     * @param graphicsContext graphics context to draw the dimension line on
+     * @param startY          dimension line start point - y coordinate
+     * @param endY            dimension line end point - y coordinate
+     * @param x               dimension line x coordinate
+     */
     public VerticalDimensionLine(String text, Color color, GraphicsContext graphicsContext, double startY, double endY, double x) {
         this(text, color, graphicsContext, startY, endY, x, DimensionLine.DEFAULT_OFFSET, DimensionLine.DEFAULT_SCALE, true);
     }
 
+    /**
+     * Draws a horizontal limiting end line.
+     *
+     * @param graphicsContext graphics context to draw on
+     * @param x               x coordinate of the centre of the line
+     * @param y               y coordinate of the centre of the line
+     * @param scale           dimension line scale
+     */
     @Override
     protected void drawEndLine(GraphicsContext graphicsContext, double x, double y, double scale) {
         this.drawLine(graphicsContext, x + 0.5 * DimensionLine.DEFAULT_END_LINE_LENGTH * scale, y, x - 0.5 * DimensionLine.DEFAULT_END_LINE_LENGTH * scale, y);
     }
 
+    /**
+     * Draws text left to the dimension line.
+     * If text is aligned, it rotates the text and displays it vertically, otherwise the text is horizontal.
+     *
+     * @param text            text to be displayed
+     * @param graphicsContext graphics context to draw text one
+     * @param x               x coordinate of the text
+     * @param y               y coordinate of the text
+     * @param scale           dimension line scale
+     */
     @Override
     protected void drawText(String text, GraphicsContext graphicsContext, double x, double y, double scale) {
         graphicsContext.beginPath();
@@ -46,7 +90,7 @@ public class VerticalDimensionLine extends DimensionLine {
         graphicsContext.setFont(font);
         if (isTextAligned) {
             graphicsContext.setTextAlign(TextAlignment.CENTER);
-            rotate(graphicsContext, -90, x ,y);
+            rotate(graphicsContext, -90, x, y);
         } else {
             graphicsContext.setTextBaseline(VPos.CENTER);
         }
@@ -54,6 +98,11 @@ public class VerticalDimensionLine extends DimensionLine {
         graphicsContext.closePath();
     }
 
+    /**
+     * Draws the dimension line.
+     * It sets stroke and fill colour. It draws the main horizontal line, draws two horizontal end lines along with two ticks.
+     * Finally, it draws a text in the centre to the left of the dimension line.
+     */
     @Override
     public void draw() {
         graphicsContext.setStroke(color);
