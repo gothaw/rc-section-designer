@@ -43,6 +43,7 @@ public class SlabGeometrySetup extends Controller {
     private static final double END_ARCH_DEPTH = 15;
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.6;
     private static final double SLAB_IMAGE_VERTICAL_RATIO = 0.3;
+    private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.8;
 
     /**
      * Constructor. It gets project instance and using the instance it gets the geometry.
@@ -140,10 +141,31 @@ public class SlabGeometrySetup extends Controller {
         graphicsContext.closePath();
 
         // Draw Horizontal Dimension Line
-        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine("1000", Color.BLACK, graphicsContext, slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, -DimensionLine.DEFAULT_OFFSET, 0.8);
+        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
+                "1000",
+                Color.BLACK,
+                graphicsContext,
+                slabLeftEdgeX,
+                slabRightEdgeX,
+                slabTopEdgeY,
+                -DimensionLine.DEFAULT_OFFSET,
+                SLAB_IMAGE_DIMENSION_LINES_SCALE
+        );
         horizontalDimensionLine.draw();
 
         // Draw Vertical Dimension Line
+        VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+                "t",
+                Color.BLACK,
+                graphicsContext,
+                slabTopEdgeY,
+                slabBottomEdgeY,
+                slabLeftEdgeX,
+                -DimensionLine.DEFAULT_OFFSET,
+                SLAB_IMAGE_DIMENSION_LINES_SCALE,
+                false
+        );
+        verticalDimensionLine.draw();
     }
 
     /**

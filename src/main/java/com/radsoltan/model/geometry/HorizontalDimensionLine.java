@@ -66,7 +66,7 @@ public class HorizontalDimensionLine extends DimensionLine {
      */
     @Override
     protected void drawEndLine(GraphicsContext graphicsContext, double x, double y, double scale) {
-        this.drawLine(graphicsContext, x, y + 0.5 * DimensionLine.DEFAULT_END_LINE_LENGTH, x, y - 0.5 * DimensionLine.DEFAULT_END_LINE_LENGTH * scale);
+        this.drawLine(graphicsContext, x, y + 0.5 * DimensionLine.DEFAULT_END_LINE_LENGTH * scale, x, y - 0.5 * DimensionLine.DEFAULT_END_LINE_LENGTH * scale);
     }
 
     /**

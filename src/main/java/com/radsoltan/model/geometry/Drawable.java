@@ -5,7 +5,7 @@ package com.radsoltan.model.geometry;
  */
 public interface Drawable {
     /**
-     * yolo
+     * Method to draw the entity.
      */
     void draw();
 }
