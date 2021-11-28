@@ -29,9 +29,10 @@ public class NumericalTextField extends TextField {
     /**
      * Method override. Replaces a range of characters with the given text.
      * Input validation carried out by invoking private method {@code validateTextInput}.
+     *
      * @param start The starting index in the range, inclusive.
-     * @param end The ending index in the range, exclusive.
-     * @param text The text that is to replace the range. This must not be null.
+     * @param end   The ending index in the range, exclusive.
+     * @param text  The text that is to replace the range. This must not be null.
      */
     @Override
     public void replaceText(int start, int end, String text) {
@@ -43,9 +44,10 @@ public class NumericalTextField extends TextField {
     /**
      * Method to validate if String created after text replacement is a valid decimal number.
      * It uses StringBuilder and replace method to create a new String that is checked against {@code pattern}.
+     *
      * @param start The starting index in the range, inclusive.
-     * @param end The ending index in the range, exclusive.
-     * @param text The text that is to replace the range. This must not be null.
+     * @param end   The ending index in the range, exclusive.
+     * @param text  The text that is to replace the range. This must not be null.
      * @return true if new text after replacement is still a valid decimal number.
      */
     private boolean validateTextInput(int start, int end, String text) {

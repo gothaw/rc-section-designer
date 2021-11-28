@@ -16,16 +16,18 @@ public enum AlertKind {
 
     /**
      * Enum constructor.
-     * @param url The url of the image icon.
+     *
+     * @param url   The url of the image icon.
      * @param title Title to be displayed in the window.
      */
-    AlertKind(String url, String title){
+    AlertKind(String url, String title) {
         this.url = url;
         this.title = title;
     }
 
     /**
      * Getter for the url.
+     *
      * @return url of the image icon.
      */
     public String getUrl() {
@@ -34,6 +36,7 @@ public enum AlertKind {
 
     /**
      * Getter for the title.
+     *
      * @return title of the alert
      */
     public String getTitle() {

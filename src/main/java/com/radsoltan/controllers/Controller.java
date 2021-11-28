@@ -20,22 +20,24 @@ public abstract class Controller {
 
     /**
      * Shows an alert box with a default width and height.
+     *
      * @param message Text to be shown as an alert message.
-     * @param kind Type of alert box as a AlertKind enum.
+     * @param kind    Type of alert box as a AlertKind enum.
      */
-    protected void showAlertBox(String message, AlertKind kind){
+    protected void showAlertBox(String message, AlertKind kind) {
         showAlertBox(message, kind, Constants.DEFAULT_ALERT_WIDTH, Constants.DEFAULT_ALERT_HEIGHT);
     }
 
     /**
      * Shows an alert box with custom preferred width and preferred height.
      * It uses JavaFX alert with type of NONE and OK button.
-     * @param message Text to be shown as an alert message.
-     * @param kind Type of alert box as a AlertKind enum.
-     * @param prefWidth Width in pixels.
+     *
+     * @param message    Text to be shown as an alert message.
+     * @param kind       Type of alert box as a AlertKind enum.
+     * @param prefWidth  Width in pixels.
      * @param prefHeight Height in pixels.
      */
-    protected void showAlertBox(String message, AlertKind kind, double prefWidth, double prefHeight){
+    protected void showAlertBox(String message, AlertKind kind, double prefWidth, double prefHeight) {
         Alert alert = new Alert(Alert.AlertType.NONE, message, new ButtonType(Messages.OK));
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         // Setting the icon
@@ -51,6 +53,7 @@ public abstract class Controller {
 
     /**
      * Centers the alert box within window.
+     *
      * @param alert alert to be centered.
      */
     private void centerAlertBox(Alert alert) {
@@ -60,6 +63,7 @@ public abstract class Controller {
 
     /**
      * Loads alert stylesheets. Loads main css file to the alert box.
+     *
      * @param alert alert that requires loading css.
      */
     private void loadAlertStylesheets(Alert alert) {
@@ -69,6 +73,7 @@ public abstract class Controller {
 
     /**
      * Method that should check for empty fields in view and add a message to a List about each empty field.
+     *
      * @return list of validation messages
      */
     protected abstract List<String> getValidationMessagesForEmptyFields();

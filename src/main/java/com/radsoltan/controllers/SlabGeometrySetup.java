@@ -108,7 +108,7 @@ public class SlabGeometrySetup extends Controller {
      * Slab image is drawn relatively to the canvas size using the ratios defined in constants.
      */
     private void draw() {
-        GraphicsContext gc = slabImage.getGraphicsContext2D();
+        GraphicsContext graphicsContext = slabImage.getGraphicsContext2D();
         double canvasWidth = slabImage.getWidth();
         double canvasHeight = slabImage.getHeight();
         double slabWidth = SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth;
@@ -118,29 +118,29 @@ public class SlabGeometrySetup extends Controller {
         double slabRightEdgeX = slabLeftEdgeX + slabWidth;
         double slabBottomEdgeY = slabTopEdgeY + slabDepth;
 
-        gc.setFill(Color.LIGHTGRAY);
-        gc.setStroke(Color.BLACK);
+        graphicsContext.setFill(Color.LIGHTGRAY);
+        graphicsContext.setStroke(Color.BLACK);
 
         // Drawing Slab
-        gc.beginPath();
+        graphicsContext.beginPath();
         // Top Edge
-        gc.moveTo(slabLeftEdgeX, slabTopEdgeY);
-        gc.lineTo(slabRightEdgeX, slabTopEdgeY);
+        graphicsContext.moveTo(slabLeftEdgeX, slabTopEdgeY);
+        graphicsContext.lineTo(slabRightEdgeX, slabTopEdgeY);
         // Right Edge
-        gc.quadraticCurveTo(slabRightEdgeX - END_ARCH_DEPTH, slabTopEdgeY + 0.25 * slabDepth, slabRightEdgeX, slabTopEdgeY + 0.5 * slabDepth);
-        gc.quadraticCurveTo(slabRightEdgeX + END_ARCH_DEPTH, slabTopEdgeY + 0.75 * slabDepth, slabRightEdgeX, slabBottomEdgeY);
+        graphicsContext.quadraticCurveTo(slabRightEdgeX - END_ARCH_DEPTH, slabTopEdgeY + 0.25 * slabDepth, slabRightEdgeX, slabTopEdgeY + 0.5 * slabDepth);
+        graphicsContext.quadraticCurveTo(slabRightEdgeX + END_ARCH_DEPTH, slabTopEdgeY + 0.75 * slabDepth, slabRightEdgeX, slabBottomEdgeY);
         // Bottom Edge
-        gc.lineTo(slabLeftEdgeX, slabBottomEdgeY);
+        graphicsContext.lineTo(slabLeftEdgeX, slabBottomEdgeY);
         // Left Edge
-        gc.quadraticCurveTo(slabLeftEdgeX + END_ARCH_DEPTH, slabBottomEdgeY - 0.25 * slabDepth, slabLeftEdgeX, slabBottomEdgeY - 0.5 * slabDepth);
-        gc.quadraticCurveTo(slabLeftEdgeX - END_ARCH_DEPTH, slabBottomEdgeY - 0.75 * slabDepth, slabLeftEdgeX, slabTopEdgeY);
+        graphicsContext.quadraticCurveTo(slabLeftEdgeX + END_ARCH_DEPTH, slabBottomEdgeY - 0.25 * slabDepth, slabLeftEdgeX, slabBottomEdgeY - 0.5 * slabDepth);
+        graphicsContext.quadraticCurveTo(slabLeftEdgeX - END_ARCH_DEPTH, slabBottomEdgeY - 0.75 * slabDepth, slabLeftEdgeX, slabTopEdgeY);
         // Draw Slab and clean up
-        gc.stroke();
-        gc.fill();
-        gc.closePath();
+        graphicsContext.stroke();
+        graphicsContext.fill();
+        graphicsContext.closePath();
 
         // Draw Horizontal Dimension Line
-        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine("1000", Color.BLACK, gc, slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, -DimensionLine.DEFAULT_OFFSET, 0.8);
+        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine("1000", Color.BLACK, graphicsContext, slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, -DimensionLine.DEFAULT_OFFSET, 0.8);
         horizontalDimensionLine.draw();
 
         // Draw Vertical Dimension Line

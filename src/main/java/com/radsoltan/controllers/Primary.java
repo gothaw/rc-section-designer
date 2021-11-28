@@ -140,15 +140,16 @@ public class Primary extends Controller {
 
     /**
      * Method that handles calculate button click.
-     *
+     * <p>
      * Following things are checked before calculations are run:
      * - element type needs to be set up
      * - all necessary project properties must by set up (geometry, reinforcement, forces etc.) this is carried out using
      * getValidationMessagesForEmptyFields method.
      * - project properties must be valid. This is carried out by calling getValidationMessagesBasedOnElementType method
      * If any of these conditions are not met, an alert box is shown to the user
-     *
+     * <p>
      * Project is calculated and then results for flexure, shear and cracking are shown in results area.
+     *
      * @param actionEvent Calculate button click event.
      */
     public void calculate(ActionEvent actionEvent) {
@@ -177,7 +178,7 @@ public class Primary extends Controller {
                         shearResultsWrapper.getChildren().add(shearResults);
                     }
                     if (project.getCrackingCheckMessage() != null) {
-                        // TODO: 13/08/2020 Implement
+                        // TODO: 13/08/2020 Implement cracking calcs
                     }
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
@@ -193,6 +194,7 @@ public class Primary extends Controller {
     /**
      * Method that handles edit button for Design Parameters.
      * It redirects to controller that handles setting up design parameters.
+     *
      * @param actionEvent Edit button click event.
      * @throws IOException Exception for failed or interrupted I/O operation.
      */
@@ -209,6 +211,7 @@ public class Primary extends Controller {
     /**
      * Method that handles edit button for Reinforcement.
      * It redirects to controller that handles setting up reinforcement. This depends on element type i.e. slab or beam.
+     *
      * @param actionEvent Edit button click event.
      * @throws IOException Exception for failed or interrupted I/O operation.
      */
@@ -234,6 +237,7 @@ public class Primary extends Controller {
     /**
      * Method that handles edit button for Geometry.
      * It redirects to controller that handles setting up geometry. This depends on element type i.e. slab or beam.
+     *
      * @param actionEvent Edit button click event.
      * @throws IOException Exception for failed or interrupted I/O operation.
      */
@@ -260,6 +264,7 @@ public class Primary extends Controller {
      * Method that handles drop down list for the element type.
      * It sets the element type, handles what units should be shown next analysis forces and whether or not shear input field for shear should be shown.
      * When switching between element types, method resets some of the project properties. This includes geometry, reinforcement, design parameters.
+     *
      * @param actionEvent Dropdown list click event
      */
     public void setElementTypeChoiceBox(ActionEvent actionEvent) {
@@ -308,6 +313,7 @@ public class Primary extends Controller {
 
     /**
      * Sets units for moment labels next to ULS and QLS
+     *
      * @param unit Units for moment. Either 'kNm' or 'kNm/m'
      */
     private void setMomentsUnit(String unit) {
@@ -322,10 +328,11 @@ public class Primary extends Controller {
      * The inner VBox includes:
      * - capacity note with a pass and fail text, for example: '12 kNm < 15 kNm Pass'
      * - additional message, which can include info why design is failing
-     * @param designValue Design value of the analysis force/moment
-     * @param maxValue Design capacity
-     * @param title Title for the analysis result area, for example, 'Flexure', 'Shear' etc.
-     * @param capacityMessage Message that that includes comparison of designValue and maxValue. for instance: '12 kNm < 15 kNm'
+     *
+     * @param designValue       Design value of the analysis force/moment
+     * @param maxValue          Design capacity
+     * @param title             Title for the analysis result area, for example, 'Flexure', 'Shear' etc.
+     * @param capacityMessage   Message that that includes comparison of designValue and maxValue. for instance: '12 kNm < 15 kNm'
      * @param additionalMessage Additional message for the user if section fails. For example: 'Increase reinforcement or redesign section.'
      * @return Wrapper VBox
      */
@@ -347,6 +354,7 @@ public class Primary extends Controller {
     /**
      * Gets validation messages for element type. This is carried out by creating an instance of ValidateSlab or ValidateBeam.
      * These include validation messages for geometry, reinforcement spacing or design parameters.
+     *
      * @param elementType structure element type. This can be either 'beam' or 'slab'
      * @return list of validation messages based on element type
      */
@@ -385,6 +393,7 @@ public class Primary extends Controller {
 
     /**
      * Gets a list of validation messages if analysis forces, geometry, reinforcement and design parameters are not set up.
+     *
      * @return list of validation messages for empty fields
      */
     @Override

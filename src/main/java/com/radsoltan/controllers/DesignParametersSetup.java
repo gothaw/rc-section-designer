@@ -147,6 +147,7 @@ public class DesignParametersSetup extends Controller {
      * Method that handles ok button click. It requires all values to be set (not empty) before redirecting to primary controller.
      * In addition to empty field validation, it includes validation of redistribution ratio value.
      * Values from fields are saved to designParameters instance.
+     *
      * @param actionEvent Ok button click event.
      * @throws IOException Exception for failed or interrupted I/O operation.
      */
@@ -188,6 +189,7 @@ public class DesignParametersSetup extends Controller {
 
     /**
      * Method that handles cancel button click. It redirects to primary controller by using setRoot method.
+     *
      * @param actionEvent Cancel button click event.
      * @throws IOException Exception for failed or interrupted I/O operation.
      */
@@ -198,6 +200,7 @@ public class DesignParametersSetup extends Controller {
     /**
      * Handler for redistribution ratio checkbox. It disables and enables redistribution ratio input field.
      * It also resets the value in the input field to default value.
+     *
      * @param actionEvent Redistribution ratio checkbox click
      */
     public void setRecommendedRedistributionRatio(ActionEvent actionEvent) {
@@ -208,6 +211,7 @@ public class DesignParametersSetup extends Controller {
     /**
      * Checks if the fields in view are empty or don't have any value set.
      * If this is the case a message is added to the list of validation messages.
+     *
      * @return list of validation messages
      */
     @Override
@@ -234,6 +238,7 @@ public class DesignParametersSetup extends Controller {
     /**
      * Checks the redistribution ratio input field if it has correct value. According to EC2, this should be between 0.7 and 1.0.
      * If the value is within limits an empty string is returned. Otherwise, a validation message as a string is returned from the method.
+     *
      * @return validation message for the redistribution ratio
      */
     private String getValidationMessageForRedistributionRatio() {
