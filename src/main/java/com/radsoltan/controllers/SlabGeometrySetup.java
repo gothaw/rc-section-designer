@@ -40,7 +40,7 @@ public class SlabGeometrySetup extends Controller {
     private final Project project;
     private final Geometry geometry;
 
-    private static final double END_ARCH_DEPTH = 50;
+    private static final double END_ARCH_DEPTH = 15;
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.6;
     private static final double SLAB_IMAGE_VERTICAL_RATIO = 0.3;
 

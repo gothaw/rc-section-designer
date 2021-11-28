@@ -23,7 +23,7 @@ public abstract class DimensionLine implements Drawable {
     /**
      * Abstract method to draw end limiting lines of the dimension line.
      *
-     * @param graphicsContext graphic context to draw on
+     * @param graphicsContext graphics context to draw on
      * @param x               x coordinate of the centre of the line
      * @param y               y coordinate of the centre of the line
      * @param scale           dimension line scale
@@ -89,7 +89,7 @@ public abstract class DimensionLine implements Drawable {
      * @param x               x coordinate of the centre of rotation
      * @param y               y coordinate of the centre of rotation
      */
-    private void rotate(GraphicsContext graphicsContext, double angle, double x, double y) {
+    protected void rotate(GraphicsContext graphicsContext, double angle, double x, double y) {
         Rotate rotate = new Rotate(angle, x, y);
         graphicsContext.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
     }
