@@ -14,11 +14,12 @@ dependencies {
     testCompile group: 'org.testfx', name: 'testfx-core', version: '4.0.16-alpha'
     testCompile group: 'org.testfx', name: 'testfx-junit5', version: '4.0.16-alpha'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.13.2'
+    testImplementation group: 'de.saxsys', name: 'jfx-testrunner', version: '1.1'
 }
 
 javafx {
     version = '14'
-    modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.media']
+    modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.swing']
 }
 
 compileTestJava {

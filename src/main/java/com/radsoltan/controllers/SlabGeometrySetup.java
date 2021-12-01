@@ -14,10 +14,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Rotate;
 
 import java.io.IOException;
 import java.util.ArrayList;
