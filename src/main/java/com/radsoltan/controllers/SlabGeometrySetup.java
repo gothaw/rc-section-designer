@@ -82,7 +82,9 @@ public class SlabGeometrySetup extends Controller {
         if (validationMessages.isEmpty()) {
             SlabStrip slabStrip = new SlabStrip(Integer.parseInt(slabThickness.getText()));
             Geometry geometry = new Geometry(slabStrip);
+
             project.setGeometry(geometry);
+
             App.setRoot("primary");
         } else {
             showAlertBox(validationMessages.get(0), AlertKind.INFO);

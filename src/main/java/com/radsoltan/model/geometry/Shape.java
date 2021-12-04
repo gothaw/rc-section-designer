@@ -1,10 +1,14 @@
 package com.radsoltan.model.geometry;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public abstract class Shape implements Drawable {
 
     public abstract int getDepth();
 
     public abstract int getWebWidth();
+
+    public abstract GraphicsContext getGraphicsContext();
 
     public abstract double getArea();
 

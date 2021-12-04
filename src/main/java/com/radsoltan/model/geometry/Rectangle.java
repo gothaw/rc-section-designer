@@ -1,13 +1,21 @@
 package com.radsoltan.model.geometry;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public class Rectangle extends Shape {
 
     private final int width;
     private final int depth;
+    private final GraphicsContext graphicsContext;
 
-    public Rectangle(int width, int depth) {
+    public Rectangle(int width, int depth, GraphicsContext graphicsContext) {
         this.width = width;
         this.depth = depth;
+        this.graphicsContext = graphicsContext;
+    }
+
+    public Rectangle(int width, int depth) {
+        this(width, depth, null);
     }
 
     @Override
@@ -18,6 +26,11 @@ public class Rectangle extends Shape {
     @Override
     public int getWebWidth() {
         return width;
+    }
+
+    @Override
+    public GraphicsContext getGraphicsContext() {
+        return graphicsContext;
     }
 
     @Override

@@ -80,29 +80,31 @@ public class SlabReinforcementSetup extends Controller {
 
         slabReinforcement = project.getReinforcement();
 
-        // creating list for bar spacings
+        // Creating list for bar spacings
         List<Integer> spacingsList = new ArrayList<>();
         IntStream.iterate(Constants.SLAB_MIN_BAR_SPACING, spacing -> spacing <= Constants.SLAB_MAX_BAR_SPACING, spacing -> spacing + Constants.SLAB_BAR_SPACING_STEP)
                 .forEach(spacingsList::add);
         spacings = FXCollections.observableList(spacingsList);
-        // creating list for bar diameters
+        // Creating list for bar diameters
         diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
-        // list for reinforcement layer labels
+        // List for reinforcement layer labels
         layerLabels = Constants.LAYERS_ORDINAL_LABELS;
     }
 
     /**
-     * Initialize method that is run after calling the constructor.
-     * // TODO: 19/09/2021 Update doc.
+     * Initialize method that is run after calling the constructor. If no slab reinforcement was set up it creates an empty bottom layer and an empty top layers.
+     * If slab reinforcement is found in project instance, it creates required number of reinforcement layers and initializes the fields.
      */
     @FXML
     public void initialize() {
         if (slabReinforcement == null) {
+            // If no reinforcement set up before, create one top and one bottom layer
             addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, 0);
             addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, 0);
             numberOfTopLayers = 1;
             numberOfBottomLayers = 1;
         } else if (this.slabReinforcement instanceof SlabReinforcement) {
+            // Getting slab reinforcement instance
             SlabReinforcement slabReinforcement = (SlabReinforcement) this.slabReinforcement;
             numberOfTopLayers = slabReinforcement.getTopDiameters().size();
             numberOfBottomLayers = slabReinforcement.getBottomDiameters().size();
@@ -114,6 +116,7 @@ public class SlabReinforcementSetup extends Controller {
             List<Integer> bottomSpacings = slabReinforcement.getBottomSpacings();
             List<Integer> additionalBottomDiameters = slabReinforcement.getAdditionalBottomDiameters();
             List<Integer> bottomVerticalSpacing = slabReinforcement.getBottomVerticalSpacings();
+            // Adding slab reinforcement layers to the view and initializing the fields with properties
             IntStream.range(0, numberOfTopLayers).forEach(i -> {
                 addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, i);
                 initializeReinforcementLayerFields(topLayersVBox, topLayersVerticalSpacingVBox, i, topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacing);
@@ -123,15 +126,24 @@ public class SlabReinforcementSetup extends Controller {
                 initializeReinforcementLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, i, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacing);
             });
         } else {
+            // Show error if invalid reinforcement
             showAlertBox(Messages.INVALID_SLAB_REINFORCEMENT, AlertKind.ERROR);
         }
         Platform.runLater(() -> container.requestFocus());
     }
 
+    /**
+     * Method that handles ok button click. It checks if there are no empty fields in the form.
+     * If all fields are filled with reinforcement data, it gets the data from the form fields and create a slab reinforcement object.
+     * It saves the reinforcement to project instance and redirects to primary view.
+     *
+     * @param actionEvent Ok button click
+     * @throws IOException Exception for failed or interrupted I/O operation
+     */
     public void applyChanges(ActionEvent actionEvent) throws IOException {
         List<String> validationMessagesForEmptyFields = getValidationMessagesForEmptyFields();
         if (validationMessagesForEmptyFields.isEmpty()) {
-
+            // Get reinforcement properties from the form fields
             Map<String, List<Integer>> topReinforcement = getSlabReinforcementDataFromLayerFields(topLayersVBox, topLayersVerticalSpacingVBox, numberOfTopLayers);
             Map<String, List<Integer>> bottomReinforcement = getSlabReinforcementDataFromLayerFields(bottomLayersVBox, bottomLayersVerticalSpacingVBox, numberOfBottomLayers);
 
@@ -139,15 +151,23 @@ public class SlabReinforcementSetup extends Controller {
                     bottomReinforcement.get("diameters"), bottomReinforcement.get("additionalDiameters"), bottomReinforcement.get("spacings"), bottomReinforcement.get("verticalSpacings"));
 
             project.setReinforcement(slabReinforcement);
+
             App.setRoot("primary");
         } else {
             showAlertBox(validationMessagesForEmptyFields.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
         }
     }
 
+    /**
+     * Method that handles cancel button click. It redirects to primary controller by using setRoot method.
+     *
+     * @param actionEvent Cancel button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
     public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
+
 
     private Map<String, List<Integer>> getSlabReinforcementDataFromLayerFields(VBox layerWrapper, VBox verticalSpacingsWrapper, int numberOfLayers) {
 

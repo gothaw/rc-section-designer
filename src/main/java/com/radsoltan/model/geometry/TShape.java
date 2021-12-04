@@ -1,5 +1,7 @@
 package com.radsoltan.model.geometry;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public class TShape extends Shape implements Flanged {
 
     private final int webWidth;
@@ -98,6 +100,11 @@ public class TShape extends Shape implements Flanged {
     @Override
     public int getWebWidth() {
         return webWidth;
+    }
+
+    @Override
+    public GraphicsContext getGraphicsContext() {
+        return null;
     }
 
     public int getDownstandDepth() {
