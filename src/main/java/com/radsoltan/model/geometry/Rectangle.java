@@ -1,6 +1,7 @@
 package com.radsoltan.model.geometry;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class Rectangle extends Shape {
 
@@ -8,14 +9,14 @@ public class Rectangle extends Shape {
     private final int depth;
     private final GraphicsContext graphicsContext;
 
-    public Rectangle(int width, int depth, GraphicsContext graphicsContext) {
+    public Rectangle(int width, int depth, GraphicsContext graphicsContext, Color stroke, Color fill) {
         this.width = width;
         this.depth = depth;
         this.graphicsContext = graphicsContext;
     }
 
     public Rectangle(int width, int depth) {
-        this(width, depth, null);
+        this(width, depth, null, null, null);
     }
 
     @Override
