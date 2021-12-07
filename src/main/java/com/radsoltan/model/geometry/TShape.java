@@ -1,6 +1,7 @@
 package com.radsoltan.model.geometry;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class TShape extends Shape implements Flanged {
 
@@ -98,6 +99,11 @@ public class TShape extends Shape implements Flanged {
     }
 
     @Override
+    public int getWidth() {
+        return 0;
+    }
+
+    @Override
     public int getWebWidth() {
         return webWidth;
     }
@@ -105,6 +111,26 @@ public class TShape extends Shape implements Flanged {
     @Override
     public GraphicsContext getGraphicsContext() {
         return null;
+    }
+
+    @Override
+    public Color getStroke() {
+        return null;
+    }
+
+    @Override
+    public Color getFill() {
+        return null;
+    }
+
+    @Override
+    public double getStartX() {
+        return 0;
+    }
+
+    @Override
+    public double getStartY() {
+        return 0;
     }
 
     public int getDownstandDepth() {

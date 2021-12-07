@@ -8,21 +8,32 @@ public class Rectangle extends Shape {
     private final int width;
     private final int depth;
     private final GraphicsContext graphicsContext;
+    private final Color stroke;
+    private final Color fill;
+    private final double startX;
+    private final double startY;
 
-    public Rectangle(int width, int depth, GraphicsContext graphicsContext, Color stroke, Color fill) {
+    public Rectangle(int width, int depth, GraphicsContext graphicsContext, Color stroke, Color fill, double startX, double startY) {
         this.width = width;
         this.depth = depth;
         this.graphicsContext = graphicsContext;
+        this.stroke = stroke;
+        this.fill = fill;
+        this.startX = startX;
+        this.startY = startY;
     }
 
     public Rectangle(int width, int depth) {
-        this(width, depth, null, null, null);
+        this(width, depth, null, null, null, 0, 0);
     }
 
     @Override
     public int getDepth() {
         return depth;
     }
+
+    @Override
+    public int getWidth() { return width; }
 
     @Override
     public int getWebWidth() {
@@ -33,6 +44,18 @@ public class Rectangle extends Shape {
     public GraphicsContext getGraphicsContext() {
         return graphicsContext;
     }
+
+    @Override
+    public Color getStroke() { return stroke; }
+
+    @Override
+    public Color getFill() { return fill; }
+
+    @Override
+    public double getStartX() { return startX; }
+
+    @Override
+    public double getStartY() { return startY; }
 
     @Override
     public double getArea() {

@@ -110,33 +110,24 @@ public class SlabGeometrySetup extends Controller {
         GraphicsContext graphicsContext = slabImage.getGraphicsContext2D();
         double canvasWidth = slabImage.getWidth();
         double canvasHeight = slabImage.getHeight();
-        double slabWidth = SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth;
-        double slabDepth = SLAB_IMAGE_VERTICAL_RATIO * canvasHeight;
+        int slabWidth = (int) (SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth);
+        int slabDepth = (int) (SLAB_IMAGE_VERTICAL_RATIO * canvasHeight);
         double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabWidth;
         double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabDepth;
         double slabRightEdgeX = slabLeftEdgeX + slabWidth;
         double slabBottomEdgeY = slabTopEdgeY + slabDepth;
 
-        graphicsContext.setFill(Color.LIGHTGRAY);
-        graphicsContext.setStroke(Color.BLACK);
+        SlabStrip slabStrip = new SlabStrip(
+                slabWidth,
+                slabDepth,
+                graphicsContext,
+                Color.BLACK,
+                Color.LIGHTGRAY,
+                slabLeftEdgeX,
+                slabTopEdgeY
+        );
 
-        // Drawing Slab
-        graphicsContext.beginPath();
-        // Top Edge
-        graphicsContext.moveTo(slabLeftEdgeX, slabTopEdgeY);
-        graphicsContext.lineTo(slabRightEdgeX, slabTopEdgeY);
-        // Right Edge
-        graphicsContext.quadraticCurveTo(slabRightEdgeX - END_ARCH_DEPTH, slabTopEdgeY + 0.25 * slabDepth, slabRightEdgeX, slabTopEdgeY + 0.5 * slabDepth);
-        graphicsContext.quadraticCurveTo(slabRightEdgeX + END_ARCH_DEPTH, slabTopEdgeY + 0.75 * slabDepth, slabRightEdgeX, slabBottomEdgeY);
-        // Bottom Edge
-        graphicsContext.lineTo(slabLeftEdgeX, slabBottomEdgeY);
-        // Left Edge
-        graphicsContext.quadraticCurveTo(slabLeftEdgeX + END_ARCH_DEPTH, slabBottomEdgeY - 0.25 * slabDepth, slabLeftEdgeX, slabBottomEdgeY - 0.5 * slabDepth);
-        graphicsContext.quadraticCurveTo(slabLeftEdgeX - END_ARCH_DEPTH, slabBottomEdgeY - 0.75 * slabDepth, slabLeftEdgeX, slabTopEdgeY);
-        // Draw Slab and clean up
-        graphicsContext.stroke();
-        graphicsContext.fill();
-        graphicsContext.closePath();
+        slabStrip.draw();
 
         // Draw Horizontal Dimension Line
         HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
