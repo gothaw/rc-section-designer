@@ -168,7 +168,21 @@ public class SlabReinforcementSetup extends Controller {
         App.setRoot("primary");
     }
 
-
+    /**
+     * Method that takes the reinforcement data from the form fields and saves it to a HashMap.
+     * It takes the data for all layers for either top or bottom slab face.
+     * The HashMap includes following keys:
+     * - diameters, diameters of the main reinforcement bars in subsequent layers
+     * - additionalDiameters, diameters of the additional main reinforcement bars that are between main reinforcement.
+     * If not set up, the diameter is zero.
+     * - spacings, spacings between main reinforcement bar centres
+     * - verticalSpacings, clear vertical spacing between reinforcement layers
+     *
+     * @param layerWrapper            VBox that wraps reinforcement layer fields for given slab face - top/bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
+     * @param numberOfLayers          number of layers for given slab face
+     * @return HashMap with reinforcement data for a slab face
+     */
     private Map<String, List<Integer>> getSlabReinforcementDataFromLayerFields(VBox layerWrapper, VBox verticalSpacingsWrapper, int numberOfLayers) {
 
         List<Integer> diameters = new ArrayList<>();
@@ -177,10 +191,13 @@ public class SlabReinforcementSetup extends Controller {
         List<Integer> verticalSpacings = new ArrayList<>();
 
         for (int i = 0; i < numberOfLayers; i++) {
+            // Looping through each reinforcement layer inside layerWrapper
             HBox layer = (HBox) layerWrapper.getChildren().get(i);
+            // Selecting form fields - combo boxes
             @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
             @SuppressWarnings("unchecked") ComboBox<Integer> spacingComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_SPACING_COMBO_BOX);
             @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
+            // Getting values from combo boxes and setting them in lists
             diameters.add(diameterComboBox.getValue());
             spacings.add(spacingComboBox.getValue());
             if (additionalDiameterComboBox != null) {
@@ -189,17 +206,21 @@ public class SlabReinforcementSetup extends Controller {
                 additionalDiameters.add(0);
             }
             if (i > 0) {
+                // If not first layer, get the the vertical spacing value and set in the list
                 HBox verticalSpacingHBox = (HBox) verticalSpacingsWrapper.getChildren().get(i - 1);
                 PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
                 verticalSpacings.add(Integer.parseInt(verticalSpacingField.getText()));
             }
         }
 
-        return new HashMap<>(Map.of(
-                "diameters", diameters,
-                "additionalDiameters", additionalDiameters,
-                "spacings", spacings,
-                "verticalSpacings", verticalSpacings));
+        return new HashMap<>(
+                Map.of(
+                        "diameters", diameters,
+                        "additionalDiameters", additionalDiameters,
+                        "spacings", spacings,
+                        "verticalSpacings", verticalSpacings
+                )
+        );
     }
 
     private void addReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle, int layerIndex) {
