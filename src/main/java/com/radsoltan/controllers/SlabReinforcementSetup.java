@@ -178,12 +178,12 @@ public class SlabReinforcementSetup extends Controller {
      * - spacings, spacings between main reinforcement bar centres
      * - verticalSpacings, clear vertical spacing between reinforcement layers
      *
-     * @param layerWrapper            VBox that wraps reinforcement layer fields for given slab face - top/bottom
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
      * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
-     * @param numberOfLayers          number of layers for given slab face
+     * @param numberOfLayers          Number of layers for given slab face
      * @return HashMap with reinforcement data for a slab face
      */
-    private Map<String, List<Integer>> getSlabReinforcementDataFromLayerFields(VBox layerWrapper, VBox verticalSpacingsWrapper, int numberOfLayers) {
+    private Map<String, List<Integer>> getSlabReinforcementDataFromLayerFields(VBox layersWrapper, VBox verticalSpacingsWrapper, int numberOfLayers) {
 
         List<Integer> diameters = new ArrayList<>();
         List<Integer> additionalDiameters = new ArrayList<>();
@@ -192,7 +192,7 @@ public class SlabReinforcementSetup extends Controller {
 
         for (int i = 0; i < numberOfLayers; i++) {
             // Looping through each reinforcement layer inside layerWrapper
-            HBox layer = (HBox) layerWrapper.getChildren().get(i);
+            HBox layer = (HBox) layersWrapper.getChildren().get(i);
             // Selecting form fields - combo boxes
             @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
             @SuppressWarnings("unchecked") ComboBox<Integer> spacingComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_SPACING_COMBO_BOX);
@@ -223,17 +223,34 @@ public class SlabReinforcementSetup extends Controller {
         );
     }
 
+    /**
+     * Method that adds a reinforcement layer to given slab face (layersWrapper). It adds:
+     * - combo box for bar diameter
+     * - combo box for main bar spacing
+     * - "Add" button that handles adding additional reinforcement between main reinforcement
+     * - "Delete" button that handles removing additional reinforcement
+     * - layer labels for example "3rd layer:"
+     * - vertical spacing input field
+     *
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
+     * @param verticalSpacingsTitle   VBox with the label for the vertical spacings column
+     * @param layerIndex              Index of the layer to be added
+     */
     private void addReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle, int layerIndex) {
+        // Creating text labels
         Label layerLabel = new Label(Utility.capitalize(layerLabels.get(layerIndex)) + " layer:");
         layerLabel.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER_LABEL);
         Label spacingLabel = new Label("at");
         Label unitsLabel = new Label("mm");
+        // Creating combo boxes
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
         diameterComboBox.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
         ComboBox<Integer> spacingComboBox = new ComboBox<>(spacings);
         spacingComboBox.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_SPACING_COMBO_BOX);
         spacingComboBox.setOnAction(this::setAdditionalReinforcementSpacingLabel);
 
+        // Creating buttons
         Button addButton = new Button("Add");
         addButton.getStyleClass().add(CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
         addButton.setOnAction(this::addAdditionalReinforcementInView);
@@ -243,10 +260,12 @@ public class SlabReinforcementSetup extends Controller {
         StackPane buttonWrapper = new StackPane(addButton, deleteButton);
         buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
 
+        // Creating reinforcement layer
         HBox layer = new HBox(layerLabel, diameterComboBox, spacingLabel, spacingComboBox, unitsLabel, buttonWrapper);
         layer.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER);
 
         if (layerIndex > 0) {
+            // If not first layer, create an input field for vertical spacing between layers
             PositiveIntegerField verticalSpacingInputField = new PositiveIntegerField();
             verticalSpacingInputField.getStyleClass().add(CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
             Label unitLabel = new Label("mm");
@@ -256,25 +275,49 @@ public class SlabReinforcementSetup extends Controller {
         }
 
         if (layerIndex == 1) {
+            // If second layer show the title for vertical spacings column
             verticalSpacingsTitle.getStyleClass().remove(CssStyleClasses.HIDDEN);
         }
 
+        // Adding reinforcement layer
         layersWrapper.getChildren().add(layer);
     }
 
+    /**
+     * Method that removes the last reinforcement layer from a given slab face (layersWrapper).
+     *
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
+     * @param verticalSpacingsTitle   VBox with the label for the vertical spacings column
+     */
     private void deleteReinforcementLayer(VBox layersWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle) {
         List<Node> layers = layersWrapper.getChildren();
+        // Removing the last layer
         layers.remove(layers.size() - 1);
         List<Node> verticalSpacings = verticalSpacingsWrapper.getChildren();
+        // Removing vertical spacing field
         verticalSpacings.remove(verticalSpacings.size() - 1);
         if (layers.size() == 1) {
+            // Hiding title for vertical spacings if only one layer
             verticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
         }
     }
 
+    /**
+     * Method that initializes a reinforcement layer fields with provided data.
+     * It requires creating the combo boxes and input fields beforehand.
+     *
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
+     * @param layerIndex              index of the layer to be initialized
+     * @param diameters
+     * @param additionalDiameters
+     * @param spacings
+     * @param verticalSpacings
+     */
     private void initializeReinforcementLayerFields(VBox layersWrapper, VBox verticalSpacingsWrapper,
-                                                    int layerIndex, List<Integer> reinforcement, List<Integer> additionalReinforcement,
-                                                    List<Integer> spacing, List<Integer> verticalSpacing) {
+                                                    int layerIndex, List<Integer> diameters, List<Integer> additionalDiameters,
+                                                    List<Integer> spacings, List<Integer> verticalSpacings) {
         List<Node> layers = layersWrapper.getChildren();
         if (layerIndex < layers.size()) {
             HBox layer = (HBox) layers.get(layerIndex);
@@ -283,18 +326,18 @@ public class SlabReinforcementSetup extends Controller {
             StackPane stackPane = (StackPane) layer.lookup("." + CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
             Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
             Button deleteButton = (Button) stackPane.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-            diameterComboBox.setValue(reinforcement.get(layerIndex));
-            spacingComboBox.setValue(spacing.get(layerIndex));
-            if (additionalReinforcement.get(layerIndex) != 0) {
+            diameterComboBox.setValue(diameters.get(layerIndex));
+            spacingComboBox.setValue(spacings.get(layerIndex));
+            if (additionalDiameters.get(layerIndex) != 0) {
                 addAdditionalReinforcementInView(addButton, deleteButton, layer);
                 @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
-                additionalDiameterComboBox.setValue(additionalReinforcement.get(layerIndex));
+                additionalDiameterComboBox.setValue(additionalDiameters.get(layerIndex));
             }
             if (layerIndex > 0) {
-                List<Node> verticalSpacings = verticalSpacingsWrapper.getChildren();
-                HBox verticalSpacingHBox = (HBox) verticalSpacings.get(layerIndex - 1);
+                List<Node> verticalSpacingsFields = verticalSpacingsWrapper.getChildren();
+                HBox verticalSpacingHBox = (HBox) verticalSpacingsFields.get(layerIndex - 1);
                 PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
-                verticalSpacingField.setText(Integer.toString(verticalSpacing.get(layerIndex - 1)));
+                verticalSpacingField.setText(Integer.toString(verticalSpacings.get(layerIndex - 1)));
             }
         }
     }
