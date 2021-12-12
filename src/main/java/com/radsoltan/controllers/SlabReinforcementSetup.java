@@ -253,9 +253,9 @@ public class SlabReinforcementSetup extends Controller {
         // Creating buttons
         Button addButton = new Button("Add");
         addButton.getStyleClass().add(CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-        addButton.setOnAction(this::addAdditionalReinforcementInView);
+        addButton.setOnAction(this::handleAddAdditionalReinforcement);
         Button deleteButton = new Button("Delete");
-        deleteButton.setOnAction(this::deleteAdditionalReinforcementFromView);
+        deleteButton.setOnAction(this::deleteAdditionalReinforcement);
         deleteButton.getStyleClass().addAll(CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON, CssStyleClasses.HIDDEN);
         StackPane buttonWrapper = new StackPane(addButton, deleteButton);
         buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
@@ -310,29 +310,37 @@ public class SlabReinforcementSetup extends Controller {
      * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
      * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
      * @param layerIndex              index of the layer to be initialized
-     * @param diameters
-     * @param additionalDiameters
-     * @param spacings
-     * @param verticalSpacings
+     * @param diameters               diameters of the main reinforcement bars in subsequent layers
+     * @param additionalDiameters     diameters of the additional main reinforcement bars that are between main reinforcement.
+     *                                If not set up, the diameter is zero.
+     * @param spacings                spacings between main reinforcement bar centres
+     * @param verticalSpacings        clear vertical spacing between reinforcement layers
      */
     private void initializeReinforcementLayerFields(VBox layersWrapper, VBox verticalSpacingsWrapper,
                                                     int layerIndex, List<Integer> diameters, List<Integer> additionalDiameters,
                                                     List<Integer> spacings, List<Integer> verticalSpacings) {
         List<Node> layers = layersWrapper.getChildren();
         if (layerIndex < layers.size()) {
+            // Selecting a layer with given index
             HBox layer = (HBox) layers.get(layerIndex);
+            // Selecting combo boxes and initializing main reinforcement
             @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
             @SuppressWarnings("unchecked") ComboBox<Integer> spacingComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_SPACING_COMBO_BOX);
-            StackPane stackPane = (StackPane) layer.lookup("." + CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
-            Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-            Button deleteButton = (Button) stackPane.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
             diameterComboBox.setValue(diameters.get(layerIndex));
             spacingComboBox.setValue(spacings.get(layerIndex));
+
+            // Initializing additional reinforcement
             if (additionalDiameters.get(layerIndex) != 0) {
-                addAdditionalReinforcementInView(addButton, deleteButton, layer);
+                // Getting add and delete buttons
+                StackPane stackPane = (StackPane) layer.lookup("." + CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
+                Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+                Button deleteButton = (Button) stackPane.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+                // Adding additional reinforcement fields and initializing fields
+                addAdditionalReinforcement(addButton, deleteButton, layer);
                 @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
                 additionalDiameterComboBox.setValue(additionalDiameters.get(layerIndex));
             }
+            // Initializing vertical spacings
             if (layerIndex > 0) {
                 List<Node> verticalSpacingsFields = verticalSpacingsWrapper.getChildren();
                 HBox verticalSpacingHBox = (HBox) verticalSpacingsFields.get(layerIndex - 1);
@@ -342,19 +350,37 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
-    public void addAdditionalReinforcementInView(ActionEvent actionEvent) {
+    /**
+     * It that handles "Add" button for a reinforcement layer. It adds additional reinforcement fields to the main reinforcement.
+     * It uses method addAdditionalReinforcement.
+     *
+     * @param actionEvent Add button click event
+     */
+    public void handleAddAdditionalReinforcement(ActionEvent actionEvent) {
         Button addButton = (Button) actionEvent.getSource();
         StackPane stackPane = (StackPane) addButton.getParent();
         Button deleteButton = (Button) stackPane.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
         HBox layer = (HBox) stackPane.getParent();
-        addAdditionalReinforcementInView(addButton, deleteButton, layer);
+        addAdditionalReinforcement(addButton, deleteButton, layer);
     }
 
-    public void addAdditionalReinforcementInView(Button addButton, Button deleteButton, HBox layer) {
+    /**
+     * It adds form fields for setting up additional reinforcement. This includes:
+     * - labels
+     * - combo box for additional reinforcement reinforcement
+     * It hides add button and shows remove button for additional reinforcement
+     *
+     * @param addButton add button that handles adding additional reinforcement
+     * @param deleteButton remove button that handles removing additional reinforcement
+     * @param layer HBox that represents layer which we add the additional reinforcement to
+     */
+    public void addAdditionalReinforcement(Button addButton, Button deleteButton, HBox layer) {
         Label joiningLabel = new Label(" + ");
         joiningLabel.getStyleClass().add(CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
+
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
         diameterComboBox.getStyleClass().add(CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
+
         Label spacingLabel = new Label(getAdditionalReinforcementSpacingLabel(layer));
         spacingLabel.getStyleClass().add(CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_SPACING_LABEL);
 
@@ -370,7 +396,7 @@ public class SlabReinforcementSetup extends Controller {
         return (spacing.getValue() != null) ? String.format("at %d mm", spacing.getValue()) : "";
     }
 
-    public void deleteAdditionalReinforcementFromView(ActionEvent actionEvent) {
+    public void deleteAdditionalReinforcement(ActionEvent actionEvent) {
         Button deleteButton = (Button) actionEvent.getSource();
         StackPane stackPane = (StackPane) deleteButton.getParent();
         Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
