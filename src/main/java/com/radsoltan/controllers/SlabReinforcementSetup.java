@@ -178,7 +178,7 @@ public class SlabReinforcementSetup extends Controller {
      * - spacings, spacings between main reinforcement bar centres
      * - verticalSpacings, clear vertical spacing between reinforcement layers
      *
-     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face - top or bottom
      * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
      * @param numberOfLayers          Number of layers for given slab face
      * @return HashMap with reinforcement data for a slab face
@@ -232,7 +232,7 @@ public class SlabReinforcementSetup extends Controller {
      * - layer labels for example "3rd layer:"
      * - vertical spacing input field
      *
-     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face - top or bottom
      * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
      * @param verticalSpacingsTitle   VBox with the label for the vertical spacings column
      * @param layerIndex              Index of the layer to be added
@@ -286,7 +286,7 @@ public class SlabReinforcementSetup extends Controller {
     /**
      * Method that removes the last reinforcement layer from a given slab face (layersWrapper).
      *
-     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face - top or bottom
      * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
      * @param verticalSpacingsTitle   VBox with the label for the vertical spacings column
      */
@@ -307,7 +307,7 @@ public class SlabReinforcementSetup extends Controller {
      * Method that initializes a reinforcement layer fields with provided data.
      * It requires creating the combo boxes and input fields beforehand.
      *
-     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face top or bottom
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face - top or bottom
      * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
      * @param layerIndex              index of the layer to be initialized
      * @param diameters               diameters of the main reinforcement bars in subsequent layers
@@ -370,9 +370,9 @@ public class SlabReinforcementSetup extends Controller {
      * - combo box for additional reinforcement reinforcement
      * It hides add button and shows remove button for additional reinforcement
      *
-     * @param addButton add button that handles adding additional reinforcement
+     * @param addButton    add button that handles adding additional reinforcement
      * @param deleteButton remove button that handles removing additional reinforcement
-     * @param layer HBox that represents layer which we add the additional reinforcement to
+     * @param layer        HBox that wraps layer fields which we add the additional reinforcement to
      */
     public void addAdditionalReinforcement(Button addButton, Button deleteButton, HBox layer) {
         Label joiningLabel = new Label(" + ");
@@ -391,17 +391,31 @@ public class SlabReinforcementSetup extends Controller {
         deleteButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
     }
 
+    /**
+     * It gets text for the label of additional reinforcement. This is the same as the main reinforcement spacing.
+     * If main reinforcement spacing is not set up it returns an empty string.
+     *
+     * @param layer HBox that wraps the layer fields
+     * @return text for additional reinforcement spacing label
+     */
     private String getAdditionalReinforcementSpacingLabel(HBox layer) {
         @SuppressWarnings("unchecked") ComboBox<Integer> spacing = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_SPACING_COMBO_BOX);
         return (spacing.getValue() != null) ? String.format("at %d mm", spacing.getValue()) : "";
     }
 
+    /**
+     * It handles "Delete" button for a reinforcement layer. It deletes additional reinforcement
+     *
+     * @param actionEvent Delete button click event
+     */
     public void deleteAdditionalReinforcement(ActionEvent actionEvent) {
+        // Selecting layer based on the button clicked
         Button deleteButton = (Button) actionEvent.getSource();
         StackPane stackPane = (StackPane) deleteButton.getParent();
         Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
         HBox layer = (HBox) stackPane.getParent();
 
+        // Selecting nodes to be deleted
         List<Node> layerNodes = layer.getChildren();
         Label joiningLabel = (Label) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
         @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
@@ -409,19 +423,34 @@ public class SlabReinforcementSetup extends Controller {
 
         layerNodes.removeAll(new ArrayList<>(List.of(joiningLabel, diameterComboBox, spacingLabel)));
 
+        // Hiding delete button and showing add button
         deleteButton.getStyleClass().add(CssStyleClasses.HIDDEN);
         addButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
     }
 
+    /**
+     * It handles change event for the main reinforcement spacing combo box.
+     * It takes a new value of spacing and updates additional reinforcement spacing label.
+     *
+     * @param actionEvent Main reinforcement spacing combo box value change event
+     */
     public void setAdditionalReinforcementSpacingLabel(ActionEvent actionEvent) {
         Node node = (Node) actionEvent.getSource();
         HBox layer = (HBox) node.getParent();
+        // Selecting additional reinforcement label
         Label additionalReinforcementLabel = (Label) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_SPACING_LABEL);
         if (additionalReinforcementLabel != null) {
+            // Updating label
             additionalReinforcementLabel.setText(getAdditionalReinforcementSpacingLabel(layer));
         }
     }
 
+    /**
+     * It handles "Delete" button click event for the top face of the slab.
+     * It removes the innermost reinforcement layer. It invokes deleteReinforcementLayer function.
+     *
+     * @param actionEvent Delete button click event
+     */
     public void deleteLayerFromTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers > 1) {
             deleteReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle);
@@ -429,6 +458,12 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
+    /**
+     * It handles "Add" button click event for the top face of the slab.
+     * It invokes addReinforcementLayer function.
+     *
+     * @param actionEvent Add button click event
+     */
     public void addLayerToTopReinforcement(ActionEvent actionEvent) {
         if (numberOfTopLayers < Constants.MAX_NUMBER_OF_LAYERS) {
             addReinforcementLayer(topLayersVBox, topLayersVerticalSpacingVBox, topLayersVerticalSpacingsTitle, numberOfTopLayers);
@@ -436,6 +471,12 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
+    /**
+     * It handles "Delete" button click event for the bottom face of the slab.
+     * It removes the innermost reinforcement layer. It invokes deleteReinforcementLayer function.
+     *
+     * @param actionEvent Delete button click event
+     */
     public void deleteLayerFromBottomReinforcement(ActionEvent actionEvent) {
         if (numberOfBottomLayers > 1) {
             deleteReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle);
@@ -443,6 +484,12 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
+    /**
+     * It handles "Add" button click event for the bottom face of the slab.
+     * It invokes addReinforcementLayer function.
+     *
+     * @param actionEvent Add button click event
+     */
     public void addLayerToBottomReinforcement(ActionEvent actionEvent) {
         if (numberOfBottomLayers < Constants.MAX_NUMBER_OF_LAYERS) {
             addReinforcementLayer(bottomLayersVBox, bottomLayersVerticalSpacingVBox, bottomLayersVerticalSpacingsTitle, numberOfBottomLayers);
@@ -450,13 +497,25 @@ public class SlabReinforcementSetup extends Controller {
         }
     }
 
+    /**
+     * Method is used to check if layer fields are set up - not empty.
+     * It also checks if vertical spacing between considered layer and a previous layer is set up - if applicable.
+     *
+     * @param layersWrapper           VBox that wraps reinforcement layer fields. It represents slab face - top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement layers for given slab face - top/bottom
+     * @param layerIndex              index of the layer to be validated
+     * @param layersLocation          text that describes which layer is being checked - top or bottom
+     * @return List of validation messages
+     */
     private List<String> getValidationMessagesIfLayerFieldsAreEmpty(VBox layersWrapper, VBox verticalSpacingsWrapper, int layerIndex, String layersLocation) {
         List<String> validationMessages = new ArrayList<>();
         String layerLocation = layersLocation.toLowerCase();
+        // Selecting layer fields
         HBox layer = (HBox) layersWrapper.getChildren().get(layerIndex);
         @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
         @SuppressWarnings("unchecked") ComboBox<Integer> spacingComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_SPACING_COMBO_BOX);
         @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
+        // Checking if layer fields are set up
         if (diameterComboBox.getValue() == null) {
             validationMessages.add(String.format("Please enter bar diameter for %s %s layer.", layerLabels.get(layerIndex), layerLocation));
         }
@@ -466,6 +525,7 @@ public class SlabReinforcementSetup extends Controller {
         if (additionalDiameterComboBox != null && additionalDiameterComboBox.getValue() == null) {
             validationMessages.add(String.format("Please enter alternate bar diameter for %s %s layer.", layerLabels.get(layerIndex), layerLocation));
         }
+        // Checking if vertical spacing is set up between this and previous layer
         if (layerIndex > 0) {
             HBox verticalSpacingHBox = (HBox) verticalSpacingsWrapper.getChildren().get(layerIndex - 1);
             PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
@@ -476,6 +536,12 @@ public class SlabReinforcementSetup extends Controller {
         return validationMessages;
     }
 
+    /**
+     * Method loops through all layers for the top and bottom face and checks if the form fields are set up - not empty.
+     * It also checks if all vertical spacings fields are filled in. It uses getValidationMessagesIfLayerFieldsAreEmpty method.
+     *
+     * @return List of validation messages
+     */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
         List<String> validationMessages = new ArrayList<>();
