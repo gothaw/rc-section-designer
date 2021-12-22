@@ -74,7 +74,7 @@ public abstract class Controller {
     /**
      * Method that should check for empty fields in view and add a message to a List about each empty field.
      *
-     * @return list of validation messages
+     * @return List of validation messages
      */
     protected abstract List<String> getValidationMessagesForEmptyFields();
 }

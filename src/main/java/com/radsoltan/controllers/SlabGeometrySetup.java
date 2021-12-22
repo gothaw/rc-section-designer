@@ -160,7 +160,7 @@ public class SlabGeometrySetup extends Controller {
      * Checks if slab thickness field is empty.
      * If this is the case a message is added to the list of validation messages.
      *
-     * @return list of validation messages
+     * @return List of validation messages
      */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {

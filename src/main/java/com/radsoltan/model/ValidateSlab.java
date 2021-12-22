@@ -95,7 +95,7 @@ public class ValidateSlab implements Validation {
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
      * @param verticalSpacings clear vertical spacing between layers
      * @param aggregateSize aggregate size in mm
-     * @return list of validation messages for vertical spacing
+     * @return List of validation messages for vertical spacing
      */
     private List<String> getValidateMessagesForSlabReinforcementVerticalSpacings(String location, List<Integer> diameters, List<Integer> additionalDiameters,
                                                                                  List<Integer> verticalSpacings, int aggregateSize) {

@@ -212,7 +212,7 @@ public class DesignParametersSetup extends Controller {
      * Checks if the fields in view are empty or don't have any value set.
      * If this is the case a message is added to the list of validation messages.
      *
-     * @return list of validation messages
+     * @return List of validation messages
      */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {

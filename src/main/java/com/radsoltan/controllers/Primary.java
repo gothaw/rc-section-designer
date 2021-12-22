@@ -334,7 +334,7 @@ public class Primary extends Controller {
      * @param title             Title for the analysis result area, for example, 'Flexure', 'Shear' etc.
      * @param capacityMessage   Message that that includes comparison of designValue and maxValue. for instance: '12 kNm < 15 kNm'
      * @param additionalMessage Additional message for the user if section fails. For example: 'Increase reinforcement or redesign section.'
-     * @return Wrapper VBox
+     * @return wrapper VBox
      */
     private VBox generateResultsArea(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage) {
         Label titleLabel = new Label(title);
@@ -356,7 +356,7 @@ public class Primary extends Controller {
      * These include validation messages for geometry, reinforcement spacing or design parameters.
      *
      * @param elementType structure element type. This can be either 'beam' or 'slab'
-     * @return list of validation messages based on element type
+     * @return List of validation messages based on element type
      */
     private List<String> getValidationMessagesBasedOnElementType(String elementType) {
         List<String> elementValidationMessages = new ArrayList<>();
@@ -394,7 +394,7 @@ public class Primary extends Controller {
     /**
      * Gets a list of validation messages if analysis forces, geometry, reinforcement and design parameters are not set up.
      *
-     * @return list of validation messages for empty fields
+     * @return List of validation messages for empty fields
      */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
