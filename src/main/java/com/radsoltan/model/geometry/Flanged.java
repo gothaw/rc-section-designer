@@ -2,7 +2,7 @@ package com.radsoltan.model.geometry;
 
 /**
  * Interface for classes that describe geometry with a flange.
- * This could be asymmetric or symmetric flange (L shape or T shape) and top or bottom.
+ * This could be asymmetric or symmetric flange (L section or T section) and top or bottom.
  */
 public interface Flanged {
 

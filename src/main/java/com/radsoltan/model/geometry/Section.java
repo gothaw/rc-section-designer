@@ -3,7 +3,7 @@ package com.radsoltan.model.geometry;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public abstract class Shape implements Drawable {
+public abstract class Section implements Drawable {
 
     public abstract int getDepth();
 

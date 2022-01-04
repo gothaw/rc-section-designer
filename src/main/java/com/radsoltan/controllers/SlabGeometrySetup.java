@@ -56,9 +56,9 @@ public class SlabGeometrySetup extends Controller {
     @FXML
     public void initialize() {
         if (geometry != null) {
-            Shape shape = geometry.getShape();
-            if (shape instanceof SlabStrip) {
-                SlabStrip slabStrip = (SlabStrip) shape;
+            Section section = geometry.getSection();
+            if (section instanceof SlabStrip) {
+                SlabStrip slabStrip = (SlabStrip) section;
                 slabThickness.setText(Integer.toString(slabStrip.getDepth()));
             } else {
                 showAlertBox(Messages.INVALID_SLAB_GEOMETRY, AlertKind.ERROR);

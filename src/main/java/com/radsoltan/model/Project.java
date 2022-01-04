@@ -53,13 +53,13 @@ public class Project {
     }
 
     private void calculateSlabProject() {
-        if (!(geometry.getShape() instanceof SlabStrip)) {
+        if (!(geometry.getSection() instanceof SlabStrip)) {
             throw new IllegalArgumentException(Messages.INVALID_SLAB_GEOMETRY);
         }
         if (!(reinforcement instanceof SlabReinforcement)) {
             throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
         }
-        SlabStrip slabStrip = (SlabStrip) geometry.getShape();
+        SlabStrip slabStrip = (SlabStrip) geometry.getSection();
         SlabReinforcement slabReinforcement = (SlabReinforcement) reinforcement;
         double UlsMomentValue = Double.parseDouble(UlsMoment);
         double SlsMomentValue = Double.parseDouble(SlsMoment);
