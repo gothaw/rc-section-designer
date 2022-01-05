@@ -9,13 +9,13 @@ public class LSection extends TSection {
     /**
      * Constructor. It uses T section constructor.
      *
-     * @param width           web width in mm
+     * @param webWidth           web width in mm
      * @param depth           total depth in mm
      * @param flangeWidth     flange width in mm
      * @param flangeThickness flange thickness in mm
      */
-    public LSection(int width, int depth, int flangeWidth, int flangeThickness) {
-        super(width, depth, flangeWidth, flangeThickness);
+    public LSection(int webWidth, int depth, int flangeWidth, int flangeThickness) {
+        super(webWidth, depth, flangeWidth, flangeThickness);
     }
 
     /**

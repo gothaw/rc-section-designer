@@ -14,6 +14,7 @@ public class Geometry {
 
     /**
      * Constructor. Used for rectangular sections.
+     *
      * @param rectangle rectangular section
      */
     public Geometry(Rectangle rectangle) {
@@ -23,6 +24,7 @@ public class Geometry {
 
     /**
      * Constructor. Used for L section sections.
+     *
      * @param lSection L section section
      */
     public Geometry(LSection lSection) {
@@ -33,6 +35,7 @@ public class Geometry {
 
     /**
      * Constructor. Used for T section sections.
+     *
      * @param tSection T section section
      */
     public Geometry(TSection tSection) {
@@ -43,6 +46,7 @@ public class Geometry {
 
     /**
      * Constructor. Used for slab section.
+     *
      * @param slabStrip Section of a slab strip
      */
     public Geometry(SlabStrip slabStrip) {
@@ -52,6 +56,7 @@ public class Geometry {
 
     /**
      * Getter for section.
+     *
      * @return section instance
      */
     public Section getSection() {
@@ -60,6 +65,7 @@ public class Geometry {
 
     /**
      * Gets section depth.
+     *
      * @return section depth
      */
     public int getDepth() {
@@ -68,6 +74,7 @@ public class Geometry {
 
     /**
      * Gets section width.
+     *
      * @return section width
      */
     public int getWidth() {
@@ -76,6 +83,7 @@ public class Geometry {
 
     /**
      * Gets section area.
+     *
      * @return section area
      */
     public double getArea() {
@@ -84,6 +92,7 @@ public class Geometry {
 
     /**
      * Gets section width in compression zone.
+     *
      * @param UlsMoment ULS moment in kNm or kNm/m
      * @return width in compression zone
      */
@@ -93,6 +102,7 @@ public class Geometry {
 
     /**
      * Gets section width in tension zone.
+     *
      * @param UlsMoment ULS moment in kNm or kNm/m
      * @return width in tension zone
      */
@@ -102,6 +112,7 @@ public class Geometry {
 
     /**
      * Gets area in tension zone just before first crack occurs.
+     *
      * @param UlsMoment ULS moment in kNm or kNm/m
      * @return area prior to cracking
      */
@@ -111,6 +122,7 @@ public class Geometry {
 
     /**
      * Gets a k factor for a section described in cl. 7.3.2 in EC2.
+     *
      * @param UlsMoment ULS moment in kNm or kNm/m
      * @return k factor
      */
@@ -120,6 +132,7 @@ public class Geometry {
 
     /**
      * Gets kc factor for a section described in cl. 7.3.2 in EC2.
+     *
      * @param UlsMoment ULS moment in kNm or kNm/m
      * @return kc factor
      */
@@ -129,6 +142,7 @@ public class Geometry {
 
     /**
      * Checks if a section has a flange.
+     *
      * @return true if a flanged section
      */
     public boolean isFlangedSection() {
@@ -137,9 +151,10 @@ public class Geometry {
 
     /**
      * Checks if plastic neutral axis for section is in the flange.
-     * @param UlsMoment ULS moment in kNm or kNm/m
+     *
+     * @param UlsMoment      ULS moment in kNm or kNm/m
      * @param effectiveDepth effective depth in mm
-     * @param leverArm lever arm in mm
+     * @param leverArm       lever arm in mm
      * @return true if plastic neutral axis is in the flange
      */
     public boolean checkIfPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double leverArm) {
@@ -151,10 +166,11 @@ public class Geometry {
 
     /**
      * Gets flange thickness. If not flanged section, it returns 0.
+     *
      * @return flange thickness
      */
     public int getFlangeThickness() {
-        if(isFlangedSection()) {
+        if (isFlangedSection()) {
             return flangedSection.getFlangeThickness();
         }
         return 0;
@@ -162,10 +178,11 @@ public class Geometry {
 
     /**
      * Gets flange width. If not flanged section, it returns 0.
+     *
      * @return flange width
      */
     public int getFlangeWidth() {
-        if(isFlangedSection()) {
+        if (isFlangedSection()) {
             return flangedSection.getFlangeThickness();
         }
         return 0;
@@ -173,6 +190,7 @@ public class Geometry {
 
     /**
      * Gets section description.
+     *
      * @return section description
      */
     public String getDescription() {
