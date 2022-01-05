@@ -138,11 +138,6 @@ public class TSection extends Section implements Flanged {
     }
 
     @Override
-    public void draw() {
-        // TODO: 18/05/2020
-    }
-
-    @Override
     public int getFlangeWidth() {
         return flangeWidth;
     }
@@ -161,5 +156,10 @@ public class TSection extends Section implements Flanged {
     public boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double leverArm) {
         double neutralAxisDepth = 2.5 * (effectiveDepth - leverArm);
         return (UlsMoment >= 0) && neutralAxisDepth <= 2.5 * flangeThickness;
+    }
+
+    @Override
+    public void draw() {
+        // TODO: 18/05/2020
     }
 }
