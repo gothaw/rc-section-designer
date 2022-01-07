@@ -3,6 +3,9 @@ package com.radsoltan.model.geometry;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * 
+ */
 public class Rectangle extends Section {
 
     private final int width;

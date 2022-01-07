@@ -31,7 +31,7 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Gets section area.
+     * Gets the section area.
      *
      * @return section area
      */
@@ -41,7 +41,7 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Gets centroid of the section from the top edge of the section.
+     * Gets the centroid of the section from the top edge of the section.
      *
      * @return centroid of the section
      */
@@ -97,7 +97,7 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Gets area of the section prior to cracking
+     * Gets area of the section prior to cracking.
      *
      * @param UlsMoment ULS moment in kNm
      * @return area in tension zone prior to cracking
@@ -112,7 +112,7 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Gets a k factor for a section described in cl. 7.3.2 in EC2.
+     * Gets a k factor for the section described in cl. 7.3.2 in EC2.
      *
      * @param UlsMoment ULS moment in kNm
      * @return k factor
@@ -124,7 +124,7 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Gets kc factor for a section described in cl. 7.3.2 in EC2.
+     * Gets kc factor for the section described in cl. 7.3.2 in EC2.
      *
      * @param UlsMoment ULS moment in kNm
      * @return kc factor
@@ -239,7 +239,7 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Getter for graphics context.
+     * Getter for graphics context that section is drawn on.
      *
      * @return graphics context
      */
@@ -249,7 +249,7 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Getter for section stroke.
+     * Getter of the stroke that the section is drawn with.
      *
      * @return section stroke
      */
@@ -259,9 +259,9 @@ public class TSection extends Section implements Flanged {
     }
 
     /**
-     * Getter for section fill.
+     * Getter of the fill that the the section is drawn with.
      *
-     * @return section fill
+     * @return section fill.
      */
     @Override
     public Color getFill() {
