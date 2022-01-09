@@ -78,7 +78,7 @@ public class Rectangle extends Section {
     }
 
     /**
-     * Calculates are of the rectangle.
+     * Calculates area of the rectangle.
      *
      * @return area
      */
