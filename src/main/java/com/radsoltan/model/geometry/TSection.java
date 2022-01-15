@@ -140,7 +140,7 @@ public class TSection extends Section implements Flanged {
                 double areaInTensionZone = getAreaInTensionZonePriorCracking(UlsMoment);
                 double centroid = getCentroid();
                 double unitTensileForceInFlange = 0.5 * flangeWidth * flangeThickness * ((centroid - flangeWidth) / centroid + 1);
-                return Math.min(0.5, 0.9 * unitTensileForceInFlange / areaInTensionZone);
+                return Math.min(0.5, Math.abs(0.9 * unitTensileForceInFlange / areaInTensionZone));
             }
         }
     }

@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TSectionTest {
 
@@ -79,41 +81,64 @@ class TSectionTest {
 
     @Test
     void factorKIsCalculatedCorrectlyInSagging() {
+        double kFactor = tSection.getFactorForNonUniformSelfEquilibratingStresses(saggingMoment);
 
+        assertEquals(0.685, kFactor);
     }
 
     @Test
     void factorKIsCalculatedCorrectlyInHogging() {
+        double kFactor = tSection.getFactorForNonUniformSelfEquilibratingStresses(hoggingMoment);
 
+        assertEquals(0.65, kFactor);
+    }
+
+    @Test
+    void factorKcIsCalculatedCorrectlyForSagging() {
+        double kc = tSection.getFactorForStressDistributionPriorCracking(saggingMoment);
+
+        assertEquals(0.4, kc);
     }
 
     @Test
     void factorKcIsCalculatedCorrectlyForHoggingWhenNeutralAxisIsInFlange() {
+        double kc = tSectionWithLargeFlange.getFactorForStressDistributionPriorCracking(hoggingMoment);
 
+        assertEquals(0.5, kc);
     }
 
     @Test
     void factorKcIsCalculatedCorrectlyForHoggingWhenNeutralAxisIsInWeb() {
+        double kc = tSection.getFactorForStressDistributionPriorCracking(hoggingMoment);
 
+        assertEquals(0.5, kc);
     }
 
     @Test
     void elasticNeutralAxisIsInFlange() {
+        boolean isNeutralAxisInFlange = tSectionWithLargeFlange.isElasticNeutralAxisInFlange();
 
+        assertTrue(isNeutralAxisInFlange);
     }
 
     @Test
     void elasticNeutralAxisIsInWeb() {
+        boolean isNeutralAxisInFlange = tSection.isElasticNeutralAxisInFlange();
 
+        assertFalse(isNeutralAxisInFlange);
     }
 
     @Test
     void plasticNeutralAxisIsInFlange() {
+        boolean isPlasticNeutralAxisInFlange = tSectionWithLargeFlange.isPlasticNeutralAxisInFlange(saggingMoment, 750, 0.9 * 750);
 
+        assertTrue(isPlasticNeutralAxisInFlange);
     }
 
     @Test
     void plasticNeutralAxisIsInWeb() {
+        boolean isPlasticNeutralAxisInWeb = tSection.isPlasticNeutralAxisInFlange(hoggingMoment, 950, 0.9 * 950);
 
+        assertFalse(isPlasticNeutralAxisInWeb);
     }
 }
