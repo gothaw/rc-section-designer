@@ -183,7 +183,7 @@ public class Geometry {
      */
     public int getFlangeWidth() {
         if (isFlangedSection()) {
-            return flangedSection.getFlangeThickness();
+            return flangedSection.getFlangeWidth();
         }
         return 0;
     }
