@@ -11,8 +11,8 @@ public class BeamReinforcement extends Reinforcement {
     private final List<List<Integer>> bottomReinforcement;
     private List<Integer> bottomReinforcementVerticalSpacing;
     private final ShearLinks shearLinks;
-    int numberOfBarsInSlab;
-    boolean isReinforcementInSlabSymmetrical;
+    private int numberOfBarsInSlab;
+    private boolean isReinforcementInSlabSymmetrical;
 
     public BeamReinforcement(List<List<Integer>> topReinforcement,
             List<Integer> topReinforcementVerticalSpacing,
