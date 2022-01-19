@@ -1,5 +1,8 @@
 package com.radsoltan.model;
 
+/**
+ *
+ */
 public class DesignParameters {
     private int nominalCoverTop;
     private int nominalCoverSides;

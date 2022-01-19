@@ -1,5 +1,8 @@
 package com.radsoltan.model;
 
+/**
+ * Enum for concrete class. It includes all basic concrete properties taken from Table 3.1 in EC2.
+ */
 public enum Concrete {
     C12_15(12, 15, 20, 1.6, 1.1, 2.0, 27, 0.0018, 0.0035, 0.002, 0.0035, 2.0, 0.00175, 0.0035),
     C16_20(16, 20, 24, 1.9, 1.3, 2.5, 29, 0.0019, 0.0035, 0.002, 0.0035, 2.0, 0.00175, 0.0035),
@@ -27,6 +30,24 @@ public enum Concrete {
     private final double ec3;
     private final double ecu3;
 
+    /**
+     * Enum constructor.
+     *
+     * @param fck     characteristic compressive cylinder strength of concrete at 28 days
+     * @param fckCube characteristic compressive cubic strength of concrete at 28 days
+     * @param fcm     mean value of concrete cylinder compressive strength
+     * @param fctm    mean value of axial tensile strength of concrete
+     * @param fctk005 5th percentile of the characteristic axial tensile strength of concrete
+     * @param fctk095 95th percentile of the characteristic axial tensile strength of concrete
+     * @param Ecm     secant youngs modulus of elasticity of concrete
+     * @param ec1     compressive strain in concrete at the peak stress fcm
+     * @param ecu1    ultimate compressive strain in the concrete for non-linear model
+     * @param ec2     compressive strain in the concrete at the peak stress of fcd for parabola-rectangle model - Figure 3.3
+     * @param ecu2    ultimate compressive strain in the concrete for parabola-rectangle model - Figure 3.3
+     * @param n       factor described in Table 3.1 in EC2
+     * @param ec3     compressive strain in the concrete at the peak stress of fcd for bi-linear model - Figure 3.4
+     * @param ecu3    ultimate compressive strain in the concrete for bi-linear model - Figure 3.4
+     */
     Concrete(int fck, int fckCube,
              int fcm, double fctm,
              double fctk005, double fctk095,
@@ -50,68 +71,149 @@ public enum Concrete {
         this.ecu3 = ecu3;
     }
 
+    /**
+     * Gets concrete class description in format "C{fck}/{fckCube}" for example: C30/37.
+     *
+     * @return concrete class description
+     */
     @Override
     public String toString() {
         return "C" + fck + "/" + fckCube;
     }
 
+    /**
+     * Gets characteristic compressive cylinder strength of concrete at 28 days.
+     *
+     * @return characteristic compressive strength (cylinder)
+     */
     public int getCompressiveStrength() {
         return fck;
     }
 
+    /**
+     * Gets characteristic compressive cubic strength of concrete at 28 days.
+     *
+     * @return characteristic compressive strength (cubes)
+     */
     public int getCubicCompressiveStrength() {
         return fckCube;
     }
 
+    /**
+     * Gets mean value of concrete cylinder compressive strength.
+     *
+     * @return mean value of compressive strength
+     */
     public int getMeanCompressiveStrength() {
         return fcm;
     }
 
+    /**
+     * Gets mean value of axial tensile strength of concrete.
+     *
+     * @return mean value of axial tensile strength
+     */
     public double getMeanAxialTensileStrength() {
         return fctm;
     }
 
+    /**
+     * Gets 5th percentile of the characteristic axial tensile strength of concrete.
+     *
+     * @return 5th percentile of the characteristic axial tensile strength of concrete
+     */
     public double getCompressiveStrengthFivePercentile() {
         return fctk005;
     }
 
+    /**
+     * Gets 95th percentile of the characteristic axial tensile strength of concrete.
+     *
+     * @return 95th percentile of the characteristic axial tensile strength of concrete
+     */
     public double getCompressiveStrengthNinetyFivePercentile() {
         return fctk095;
     }
 
+    /**
+     * Gets secant youngs modulus of elasticity of concrete.
+     *
+     * @return secant youngs modulus of elasticity of concrete
+     */
     public double getSecantYoungsModulus() {
         return Ecm;
     }
 
+    /**
+     * Gets compressive strain in concrete at the peak stress fcm.
+     *
+     * @return compressive strain in concrete at the peak stress fcm
+     */
     public double getCompressiveStrainInConcreteAtPeakStress() {
         return ec1;
     }
 
+    /**
+     * Gets ultimate compressive strain in the concrete for non-linear model.
+     *
+     * @return ultimate compressive strain in the concrete for non-linear model
+     */
     public double getUltimateCompressiveStrainInConcrete() {
         return ecu1;
     }
 
+    /**
+     * Gets compressive strain in the concrete at the peak stress of fcd for parabola-rectangle model - Figure 3.3.
+     *
+     * @return compressive strain in the concrete at the peak stress of fcd
+     */
     public double getCompressiveStrainAtMaximumStrengthForParabolaRectangleModel() {
         return ec2;
     }
 
+    /**
+     * Gets ultimate compressive strain in the concrete for parabola-rectangle model - Figure 3.3.
+     *
+     * @return ultimate compressive strain in the concrete
+     */
     public double getUltimateCompressiveStrainForParabolaRectangleModel() {
         return ecu2;
     }
 
+    /**
+     * Gets factor described in Table 3.1 in EC2.
+     *
+     * @return factor described in Table 3.1 in EC2
+     */
     public double getNFactor() {
         return n;
     }
 
+    /**
+     * Gets compressive strain in the concrete at the peak stress of fcd for bi-linear model - Figure 3.4.
+     *
+     * @return compressive strain in the concrete at the peak stress of fcd
+     */
     public double getCompressiveStrainAtMaximumStrengthForBilinearModel() {
         return ec3;
     }
 
+    /**
+     * Gets ultimate compressive strain in the concrete for bi-linear model - Figure 3.4.
+     *
+     * @return ultimate compressive strain in the concrete for bi-linear model
+     */
     public double getUltimateCompressiveStrainForBilinearModel() {
         return ecu3;
     }
 
-    public double getDesignCompressiveResistance(double gammaC){
+    /**
+     * Gets design compressive cylinder strength of concrete at 28 days.
+     *
+     * @param gammaC gamma factor fo concrete - cl. 2.4.2.4 in EC2
+     * @return design compressive cylinder strength
+     */
+    public double getDesignCompressiveResistance(double gammaC) {
         return 0.85 * fck / gammaC;
     }
 }

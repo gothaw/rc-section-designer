@@ -19,10 +19,11 @@ public interface Flexure {
     /**
      * Calculates K factor for a reinforced concrete section.
      * This is used to determine the size of the compression zone and used to calculate the lever arm.
-     * @param UlsMoment ULS moment in kNM
+     *
+     * @param UlsMoment              ULS moment in kNM
      * @param widthInCompressionZone width of the compression zone in mm
-     * @param effectiveDepth effective depth in mm
-     * @param fck characteristic compressive cylinder strength of concrete in MPa
+     * @param effectiveDepth         effective depth in mm
+     * @param fck                    characteristic compressive cylinder strength of concrete in MPa
      * @return value of K factor
      */
     default double getKFactor(double UlsMoment, int widthInCompressionZone, double effectiveDepth, int fck) {
@@ -32,7 +33,8 @@ public interface Flexure {
     /**
      * Calculates K' factor for a reinforced concrete section.
      * This describes the limiting value of compression zone for section under bending and is also used to calculate the lever arm.
-     * @param isRecommendedRatio boolean determining if recommended redistribution ratio (0.85) is to be used
+     *
+     * @param isRecommendedRatio  boolean determining if recommended redistribution ratio (0.85) is to be used
      * @param redistributionRatio redistribution ratio between 1.0 and 0.7
      * @return value of K' factor
      */
@@ -42,9 +44,10 @@ public interface Flexure {
 
     /**
      * Calculates effective depth for a section based on reinforcement, depth and design parameters.
-     * @param depth depth of the section in mm
-     * @param UlsMoment ULS moment in kNM
-     * @param reinforcement Reinforcement object
+     *
+     * @param depth            depth of the section in mm
+     * @param UlsMoment        ULS moment in kNM
+     * @param reinforcement    Reinforcement object
      * @param designParameters DesignParameters object
      * @return effective depth in mm
      */
@@ -56,9 +59,10 @@ public interface Flexure {
 
     /**
      * Calculates lever arm based on K, K' and effective depth.
+     *
      * @param effectiveDepth effective depth in mm
-     * @param kFactor K factor
-     * @param kDashFactor K' factor
+     * @param kFactor        K factor
+     * @param kDashFactor    K' factor
      * @return lever arm in mm
      */
     default double getLeverArm(double effectiveDepth, double kFactor, double kDashFactor) {
@@ -69,11 +73,12 @@ public interface Flexure {
 
     /**
      * Calculates minimum reinforcement area for given reinforced concrete section.
-     * @param UlsMoment ULS moment in kNm
-     * @param fctm mean value of axial tensile strength of concrete in MPa
-     * @param fy design yield strength of reinforcement in MPa
+     *
+     * @param UlsMoment      ULS moment in kNm
+     * @param fctm           mean value of axial tensile strength of concrete in MPa
+     * @param fy             design yield strength of reinforcement in MPa
      * @param effectiveDepth effective depth in mm
-     * @param geometry geometry object
+     * @param geometry       geometry object
      * @return minimum area of reinforcement in mm2
      */
     default double getMinimumReinforcement(double UlsMoment, double fctm, int fy, double effectiveDepth, Geometry geometry) {
@@ -87,6 +92,7 @@ public interface Flexure {
 
     /**
      * Calculates maximum reinforcement area for given reinforced concrete section.
+     *
      * @param concreteArea concrete area in mm2
      * @return maximum reinforcement area in mm2
      */
@@ -97,8 +103,9 @@ public interface Flexure {
     /**
      * Calculates depth of plastic neutral axis for given reinforced concrete section.
      * The depth is calculated from the compressive edge of the section
+     *
      * @param effectiveDepth effective depth in mm
-     * @param leverArm lever arm in mm
+     * @param leverArm       lever arm in mm
      * @return effective depth in mm
      */
     default double getDepthOfPlasticNeutralAxis(double effectiveDepth, double leverArm) {
@@ -107,8 +114,9 @@ public interface Flexure {
 
     /**
      * Gets centroid of compression reinforcement based on the sign of the ULS moment.
-     * @param UlsMoment ULS moment in kNm
-     * @param reinforcement Reinforcement object
+     *
+     * @param UlsMoment        ULS moment in kNm
+     * @param reinforcement    Reinforcement object
      * @param designParameters DesignParameters object
      * @return centroid of compression reinforcement in mm
      */

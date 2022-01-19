@@ -14,10 +14,11 @@ public class ShearLinks implements Drawable {
 
     /**
      * Constructor.
-     * @param fyw field strength in MPa
+     *
+     * @param fyw      field strength in MPa
      * @param diameter shear links diameter in mm
-     * @param spacing shear links spacing in mm
-     * @param legs number of legs
+     * @param spacing  shear links spacing in mm
+     * @param legs     number of legs
      */
     public ShearLinks(int fyw, int diameter, int spacing, int legs) {
         this.fyw = fyw;
@@ -28,6 +29,7 @@ public class ShearLinks implements Drawable {
 
     /**
      * Getter for shear links yield strength.
+     *
      * @return yield strength
      */
     public int getYieldStrength() {
@@ -36,6 +38,7 @@ public class ShearLinks implements Drawable {
 
     /**
      * Getter for shear links diameter.
+     *
      * @return shear links diameter
      */
     public int getDiameter() {
@@ -44,6 +47,7 @@ public class ShearLinks implements Drawable {
 
     /**
      * Getter for shear links spacing.
+     *
      * @return shear links spacing
      */
     public int getSpacing() {
@@ -52,6 +56,7 @@ public class ShearLinks implements Drawable {
 
     /**
      * Getter for number of shear links legs.
+     *
      * @return number of shear legs
      */
     public int getLegs() {
@@ -60,6 +65,7 @@ public class ShearLinks implements Drawable {
 
     /**
      * Gets area of the shear links per 1 m run of the beam.
+     *
      * @return area of shear links per 1 m
      */
     public double getArea() {
