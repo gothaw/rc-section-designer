@@ -102,7 +102,7 @@
             <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
                 <Label styleClass="heading" text="Section Preview"/>
                 <StackPane styleClass="canvas-wrapper">
-                    <Canvas height="300" width="300"/>
+                    <Canvas fx:id="elementImage" height="300" width="300"/>
                 </StackPane>
             </VBox>
             <VBox fx:id="designResultsWrapper" styleClass="grid-cell, hidden" GridPane.columnIndex="1" GridPane.rowIndex="1">

@@ -3,24 +3,31 @@ package com.radsoltan.controllers;
 import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
-import com.radsoltan.model.Concrete;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
+import com.radsoltan.model.geometry.DimensionLine;
+import com.radsoltan.model.geometry.HorizontalDimensionLine;
+import com.radsoltan.model.geometry.SlabStrip;
+import com.radsoltan.model.geometry.VerticalDimensionLine;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
 import com.radsoltan.util.Messages;
 import com.radsoltan.util.Utility;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +51,8 @@ public class Primary extends Controller {
     public VBox shearResultsWrapper;
     @FXML
     public VBox crackingResultsWrapper;
+    @FXML
+    public Canvas elementImage;
     @FXML
     private VBox container;
     @FXML
@@ -82,6 +91,10 @@ public class Primary extends Controller {
     private ChoiceBox<String> elementTypeChoiceBox;
 
     private final Project project;
+
+    private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.8;
+    private static final double SLAB_IMAGE_VERTICAL_RATIO = 0.25;
+    private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.5;
 
     /**
      * Constructor. Gets project instance.
@@ -135,6 +148,7 @@ public class Primary extends Controller {
         if (project.getDesignParameters() == null) {
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
+        this.drawElementImage();
         Platform.runLater(() -> container.requestFocus());
     }
 
@@ -389,6 +403,89 @@ public class Primary extends Controller {
         flexureResultsWrapper.getChildren().clear();
         shearResultsWrapper.getChildren().clear();
         crackingResultsWrapper.getChildren().clear();
+    }
+
+    /**
+     * Generates the element image based on provided geometry and reinforcement.
+     * It adds labels describing geometry and reinforcement.
+     */
+    private void drawElementImage() {
+        if (project.getGeometry() == null) {
+            return;
+        }
+        switch (project.getElementType().toLowerCase()) {
+            case Constants.ELEMENT_TYPE_SLAB:
+                drawSlabImage();
+                break;
+            case Constants.ELEMENT_TYPE_BEAM:
+
+                break;
+            default:
+                showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
+        }
+    }
+
+    /**
+     * Draws slab image along with dimension lines and reinforcement.
+     * It adds reinforcement description as text on canvas.
+     * Slab image is drawn relatively to the canvas size using the ratios defined in constants.
+     */
+    private void drawSlabImage() {
+        GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
+        double canvasWidth = elementImage.getWidth();
+        double canvasHeight = elementImage.getHeight();
+        int slabWidth = (int) (SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth);
+        int slabDepth = (int) (SLAB_IMAGE_VERTICAL_RATIO * canvasHeight);
+        double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabWidth;
+        double slabTopEdgeY = 0.35 * canvasHeight - 0.5 * slabDepth; // Insert slab in 35% height of canvas
+        double slabRightEdgeX = slabLeftEdgeX + slabWidth;
+        double slabBottomEdgeY = slabTopEdgeY + slabDepth;
+
+        SlabStrip slabStrip = new SlabStrip(
+                slabWidth,
+                slabDepth,
+                graphicsContext,
+                Color.BLACK,
+                Color.LIGHTGRAY,
+                slabLeftEdgeX,
+                slabTopEdgeY
+        );
+        slabStrip.draw();
+
+        // Draw Horizontal Dimension Line
+        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
+                "1000",
+                Color.BLACK,
+                graphicsContext,
+                slabLeftEdgeX,
+                slabRightEdgeX,
+                slabTopEdgeY,
+                -DimensionLine.DEFAULT_OFFSET,
+                SLAB_IMAGE_DIMENSION_LINES_SCALE
+        );
+        horizontalDimensionLine.draw();
+
+        // Draw Vertical Dimension Line
+        VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+                Integer.toString(project.getGeometry().getDepth()),
+                Color.BLACK,
+                graphicsContext,
+                slabTopEdgeY,
+                slabBottomEdgeY,
+                slabLeftEdgeX,
+                -DimensionLine.DEFAULT_OFFSET,
+                SLAB_IMAGE_DIMENSION_LINES_SCALE,
+                false
+        );
+        verticalDimensionLine.draw();
+
+    }
+
+    /**
+     * Draws beam image.
+     */
+    private void drawBeamImage() {
+        System.out.println("Drawing beam image.");
     }
 
     /**
