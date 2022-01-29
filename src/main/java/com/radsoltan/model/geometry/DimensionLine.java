@@ -11,12 +11,13 @@ import javafx.scene.transform.Rotate;
 public abstract class DimensionLine implements Drawable {
 
     public static final int DEFAULT_OFFSET = 50;
+    public static final int DEFAULT_SMALL_OFFSET = 20;
     public static final int DEFAULT_SCALE = 1;
     public static final int DEFAULT_MAIN_LINE_EXTENSION = 15;
     public static final int DEFAULT_END_LINE_LENGTH = 40;
     public static final int DEFAULT_TICK_LENGTH = 36;
     public static final int DEFAULT_TICK_WIDTH = 4;
-    public static final int DEFAULT_TEXT_OFFSET = 10;
+    public static final int DEFAULT_TEXT_OFFSET = 15;
     public static final int DEFAULT_TEXT_SIZE = 26;
     public static final String DEFAULT_TEXT_FONT = "Source Sans Pro";
 

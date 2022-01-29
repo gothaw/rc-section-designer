@@ -109,6 +109,6 @@ public class HorizontalDimensionLine extends DimensionLine {
         this.drawEndLine(graphicsContext, endX, y + offsetY, scale);
         this.drawTick(graphicsContext, startX, y + offsetY, scale);
         this.drawTick(graphicsContext, endX, y + offsetY, scale);
-        this.drawText(text, graphicsContext, 0.5 * (startX + endX), y + offsetY - DimensionLine.DEFAULT_TEXT_OFFSET, scale);
+        this.drawText(text, graphicsContext, 0.5 * (startX + endX), y + offsetY - DimensionLine.DEFAULT_TEXT_OFFSET * scale, scale);
     }
 }

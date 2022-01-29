@@ -38,7 +38,7 @@ public class SlabGeometrySetup extends Controller {
 
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.6;
     private static final double SLAB_IMAGE_VERTICAL_RATIO = 0.3;
-    private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.8;
+    private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.75;
 
     /**
      * Constructor. It gets project instance and using the instance it gets the geometry.
@@ -110,15 +110,15 @@ public class SlabGeometrySetup extends Controller {
         double canvasWidth = slabImage.getWidth();
         double canvasHeight = slabImage.getHeight();
         int slabWidth = (int) (SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth);
-        int slabDepth = (int) (SLAB_IMAGE_VERTICAL_RATIO * canvasHeight);
+        int slabThickness = (int) (SLAB_IMAGE_VERTICAL_RATIO * canvasHeight);
         double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabWidth;
-        double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabDepth;
+        double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabThickness;
         double slabRightEdgeX = slabLeftEdgeX + slabWidth;
-        double slabBottomEdgeY = slabTopEdgeY + slabDepth;
+        double slabBottomEdgeY = slabTopEdgeY + slabThickness;
 
         SlabStrip slabStrip = new SlabStrip(
                 slabWidth,
-                slabDepth,
+                slabThickness,
                 graphicsContext,
                 Color.BLACK,
                 Color.LIGHTGRAY,

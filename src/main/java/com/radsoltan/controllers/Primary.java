@@ -7,7 +7,6 @@ import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
 import com.radsoltan.model.geometry.DimensionLine;
-import com.radsoltan.model.geometry.HorizontalDimensionLine;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.VerticalDimensionLine;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
@@ -92,9 +91,9 @@ public class Primary extends Controller {
 
     private final Project project;
 
-    private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.8;
-    private static final double SLAB_IMAGE_VERTICAL_RATIO = 0.25;
+    private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.75;
     private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.5;
+    public static final int MAX_SLAB_THICKNESS_WHEN_DRAWING = 500;
 
     /**
      * Constructor. Gets project instance.
@@ -434,16 +433,18 @@ public class Primary extends Controller {
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
         double canvasWidth = elementImage.getWidth();
         double canvasHeight = elementImage.getHeight();
-        int slabWidth = (int) (SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth);
-        int slabDepth = (int) (SLAB_IMAGE_VERTICAL_RATIO * canvasHeight);
-        double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabWidth;
-        double slabTopEdgeY = 0.35 * canvasHeight - 0.5 * slabDepth; // Insert slab in 35% height of canvas
-        double slabRightEdgeX = slabLeftEdgeX + slabWidth;
-        double slabBottomEdgeY = slabTopEdgeY + slabDepth;
+        int slabImageWidth = (int) (SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth);
+        int slabThickness = project.getGeometry().getDepth();
+        int slabImageHeight = (int) (getSlabImageScale(slabImageWidth, slabThickness) * slabThickness);
+        System.out.println(getSlabImageScale(slabImageWidth, slabThickness));
+
+        double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabImageWidth;
+        double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabImageHeight;
+        double slabBottomEdgeY = slabTopEdgeY + slabImageHeight;
 
         SlabStrip slabStrip = new SlabStrip(
-                slabWidth,
-                slabDepth,
+                slabImageWidth,
+                slabImageHeight,
                 graphicsContext,
                 Color.BLACK,
                 Color.LIGHTGRAY,
@@ -451,19 +452,6 @@ public class Primary extends Controller {
                 slabTopEdgeY
         );
         slabStrip.draw();
-
-        // Draw Horizontal Dimension Line
-        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
-                "1000",
-                Color.BLACK,
-                graphicsContext,
-                slabLeftEdgeX,
-                slabRightEdgeX,
-                slabTopEdgeY,
-                -DimensionLine.DEFAULT_OFFSET,
-                SLAB_IMAGE_DIMENSION_LINES_SCALE
-        );
-        horizontalDimensionLine.draw();
 
         // Draw Vertical Dimension Line
         VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
@@ -473,12 +461,33 @@ public class Primary extends Controller {
                 slabTopEdgeY,
                 slabBottomEdgeY,
                 slabLeftEdgeX,
-                -DimensionLine.DEFAULT_OFFSET,
+                -DimensionLine.DEFAULT_SMALL_OFFSET,
                 SLAB_IMAGE_DIMENSION_LINES_SCALE,
-                false
+                true
         );
         verticalDimensionLine.draw();
 
+    }
+
+    /**
+     * It gets the scale of the slab image. The scale depends on MAX_SLAB_THICKNESS_WHEN_DRAWING.
+     * If this is less then limiting value, the scale is constant and the slab image represents 1m wide strip and slabImageHeight changes accordingly.
+     * Otherwise, the slabImageHeight stays constant when increasing slab depth, scale decreases and the slab strip width increases and is greater than 1m.
+     *
+     * @param slabImageWidth slab image width
+     * @param slabThickness actual slab thickness in mm
+     * @return scale of the slab image
+     */
+    private double getSlabImageScale(double slabImageWidth, int slabThickness) {
+        if (slabThickness <= MAX_SLAB_THICKNESS_WHEN_DRAWING) {
+            return slabImageWidth / 1000;
+        } else {
+            double maxSlabImageHeight = slabImageWidth * MAX_SLAB_THICKNESS_WHEN_DRAWING / 1000;
+
+            double slabWidth = slabImageWidth * slabThickness / maxSlabImageHeight;
+
+            return slabImageWidth / slabWidth;
+        }
     }
 
     /**

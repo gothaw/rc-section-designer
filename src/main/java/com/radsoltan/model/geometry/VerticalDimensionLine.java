@@ -119,6 +119,6 @@ public class VerticalDimensionLine extends DimensionLine {
         this.drawEndLine(graphicsContext, x + offsetX, endY, scale);
         this.drawTick(graphicsContext, x + offsetX, startY, scale);
         this.drawTick(graphicsContext, x + offsetX, endY, scale);
-        this.drawText(text, graphicsContext, x + offsetX - DimensionLine.DEFAULT_TEXT_OFFSET, 0.5 * (startY + endY), scale);
+        this.drawText(text, graphicsContext, x + offsetX - DimensionLine.DEFAULT_TEXT_OFFSET * scale, 0.5 * (startY + endY), scale);
     }
 }
