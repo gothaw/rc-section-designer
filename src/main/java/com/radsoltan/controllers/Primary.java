@@ -436,11 +436,11 @@ public class Primary extends Controller {
         int slabImageWidth = (int) (SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth);
         int slabThickness = project.getGeometry().getDepth();
         int slabImageHeight = (int) (getSlabImageScale(slabImageWidth, slabThickness) * slabThickness);
-        System.out.println(getSlabImageScale(slabImageWidth, slabThickness));
 
         double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabImageWidth;
         double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabImageHeight;
         double slabBottomEdgeY = slabTopEdgeY + slabImageHeight;
+        int slabEndArchDepth = (int) (getScaleForEndArchDepth(slabThickness) * SlabStrip.DEFAULT_END_ARCH_DEPTH);
 
         SlabStrip slabStrip = new SlabStrip(
                 slabImageWidth,
@@ -449,7 +449,8 @@ public class Primary extends Controller {
                 Color.BLACK,
                 Color.LIGHTGRAY,
                 slabLeftEdgeX,
-                slabTopEdgeY
+                slabTopEdgeY,
+                slabEndArchDepth
         );
         slabStrip.draw();
 
@@ -488,6 +489,15 @@ public class Primary extends Controller {
 
             return slabImageWidth / slabWidth;
         }
+    }
+
+    /**
+     * Calculates the scale for the end arch depth. This is a ratio of MAX_SLAB_THICKNESS_WHEN_DRAWING to the slab thickness.
+     * @param slabThickness slab thickness in mm
+     * @return scale for the end arch depth
+     */
+    private double getScaleForEndArchDepth(int slabThickness) {
+        return (double) MAX_SLAB_THICKNESS_WHEN_DRAWING / slabThickness;
     }
 
     /**
