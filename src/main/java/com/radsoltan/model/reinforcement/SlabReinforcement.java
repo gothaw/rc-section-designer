@@ -1,8 +1,8 @@
 package com.radsoltan.model.reinforcement;
 
 import com.radsoltan.util.Constants;
+import javafx.scene.canvas.GraphicsContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -26,6 +26,18 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> additionalBottomDiameters,
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings) {
+        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null);
+    }
+
+    public SlabReinforcement(List<Integer> topDiameters,
+                             List<Integer> additionalTopDiameters,
+                             List<Integer> topSpacings,
+                             List<Integer> topVerticalSpacings,
+                             List<Integer> bottomDiameters,
+                             List<Integer> additionalBottomDiameters,
+                             List<Integer> bottomSpacings,
+                             List<Integer> bottomVerticalSpacings,
+                             GraphicsContext graphicsContext) {
         this.topDiameters = topDiameters;
         this.additionalTopDiameters = additionalTopDiameters;
         this.topSpacings = topSpacings;
@@ -166,6 +178,9 @@ public class SlabReinforcement extends Reinforcement {
         return bottomVerticalSpacings;
     }
 
+    /**
+     * Method draws slab reinforcement.
+     */
     @Override
     public void draw() {
 

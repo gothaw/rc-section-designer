@@ -497,7 +497,7 @@ public class Primary extends Controller {
      * @return scale for the end arch depth
      */
     private double getScaleForEndArchDepth(int slabThickness) {
-        return (double) MAX_SLAB_THICKNESS_WHEN_DRAWING / slabThickness;
+        return Math.min((double) MAX_SLAB_THICKNESS_WHEN_DRAWING / slabThickness, 1.0);
     }
 
     /**
