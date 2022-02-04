@@ -17,6 +17,11 @@ public class SlabReinforcement extends Reinforcement {
     private final List<Integer> additionalBottomDiameters;
     private final List<Integer> bottomSpacings;
     private final List<Integer> bottomVerticalSpacings;
+    private final GraphicsContext graphicsContext;
+    private final double slabLeftEdgeX;
+    private final double slabRightEdgeX;
+    private final double slabTopEdgeY;
+    private final double slabBottomEdgeY;
 
     public SlabReinforcement(List<Integer> topDiameters,
                              List<Integer> additionalTopDiameters,
@@ -26,7 +31,7 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> additionalBottomDiameters,
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings) {
-        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null);
+        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, 0, 0, 0, 0);
     }
 
     public SlabReinforcement(List<Integer> topDiameters,
@@ -37,7 +42,12 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> additionalBottomDiameters,
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings,
-                             GraphicsContext graphicsContext) {
+                             GraphicsContext graphicsContext,
+                             double slabLeftEdgeX,
+                             double slabRightEdgeX,
+                             double slabTopEdgeY,
+                             double slabBottomEdgeY
+                             ) {
         this.topDiameters = topDiameters;
         this.additionalTopDiameters = additionalTopDiameters;
         this.topSpacings = topSpacings;
@@ -46,6 +56,11 @@ public class SlabReinforcement extends Reinforcement {
         this.additionalBottomDiameters = additionalBottomDiameters;
         this.bottomSpacings = bottomSpacings;
         this.bottomVerticalSpacings = bottomVerticalSpacings;
+        this.graphicsContext = graphicsContext;
+        this.slabLeftEdgeX = slabLeftEdgeX;
+        this.slabRightEdgeX = slabRightEdgeX;
+        this.slabTopEdgeY = slabTopEdgeY;
+        this.slabBottomEdgeY = slabBottomEdgeY;
     }
 
     @Override
@@ -176,6 +191,26 @@ public class SlabReinforcement extends Reinforcement {
 
     public List<Integer> getBottomVerticalSpacings() {
         return bottomVerticalSpacings;
+    }
+
+    public GraphicsContext getGraphicsContext() {
+        return graphicsContext;
+    }
+
+    public double getSlabLeftEdgeX() {
+        return slabLeftEdgeX;
+    }
+
+    public double getSlabRightEdgeX() {
+        return slabRightEdgeX;
+    }
+
+    public double getSlabTopEdgeY() {
+        return slabTopEdgeY;
+    }
+
+    public double getSlabBottomEdgeY() {
+        return slabBottomEdgeY;
     }
 
     /**
