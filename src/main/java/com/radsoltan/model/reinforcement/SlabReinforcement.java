@@ -2,6 +2,7 @@ package com.radsoltan.model.reinforcement;
 
 import com.radsoltan.util.Constants;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,10 +19,12 @@ public class SlabReinforcement extends Reinforcement {
     private final List<Integer> bottomSpacings;
     private final List<Integer> bottomVerticalSpacings;
     private final GraphicsContext graphicsContext;
+    private final Color colour;
     private final double slabLeftEdgeX;
     private final double slabRightEdgeX;
     private final double slabTopEdgeY;
     private final double slabBottomEdgeY;
+    private final double slabImageScale;
 
     public SlabReinforcement(List<Integer> topDiameters,
                              List<Integer> additionalTopDiameters,
@@ -31,7 +34,7 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> additionalBottomDiameters,
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings) {
-        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, 0, 0, 0, 0);
+        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, null, 0, 0, 0, 0, 0);
     }
 
     public SlabReinforcement(List<Integer> topDiameters,
@@ -43,11 +46,13 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings,
                              GraphicsContext graphicsContext,
+                             Color colour, // add nominal cover
                              double slabLeftEdgeX,
                              double slabRightEdgeX,
                              double slabTopEdgeY,
-                             double slabBottomEdgeY
-                             ) {
+                             double slabBottomEdgeY,
+                             double slabImageScale
+    ) {
         this.topDiameters = topDiameters;
         this.additionalTopDiameters = additionalTopDiameters;
         this.topSpacings = topSpacings;
@@ -57,10 +62,12 @@ public class SlabReinforcement extends Reinforcement {
         this.bottomSpacings = bottomSpacings;
         this.bottomVerticalSpacings = bottomVerticalSpacings;
         this.graphicsContext = graphicsContext;
+        this.colour = colour;
         this.slabLeftEdgeX = slabLeftEdgeX;
         this.slabRightEdgeX = slabRightEdgeX;
         this.slabTopEdgeY = slabTopEdgeY;
         this.slabBottomEdgeY = slabBottomEdgeY;
+        this.slabImageScale = slabImageScale;
     }
 
     @Override
@@ -120,7 +127,7 @@ public class SlabReinforcement extends Reinforcement {
             String description = (additionalDiameter == 0)
                     ? String.format("%s layer: \u03c6%d@%d", Constants.LAYERS_ORDINAL_LABELS.get(i), diameter, spacing)
                     : String.format("%s layer: \u03c6%d@%d + \u03c6%d@%d", Constants.LAYERS_ORDINAL_LABELS.get(i), diameter, spacing, additionalDiameter, spacing);
-            if (i < diameters.size() - 1){
+            if (i < diameters.size() - 1) {
                 description = description.concat(",  ");
             }
             layersDescription = layersDescription.concat(description);
@@ -197,6 +204,10 @@ public class SlabReinforcement extends Reinforcement {
         return graphicsContext;
     }
 
+    public Color getColour() {
+        return colour;
+    }
+
     public double getSlabLeftEdgeX() {
         return slabLeftEdgeX;
     }
@@ -213,11 +224,36 @@ public class SlabReinforcement extends Reinforcement {
         return slabBottomEdgeY;
     }
 
+    public double getSlabImageScale() {
+        return slabImageScale;
+    }
+
     /**
      * Method draws slab reinforcement.
      */
     @Override
     public void draw() {
+        if (graphicsContext == null || colour == null) {
+            return;
+        }
 
+        graphicsContext.setFill(colour);
+
+        double widthInScale = slabLeftEdgeX + slabRightEdgeX;
+        double realWidth = widthInScale / slabImageScale;
+
+        double defaultOffsetFromEdge = 10;
+        double widthAvailableForRebar = realWidth - topDiameters.get(0) - 2 * defaultOffsetFromEdge;
+
+        int quotient = (int) (widthAvailableForRebar / topSpacings.get(0));
+        int remainder = (int) (widthAvailableForRebar % topSpacings.get(0));
+
+        double firstBarX = slabLeftEdgeX + remainder * 0.5 + defaultOffsetFromEdge;
+
+        List<Double> barCoordinatesX = IntStream.range(0, quotient + 1)
+                .mapToObj(x -> (firstBarX + x * topSpacings.get(0)) * slabImageScale)
+                .collect(Collectors.toList());
+
+        System.out.println(barCoordinatesX);
     }
 }

@@ -412,6 +412,7 @@ public class Primary extends Controller {
         if (project.getGeometry() == null) {
             return;
         }
+
         switch (project.getElementType().toLowerCase()) {
             case Constants.ELEMENT_TYPE_SLAB:
                 drawSlabImage();
@@ -425,9 +426,9 @@ public class Primary extends Controller {
     }
 
     /**
-     * Draws slab image along with dimension lines and reinforcement.
-     * It adds reinforcement description as text on canvas.
+     * Draws slab image along with dimension lines. It also invokes function to draw slab reinforcement.
      * Slab image is drawn relatively to the canvas size using the ratios defined in constants.
+     * It scales the image by using scale from getSlabImageScale method.
      */
     private void drawSlabImage() {
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
@@ -435,10 +436,12 @@ public class Primary extends Controller {
         double canvasHeight = elementImage.getHeight();
         int slabImageWidth = (int) (SLAB_IMAGE_HORIZONTAL_RATIO * canvasWidth);
         int slabThickness = project.getGeometry().getDepth();
-        int slabImageHeight = (int) (getSlabImageScale(slabImageWidth, slabThickness) * slabThickness);
+        double slabImageScale = getSlabImageScale(slabImageWidth, slabThickness);
+        int slabImageHeight = (int) (slabImageScale * slabThickness);
 
         double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabImageWidth;
         double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabImageHeight;
+        double slabRightEdgeX = slabLeftEdgeX + slabImageWidth;
         double slabBottomEdgeY = slabTopEdgeY + slabImageHeight;
         int slabEndArchDepth = (int) (getScaleForEndArchDepth(slabThickness) * SlabStrip.DEFAULT_END_ARCH_DEPTH);
 
@@ -468,6 +471,41 @@ public class Primary extends Controller {
         );
         verticalDimensionLine.draw();
 
+        boolean isReinforcementSetup = project.getReinforcement() != null && project.getDesignParameters() != null;
+
+        if (isReinforcementSetup) {
+            drawSlabReinforcement(slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, slabBottomEdgeY, slabImageScale);
+        }
+    }
+
+
+    /**
+     * Draws slab reinforcement. It adds reinforcement description as text on canvas.
+     * Slab reinforcement is scaled using the scale from getSlabImageScale method.
+     */
+    private void drawSlabReinforcement(double slabLeftEdgeX, double slabRightEdgeX, double slabTopEdgeY, double slabBottomEdgeY, double slabImageScale) {
+        SlabReinforcement slabReinforcement = (SlabReinforcement) project.getReinforcement();
+        GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
+
+        SlabReinforcement slabReinforcementToDraw = new SlabReinforcement(
+                slabReinforcement.getTopDiameters(),
+                slabReinforcement.getAdditionalTopDiameters(),
+                slabReinforcement.getTopSpacings(),
+                slabReinforcement.getTopVerticalSpacings(),
+                slabReinforcement.getBottomDiameters(),
+                slabReinforcement.getAdditionalBottomDiameters(),
+                slabReinforcement.getBottomSpacings(),
+                slabReinforcement.getBottomVerticalSpacings(),
+                graphicsContext,
+                Color.BLACK,
+                slabLeftEdgeX,
+                slabRightEdgeX,
+                slabTopEdgeY,
+                slabBottomEdgeY,
+                slabImageScale
+        );
+
+        slabReinforcementToDraw.draw();
     }
 
     /**
