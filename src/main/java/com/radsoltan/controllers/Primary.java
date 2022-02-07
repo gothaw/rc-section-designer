@@ -3,6 +3,7 @@ package com.radsoltan.controllers;
 import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
+import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
@@ -485,6 +486,7 @@ public class Primary extends Controller {
      */
     private void drawSlabReinforcement(double slabLeftEdgeX, double slabRightEdgeX, double slabTopEdgeY, double slabBottomEdgeY, double slabImageScale) {
         SlabReinforcement slabReinforcement = (SlabReinforcement) project.getReinforcement();
+        DesignParameters designParameters = project.getDesignParameters();
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
 
         SlabReinforcement slabReinforcementToDraw = new SlabReinforcement(
@@ -496,6 +498,7 @@ public class Primary extends Controller {
                 slabReinforcement.getAdditionalBottomDiameters(),
                 slabReinforcement.getBottomSpacings(),
                 slabReinforcement.getBottomVerticalSpacings(),
+                designParameters,
                 graphicsContext,
                 Color.BLACK,
                 slabLeftEdgeX,
