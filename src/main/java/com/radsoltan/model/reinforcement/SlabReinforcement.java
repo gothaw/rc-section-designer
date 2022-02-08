@@ -26,6 +26,7 @@ public class SlabReinforcement extends Reinforcement {
     private final double slabRightEdgeX;
     private final double slabTopEdgeY;
     private final double slabBottomEdgeY;
+    private final double slabScaledEndArchDepth;
     private final double slabImageScale;
 
     public SlabReinforcement(List<Integer> topDiameters,
@@ -36,7 +37,7 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> additionalBottomDiameters,
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings) {
-        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, null, null, 0, 0, 0, 0, 0);
+        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, null, null, 0, 0, 0, 0, 0, 0);
     }
 
     public SlabReinforcement(List<Integer> topDiameters,
@@ -54,6 +55,7 @@ public class SlabReinforcement extends Reinforcement {
                              double slabRightEdgeX,
                              double slabTopEdgeY,
                              double slabBottomEdgeY,
+                             double slabScaledEndArchDepth,
                              double slabImageScale
     ) {
         this.designParameters = designParameters;
@@ -71,6 +73,7 @@ public class SlabReinforcement extends Reinforcement {
         this.slabRightEdgeX = slabRightEdgeX;
         this.slabTopEdgeY = slabTopEdgeY;
         this.slabBottomEdgeY = slabBottomEdgeY;
+        this.slabScaledEndArchDepth = slabScaledEndArchDepth;
         this.slabImageScale = slabImageScale;
     }
 
@@ -232,6 +235,10 @@ public class SlabReinforcement extends Reinforcement {
         return slabBottomEdgeY;
     }
 
+    public double getSlabScaledEndArchDepth() {
+        return slabScaledEndArchDepth;
+    }
+
     public double getSlabImageScale() {
         return slabImageScale;
     }
@@ -245,9 +252,10 @@ public class SlabReinforcement extends Reinforcement {
             return;
         }
 
+        graphicsContext.beginPath();
         graphicsContext.setFill(colour);
 
-        double widthInScale = slabLeftEdgeX + slabRightEdgeX;
+        double widthInScale = slabRightEdgeX - slabLeftEdgeX;
         double realWidth = widthInScale / slabImageScale;
 
         double defaultOffsetFromEdge = 10;
@@ -256,14 +264,19 @@ public class SlabReinforcement extends Reinforcement {
         int quotient = (int) (widthAvailableForRebar / topSpacings.get(0));
         int remainder = (int) (widthAvailableForRebar % topSpacings.get(0));
 
-        double firstBarX = slabLeftEdgeX / slabImageScale + remainder * 0.5 + defaultOffsetFromEdge;
+        double firstBarRealDistanceFromLeftEdge = slabLeftEdgeX / slabImageScale + remainder * 0.5 + defaultOffsetFromEdge;
 
         List<Double> barCoordinatesX = IntStream.range(0, quotient + 1)
-                .mapToObj(x -> (firstBarX + x * topSpacings.get(0)) * slabImageScale)
+                .mapToObj(x -> (firstBarRealDistanceFromLeftEdge + x * topSpacings.get(0)) * slabImageScale)
                 .collect(Collectors.toList());
 
-        double barCoordinateY = slabTopEdgeY / slabImageScale - designParameters.getNominalCoverTop();
+        double barCoordinateY = slabTopEdgeY + designParameters.getNominalCoverTop() * slabImageScale;
+        double barDiameterInScale = topDiameters.get(0) * slabImageScale;
 
-        System.out.println(barCoordinatesX);
+        barCoordinatesX.forEach(x -> {
+            graphicsContext.fillOval(x, barCoordinateY, barDiameterInScale, barDiameterInScale);
+        });
+
+        graphicsContext.closePath();
     }
 }

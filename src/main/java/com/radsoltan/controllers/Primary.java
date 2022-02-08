@@ -8,6 +8,7 @@ import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
 import com.radsoltan.model.geometry.DimensionLine;
+import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.VerticalDimensionLine;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
@@ -133,6 +134,17 @@ public class Primary extends Controller {
         }
         if (project.getUlsShear() != null) {
             UlsShear.setText(project.getUlsShear());
+        }
+        // Hardcoding
+        if (project.getGeometry() == null) {
+            SlabStrip slabStrip = new SlabStrip(400);
+            Geometry geometry = new Geometry(slabStrip);
+            DesignParameters designParameters = new DesignParameters(30, 0, 30, 500, 20, 1.5, 1.15, 0.85, true, false);
+            SlabReinforcement slabReinforcement = new SlabReinforcement(List.of(16), List.of(0), List.of(175), List.of(0), List.of(16), List.of(0), List.of(175), List.of(0));
+
+            project.setGeometry(geometry);
+            project.setDesignParameters(designParameters);
+            project.setReinforcement(slabReinforcement);
         }
         // Setting geometry, reinforcement and design parameters sections
         if (project.getGeometry() == null) {
@@ -475,7 +487,7 @@ public class Primary extends Controller {
         boolean isReinforcementSetup = project.getReinforcement() != null && project.getDesignParameters() != null;
 
         if (isReinforcementSetup) {
-            drawSlabReinforcement(slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, slabBottomEdgeY, slabImageScale);
+            drawSlabReinforcement(slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, slabBottomEdgeY, slabEndArchDepth , slabImageScale);
         }
     }
 
@@ -484,12 +496,12 @@ public class Primary extends Controller {
      * Draws slab reinforcement. It adds reinforcement description as text on canvas.
      * Slab reinforcement is scaled using the scale from getSlabImageScale method.
      */
-    private void drawSlabReinforcement(double slabLeftEdgeX, double slabRightEdgeX, double slabTopEdgeY, double slabBottomEdgeY, double slabImageScale) {
+    private void drawSlabReinforcement(double slabLeftEdgeX, double slabRightEdgeX, double slabTopEdgeY, double slabBottomEdgeY, double slabEndArchDepth, double slabImageScale) { // wrap al draw methods with try and catch + add errors if wrong objects are passed
         SlabReinforcement slabReinforcement = (SlabReinforcement) project.getReinforcement();
         DesignParameters designParameters = project.getDesignParameters();
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
 
-        SlabReinforcement slabReinforcementToDraw = new SlabReinforcement(
+        SlabReinforcement slabReinforcementToDraw = new SlabReinforcement( // refactor to take SlabStrip object
                 slabReinforcement.getTopDiameters(),
                 slabReinforcement.getAdditionalTopDiameters(),
                 slabReinforcement.getTopSpacings(),
@@ -505,6 +517,7 @@ public class Primary extends Controller {
                 slabRightEdgeX,
                 slabTopEdgeY,
                 slabBottomEdgeY,
+                slabEndArchDepth,
                 slabImageScale
         );
 

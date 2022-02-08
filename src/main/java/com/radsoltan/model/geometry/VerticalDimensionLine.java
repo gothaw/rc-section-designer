@@ -89,12 +89,16 @@ public class VerticalDimensionLine extends DimensionLine {
         Font font = new Font(DimensionLine.DEFAULT_TEXT_FONT, DimensionLine.DEFAULT_TEXT_SIZE * scale);
         graphicsContext.setFont(font);
         if (isTextAligned) {
-            graphicsContext.setTextAlign(TextAlignment.CENTER);
             rotate(graphicsContext, -90, x, y);
+            graphicsContext.setTextAlign(TextAlignment.CENTER);
         } else {
             graphicsContext.setTextBaseline(VPos.CENTER);
         }
         graphicsContext.fillText(text, x, y);
+        if (isTextAligned) {
+            // clean up
+            rotate(graphicsContext, 0, x, y);
+        }
         graphicsContext.closePath();
     }
 
