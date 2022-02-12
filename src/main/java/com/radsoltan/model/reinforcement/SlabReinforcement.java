@@ -232,25 +232,23 @@ public class SlabReinforcement extends Reinforcement {
         double realWidth = widthInScale / slabImageScale;
         double slabLeftEdgeX = slabStrip.getStartX();
         double slabTopEdgeY = slabStrip.getStartY();
+        double slabEndArchDepth = slabStrip.getEndArchDepth();
 
-        double defaultOffsetFromEdge = 10;
-        double widthAvailableForRebar = realWidth - topDiameters.get(0) - 2 * defaultOffsetFromEdge;
+        double widthAvailableForRebar = realWidth - topDiameters.get(0) - 2 * slabEndArchDepth / slabImageScale;
 
         int quotient = (int) (widthAvailableForRebar / topSpacings.get(0));
         int remainder = (int) (widthAvailableForRebar % topSpacings.get(0));
 
-        double firstBarRealDistanceFromLeftEdge = slabLeftEdgeX / slabImageScale + remainder * 0.5 + defaultOffsetFromEdge;
+        double firstBarDistanceFromLeftEdge = slabLeftEdgeX + remainder * 0.5 * slabImageScale + slabEndArchDepth;
 
         List<Double> barCoordinatesX = IntStream.range(0, quotient + 1)
-                .mapToObj(x -> (firstBarRealDistanceFromLeftEdge + x * topSpacings.get(0)) * slabImageScale)
+                .mapToObj(x -> firstBarDistanceFromLeftEdge + x * topSpacings.get(0) * slabImageScale)
                 .collect(Collectors.toList());
 
         double barCoordinateY = slabTopEdgeY + designParameters.getNominalCoverTop() * slabImageScale;
         double barDiameterInScale = topDiameters.get(0) * slabImageScale;
 
-        barCoordinatesX.forEach(x -> {
-            graphicsContext.fillOval(x, barCoordinateY, barDiameterInScale, barDiameterInScale);
-        });
+        barCoordinatesX.forEach(x -> graphicsContext.fillOval(x, barCoordinateY, barDiameterInScale, barDiameterInScale));
 
         graphicsContext.closePath();
     }

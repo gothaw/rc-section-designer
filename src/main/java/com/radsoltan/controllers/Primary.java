@@ -455,7 +455,7 @@ public class Primary extends Controller {
         double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabImageWidth;
         double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabImageHeight;
         double slabBottomEdgeY = slabTopEdgeY + slabImageHeight;
-        int slabEndArchDepth = (int) (getScaleForEndArchDepth(slabThickness) * SlabStrip.DEFAULT_END_ARCH_DEPTH);
+        int slabEndArchDepth = (int) (getScaleForEndArchDepth(slabThickness) * SlabStrip.SMALL_END_ARCH_DEPTH);
 
         SlabStrip slabStrip = new SlabStrip(
                 slabImageWidth,
@@ -498,7 +498,7 @@ public class Primary extends Controller {
      * @param slabImageScale slab image scale
      * @param designParameters design parameters object
      */
-    private void drawSlabReinforcement(SlabStrip slabStrip, DesignParameters designParameters, double slabImageScale) { // wrap all draw methods with try and catch + add errors if wrong objects are passed
+    private void drawSlabReinforcement(SlabStrip slabStrip, DesignParameters designParameters, double slabImageScale) {
         SlabReinforcement slabReinforcement = (SlabReinforcement) project.getReinforcement();
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
 

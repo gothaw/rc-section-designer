@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 public class SlabStrip extends Rectangle {
 
     public static final int DEFAULT_END_ARCH_DEPTH = 15;
+    public static final int SMALL_END_ARCH_DEPTH = 8;
 
     private final int endArchDepth;
 
