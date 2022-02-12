@@ -1,5 +1,6 @@
 package com.radsoltan.model.geometry;
 
+import com.radsoltan.util.Messages;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -21,8 +22,8 @@ public class SlabStrip extends Rectangle {
      * @param graphicsContext graphics context to draw the slab strip on
      * @param stroke          stroke to draw slab strip with
      * @param fill            fill to fill the slab strip with
-     * @param startX          drawing start point, x coordinate
-     * @param startY          drawing start point, y coordinate
+     * @param startX          slab top left corner, x coordinate
+     * @param startY          slab top left corner, y coordinate
      * @param endArchDepth    end arch that is used to mark end of the slab on the drawing
      */
     public SlabStrip(int width, int thickness, GraphicsContext graphicsContext, Color stroke, Color fill, double startX, double startY, int endArchDepth) {
@@ -38,8 +39,8 @@ public class SlabStrip extends Rectangle {
      * @param graphicsContext graphics context to draw the slab strip on
      * @param stroke          stroke to draw slab strip with
      * @param fill            fill to fill the slab strip with
-     * @param startX          drawing start point, x coordinate
-     * @param startY          drawing start point, y coordinate
+     * @param startX          slab top left corner, x coordinate
+     * @param startY          slab top left corner, y coordinate
      */
     public SlabStrip(int width, int thickness, GraphicsContext graphicsContext, Color stroke, Color fill, double startX, double startY) {
         this(width, thickness, graphicsContext, stroke, fill, startX, startY, DEFAULT_END_ARCH_DEPTH);
@@ -79,13 +80,13 @@ public class SlabStrip extends Rectangle {
      * Draws slab on provided graphics context.
      */
     @Override
-    public void draw() {
+    public void draw() throws IllegalArgumentException {
         GraphicsContext graphicsContext = getGraphicsContext();
         Color fill = getFill();
         Color stroke = getStroke();
 
         if (graphicsContext == null || fill == null || stroke == null) {
-            return;
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_GEOMETRY);
         }
 
         double width = getWidth();

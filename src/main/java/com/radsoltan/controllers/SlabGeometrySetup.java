@@ -126,34 +126,39 @@ public class SlabGeometrySetup extends Controller {
                 slabTopEdgeY
         );
 
-        slabStrip.draw();
+        try {
+            slabStrip.draw();
 
-        // Draw Horizontal Dimension Line
-        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
-                "1000",
-                Color.BLACK,
-                graphicsContext,
-                slabLeftEdgeX,
-                slabRightEdgeX,
-                slabTopEdgeY,
-                -DimensionLine.DEFAULT_OFFSET,
-                SLAB_IMAGE_DIMENSION_LINES_SCALE
-        );
-        horizontalDimensionLine.draw();
+            // Draw Horizontal Dimension Line
+            HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
+                    "1000",
+                    Color.BLACK,
+                    graphicsContext,
+                    slabLeftEdgeX,
+                    slabRightEdgeX,
+                    slabTopEdgeY,
+                    -DimensionLine.DEFAULT_OFFSET,
+                    SLAB_IMAGE_DIMENSION_LINES_SCALE
+            );
+            horizontalDimensionLine.draw();
 
-        // Draw Vertical Dimension Line
-        VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
-                "t",
-                Color.BLACK,
-                graphicsContext,
-                slabTopEdgeY,
-                slabBottomEdgeY,
-                slabLeftEdgeX,
-                -DimensionLine.DEFAULT_OFFSET,
-                SLAB_IMAGE_DIMENSION_LINES_SCALE,
-                false
-        );
-        verticalDimensionLine.draw();
+            // Draw Vertical Dimension Line
+            VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+                    "t",
+                    Color.BLACK,
+                    graphicsContext,
+                    slabTopEdgeY,
+                    slabBottomEdgeY,
+                    slabLeftEdgeX,
+                    -DimensionLine.DEFAULT_OFFSET,
+                    SLAB_IMAGE_DIMENSION_LINES_SCALE,
+                    false
+            );
+            verticalDimensionLine.draw();
+        } catch (IllegalArgumentException e) {
+            // Showing warning if slab strip is instantiated using wrong constructor - no graphics context etc.
+            showAlertBox(e.getMessage(), AlertKind.WARNING);
+        }
     }
 
     /**

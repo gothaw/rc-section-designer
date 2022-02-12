@@ -454,7 +454,6 @@ public class Primary extends Controller {
 
         double slabLeftEdgeX = 0.5 * canvasWidth - 0.5 * slabImageWidth;
         double slabTopEdgeY = 0.5 * canvasHeight - 0.5 * slabImageHeight;
-        double slabRightEdgeX = slabLeftEdgeX + slabImageWidth;
         double slabBottomEdgeY = slabTopEdgeY + slabImageHeight;
         int slabEndArchDepth = (int) (getScaleForEndArchDepth(slabThickness) * SlabStrip.DEFAULT_END_ARCH_DEPTH);
 
@@ -484,24 +483,26 @@ public class Primary extends Controller {
         );
         verticalDimensionLine.draw();
 
-        boolean isReinforcementSetup = project.getReinforcement() != null && project.getDesignParameters() != null;
+        DesignParameters designParameters = project.getDesignParameters();
+        boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
 
         if (isReinforcementSetup) {
-            drawSlabReinforcement(slabLeftEdgeX, slabRightEdgeX, slabTopEdgeY, slabBottomEdgeY, slabEndArchDepth , slabImageScale);
+            drawSlabReinforcement(slabStrip, designParameters, slabImageScale);
         }
     }
-
 
     /**
      * Draws slab reinforcement. It adds reinforcement description as text on canvas.
      * Slab reinforcement is scaled using the scale from getSlabImageScale method.
+     * @param slabStrip slab strip object instantiated using constructor with graphics context
+     * @param slabImageScale slab image scale
+     * @param designParameters design parameters object
      */
-    private void drawSlabReinforcement(double slabLeftEdgeX, double slabRightEdgeX, double slabTopEdgeY, double slabBottomEdgeY, double slabEndArchDepth, double slabImageScale) { // wrap al draw methods with try and catch + add errors if wrong objects are passed
+    private void drawSlabReinforcement(SlabStrip slabStrip, DesignParameters designParameters, double slabImageScale) { // wrap all draw methods with try and catch + add errors if wrong objects are passed
         SlabReinforcement slabReinforcement = (SlabReinforcement) project.getReinforcement();
-        DesignParameters designParameters = project.getDesignParameters();
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
 
-        SlabReinforcement slabReinforcementToDraw = new SlabReinforcement( // refactor to take SlabStrip object
+        SlabReinforcement slabReinforcementToDraw = new SlabReinforcement(
                 slabReinforcement.getTopDiameters(),
                 slabReinforcement.getAdditionalTopDiameters(),
                 slabReinforcement.getTopSpacings(),
@@ -511,13 +512,9 @@ public class Primary extends Controller {
                 slabReinforcement.getBottomSpacings(),
                 slabReinforcement.getBottomVerticalSpacings(),
                 designParameters,
+                slabStrip,
                 graphicsContext,
                 Color.BLACK,
-                slabLeftEdgeX,
-                slabRightEdgeX,
-                slabTopEdgeY,
-                slabBottomEdgeY,
-                slabEndArchDepth,
                 slabImageScale
         );
 

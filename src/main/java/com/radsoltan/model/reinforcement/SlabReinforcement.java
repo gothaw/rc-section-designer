@@ -1,6 +1,7 @@
 package com.radsoltan.model.reinforcement;
 
 import com.radsoltan.model.DesignParameters;
+import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.util.Constants;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -20,13 +21,9 @@ public class SlabReinforcement extends Reinforcement {
     private final List<Integer> bottomSpacings;
     private final List<Integer> bottomVerticalSpacings;
     private final DesignParameters designParameters;
+    private final SlabStrip slabStrip;
     private final GraphicsContext graphicsContext;
     private final Color colour;
-    private final double slabLeftEdgeX;
-    private final double slabRightEdgeX;
-    private final double slabTopEdgeY;
-    private final double slabBottomEdgeY;
-    private final double slabScaledEndArchDepth;
     private final double slabImageScale;
 
     public SlabReinforcement(List<Integer> topDiameters,
@@ -37,7 +34,7 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> additionalBottomDiameters,
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings) {
-        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, null, null, 0, 0, 0, 0, 0, 0);
+        this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, null, null, null, 0);
     }
 
     public SlabReinforcement(List<Integer> topDiameters,
@@ -49,16 +46,11 @@ public class SlabReinforcement extends Reinforcement {
                              List<Integer> bottomSpacings,
                              List<Integer> bottomVerticalSpacings,
                              DesignParameters designParameters,
+                             SlabStrip slabStrip,
                              GraphicsContext graphicsContext,
                              Color colour,
-                             double slabLeftEdgeX,
-                             double slabRightEdgeX,
-                             double slabTopEdgeY,
-                             double slabBottomEdgeY,
-                             double slabScaledEndArchDepth,
                              double slabImageScale
     ) {
-        this.designParameters = designParameters;
         this.topDiameters = topDiameters;
         this.additionalTopDiameters = additionalTopDiameters;
         this.topSpacings = topSpacings;
@@ -67,13 +59,10 @@ public class SlabReinforcement extends Reinforcement {
         this.additionalBottomDiameters = additionalBottomDiameters;
         this.bottomSpacings = bottomSpacings;
         this.bottomVerticalSpacings = bottomVerticalSpacings;
+        this.designParameters = designParameters;
+        this.slabStrip = slabStrip;
         this.graphicsContext = graphicsContext;
         this.colour = colour;
-        this.slabLeftEdgeX = slabLeftEdgeX;
-        this.slabRightEdgeX = slabRightEdgeX;
-        this.slabTopEdgeY = slabTopEdgeY;
-        this.slabBottomEdgeY = slabBottomEdgeY;
-        this.slabScaledEndArchDepth = slabScaledEndArchDepth;
         this.slabImageScale = slabImageScale;
     }
 
@@ -211,32 +200,16 @@ public class SlabReinforcement extends Reinforcement {
         return designParameters;
     }
 
+    public SlabStrip getSlabStrip() {
+        return slabStrip;
+    }
+
     public GraphicsContext getGraphicsContext() {
         return graphicsContext;
     }
 
     public Color getColour() {
         return colour;
-    }
-
-    public double getSlabLeftEdgeX() {
-        return slabLeftEdgeX;
-    }
-
-    public double getSlabRightEdgeX() {
-        return slabRightEdgeX;
-    }
-
-    public double getSlabTopEdgeY() {
-        return slabTopEdgeY;
-    }
-
-    public double getSlabBottomEdgeY() {
-        return slabBottomEdgeY;
-    }
-
-    public double getSlabScaledEndArchDepth() {
-        return slabScaledEndArchDepth;
     }
 
     public double getSlabImageScale() {
@@ -255,8 +228,10 @@ public class SlabReinforcement extends Reinforcement {
         graphicsContext.beginPath();
         graphicsContext.setFill(colour);
 
-        double widthInScale = slabRightEdgeX - slabLeftEdgeX;
+        double widthInScale = slabStrip.getWidth();
         double realWidth = widthInScale / slabImageScale;
+        double slabLeftEdgeX = slabStrip.getStartX();
+        double slabTopEdgeY = slabStrip.getStartY();
 
         double defaultOffsetFromEdge = 10;
         double widthAvailableForRebar = realWidth - topDiameters.get(0) - 2 * defaultOffsetFromEdge;
