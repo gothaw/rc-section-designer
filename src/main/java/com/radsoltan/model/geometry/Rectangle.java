@@ -235,4 +235,14 @@ public class Rectangle extends Section {
     public void draw() {
         // TODO: 18/05/2020
     }
+
+    /**
+     * Method checks if rectangle has been setup correctly and can be drawn.
+     *
+     * @return true if rectangle can be drawn
+     */
+    @Override
+    public boolean isSetupToBeDrawn() {
+        return false;
+    }
 }

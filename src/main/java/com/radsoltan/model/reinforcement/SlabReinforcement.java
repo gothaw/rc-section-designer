@@ -3,6 +3,7 @@ package com.radsoltan.model.reinforcement;
 import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.util.Constants;
+import com.radsoltan.util.Messages;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -216,40 +217,56 @@ public class SlabReinforcement extends Reinforcement {
         return slabImageScale;
     }
 
-    /**
-     * Method draws slab reinforcement.
-     */
-    @Override
-    public void draw() {
-        if (graphicsContext == null || colour == null) {
-            return;
+    private void drawReinforcementLayer(double widthAvailableForRebar, double layerY, int diameter, int spacing) {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
         }
-
         graphicsContext.beginPath();
-        graphicsContext.setFill(colour);
 
-        double widthInScale = slabStrip.getWidth();
-        double realWidth = widthInScale / slabImageScale;
         double slabLeftEdgeX = slabStrip.getStartX();
-        double slabTopEdgeY = slabStrip.getStartY();
         double slabEndArchDepth = slabStrip.getEndArchDepth();
 
-        double widthAvailableForRebar = realWidth - topDiameters.get(0) - 2 * slabEndArchDepth / slabImageScale;
+        int quotient = (int) (widthAvailableForRebar / spacing);
+        int remainder = (int) (widthAvailableForRebar % spacing);
 
-        int quotient = (int) (widthAvailableForRebar / topSpacings.get(0));
-        int remainder = (int) (widthAvailableForRebar % topSpacings.get(0));
-
-        double firstBarDistanceFromLeftEdge = slabLeftEdgeX + remainder * 0.5 * slabImageScale + slabEndArchDepth;
+        double firstBarDistanceFromLeftEdge = slabLeftEdgeX + 0.5 * remainder * slabImageScale + slabEndArchDepth;
+        double barDiameterInScale = diameter * slabImageScale;
 
         List<Double> barCoordinatesX = IntStream.range(0, quotient + 1)
                 .mapToObj(x -> firstBarDistanceFromLeftEdge + x * topSpacings.get(0) * slabImageScale)
                 .collect(Collectors.toList());
 
-        double barCoordinateY = slabTopEdgeY + designParameters.getNominalCoverTop() * slabImageScale;
-        double barDiameterInScale = topDiameters.get(0) * slabImageScale;
-
-        barCoordinatesX.forEach(x -> graphicsContext.fillOval(x, barCoordinateY, barDiameterInScale, barDiameterInScale));
+        barCoordinatesX.forEach(x -> graphicsContext.fillOval(x, layerY, barDiameterInScale, barDiameterInScale));
 
         graphicsContext.closePath();
+    }
+
+    /**
+     * Method draws slab reinforcement.
+     */
+    @Override
+    public void draw() throws IllegalArgumentException {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
+        }
+        graphicsContext.beginPath();
+        graphicsContext.setFill(colour);
+
+        double widthInScale = slabStrip.getWidth();
+        double realWidth = widthInScale / slabImageScale;
+        double slabTopEdgeY = slabStrip.getStartY();
+        double slabEndArchDepth = slabStrip.getEndArchDepth();
+        double widthAvailableForRebar = realWidth - 2 * slabEndArchDepth / slabImageScale;
+
+        double barCoordinateY = slabTopEdgeY + designParameters.getNominalCoverTop() * slabImageScale;
+
+        drawReinforcementLayer(widthAvailableForRebar, barCoordinateY, topDiameters.get(0), topSpacings.get(0));
+
+        graphicsContext.closePath();
+    }
+
+    @Override
+    public boolean isSetupToBeDrawn() {
+        return !(designParameters == null || slabStrip == null || graphicsContext == null || colour == null || slabImageScale == 0);
     }
 }

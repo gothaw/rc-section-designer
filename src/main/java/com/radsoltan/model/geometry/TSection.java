@@ -295,4 +295,14 @@ public class TSection extends Section implements Flanged {
     public void draw() {
         // TODO: 18/05/2020
     }
+
+    /**
+     * Method checks if T Section has been setup correctly and can be drawn.
+     *
+     * @return true if T section can be drawn
+     */
+    @Override
+    public boolean isSetupToBeDrawn() {
+        return false;
+    }
 }

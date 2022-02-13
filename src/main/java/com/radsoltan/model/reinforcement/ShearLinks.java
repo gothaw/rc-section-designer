@@ -79,4 +79,14 @@ public class ShearLinks implements Drawable {
     public void draw() {
         // TODO: 18/01/2022 Implement when working on beam project
     }
+
+    /**
+     * Method checks if shear links have been setup correctly and can be drawn.
+     *
+     * @return true if shear links can be drawn
+     */
+    @Override
+    public boolean isSetupToBeDrawn() {
+        return false;
+    }
 }

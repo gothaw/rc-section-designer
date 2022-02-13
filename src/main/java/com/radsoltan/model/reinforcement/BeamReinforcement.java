@@ -200,4 +200,9 @@ public class BeamReinforcement extends Reinforcement {
     public void draw() {
         // TODO: 18/05/2020
     }
+
+    @Override
+    public boolean isSetupToBeDrawn() {
+        return false;
+    }
 }

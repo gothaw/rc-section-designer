@@ -86,7 +86,7 @@ public class SlabStrip extends Rectangle {
         Color fill = getFill();
         Color stroke = getStroke();
 
-        if (graphicsContext == null || fill == null || stroke == null) {
+        if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(Messages.INVALID_SLAB_GEOMETRY);
         }
 
@@ -118,5 +118,15 @@ public class SlabStrip extends Rectangle {
         graphicsContext.stroke();
         graphicsContext.fill();
         graphicsContext.closePath();
+    }
+
+    /**
+     * Method checks if slab strip has been setup correctly and can be drawn.
+     *
+     * @return true if slab strip can be drawn
+     */
+    @Override
+    public boolean isSetupToBeDrawn() {
+        return !(getGraphicsContext() == null || getStroke() == null || getFill() == null);
     }
 }

@@ -1,5 +1,6 @@
 package com.radsoltan.model.geometry;
 
+import com.radsoltan.util.Messages;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -109,6 +110,9 @@ public class VerticalDimensionLine extends DimensionLine {
      */
     @Override
     public void draw() {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(Messages.INVALID_DIMENSION_LINE);
+        }
         graphicsContext.setStroke(color);
         graphicsContext.setFill(color);
 
@@ -124,5 +128,15 @@ public class VerticalDimensionLine extends DimensionLine {
         this.drawTick(graphicsContext, x + offsetX, startY, scale);
         this.drawTick(graphicsContext, x + offsetX, endY, scale);
         this.drawText(text, graphicsContext, x + offsetX - DimensionLine.DEFAULT_TEXT_OFFSET * scale, 0.5 * (startY + endY), scale);
+    }
+
+    /**
+     * Method checks if dimension line has been setup correctly and can be drawn.
+     *
+     * @return true if dimension line can be drawn
+     */
+    @Override
+    public boolean isSetupToBeDrawn() {
+        return !(graphicsContext == null || color == null || scale == 0);
     }
 }
