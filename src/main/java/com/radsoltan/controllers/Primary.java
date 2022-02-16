@@ -426,15 +426,20 @@ public class Primary extends Controller {
             return;
         }
 
-        switch (project.getElementType().toLowerCase()) {
-            case Constants.ELEMENT_TYPE_SLAB:
-                drawSlabImage();
-                break;
-            case Constants.ELEMENT_TYPE_BEAM:
+        try {
+            switch (project.getElementType().toLowerCase()) {
+                case Constants.ELEMENT_TYPE_SLAB:
+                    drawSlabImage();
+                    break;
+                case Constants.ELEMENT_TYPE_BEAM:
 
-                break;
-            default:
-                showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
+                    break;
+                default:
+                    showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
+            }
+        } catch (IllegalArgumentException e) {
+            // Showing warning if geometry or reinforcement were instantiated using wrong constructor - no graphics context etc.
+            showAlertBox(e.getMessage(), AlertKind.WARNING);
         }
     }
 
