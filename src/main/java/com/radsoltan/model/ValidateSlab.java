@@ -2,6 +2,7 @@ package com.radsoltan.model;
 
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,9 +19,10 @@ public class ValidateSlab implements Validation {
     /**
      * Constructor. It invokes method to validate both horizontal and vertical bar spacings and method to validate slab thickness.
      * These methods add messages to the validationMessages list if some of the spacings or slab geometry is invalid.
-     * @param slabThickness slab thickness in mm as an integer
+     *
+     * @param slabThickness     slab thickness in mm as an integer
      * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
-     * @param designParameters design parameters used in project defined in DesignParameters object
+     * @param designParameters  design parameters used in project defined in DesignParameters object
      */
     public ValidateSlab(int slabThickness, SlabReinforcement slabReinforcement, DesignParameters designParameters) {
         this.validationMessages = new ArrayList<>();
@@ -32,8 +34,9 @@ public class ValidateSlab implements Validation {
      * Method that sets validation messages for horizontal bar spacings and vertical bar spacings between layers.
      * It invokes getValidationMessagesForSlabReinforcementHorizontalSpacings and getValidateMessagesForSlabReinforcementVerticalSpacings on top and bottom reinforcement layers.
      * It adds all validation messages to the validationMessages field.
+     *
      * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
-     * @param designParameters design parameters used in project defined in DesignParameters object
+     * @param designParameters  design parameters used in project defined in DesignParameters object
      */
     private void setValidateMessagesForSlabReinforcementHorizontalAndVerticalSpacings(SlabReinforcement slabReinforcement, DesignParameters designParameters) {
         List<Integer> topDiameters = slabReinforcement.getTopDiameters();
@@ -57,11 +60,12 @@ public class ValidateSlab implements Validation {
      * The method calculates the clear spacing based on spacing between bar centers. It than checks it against minimum spacing required by Eurocode 2.
      * The minimum spacing is maximum of 20 mm, aggregate size + 5mm or bar diameter.
      * If spacing is less than minimum spacing a String message is added to the list that is returned.
-     * @param location layer location "top" or "bottom"
-     * @param diameters main bar diameters in subsequent layers as a list
+     *
+     * @param location            layer location "top" or "bottom"
+     * @param diameters           main bar diameters in subsequent layers as a list
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
-     * @param spacings spacings between main bar centers in subsequent layers as a list
-     * @param aggregateSize aggregate size in mm
+     * @param spacings            spacings between main bar centers in subsequent layers as a list
+     * @param aggregateSize       aggregate size in mm
      * @return List of validation messages for horizontal spacing
      */
     private List<String> getValidationMessagesForSlabReinforcementHorizontalSpacings(String location, List<Integer> diameters, List<Integer> additionalDiameters,
@@ -90,11 +94,12 @@ public class ValidateSlab implements Validation {
      * The method checks if clear vertical spacings are greater than minimum spacing required by Eurocode 2.
      * The minimum spacing is maximum of 20 mm, aggregate size + 5mm or bar diameter.
      * If spacing is less than minimum spacing a String message is added to the list that is returned.
-     * @param location layer location "top" or "bottom"
-     * @param diameters main bar diameters in subsequent layers as a list
+     *
+     * @param location            layer location "top" or "bottom"
+     * @param diameters           main bar diameters in subsequent layers as a list
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
-     * @param verticalSpacings clear vertical spacing between layers
-     * @param aggregateSize aggregate size in mm
+     * @param verticalSpacings    clear vertical spacing between layers
+     * @param aggregateSize       aggregate size in mm
      * @return List of validation messages for vertical spacing
      */
     private List<String> getValidateMessagesForSlabReinforcementVerticalSpacings(String location, List<Integer> diameters, List<Integer> additionalDiameters,
@@ -116,9 +121,10 @@ public class ValidateSlab implements Validation {
      * Method that sets validation message for slab thickness.
      * It checks whether slab defined in Geometry object is thick enough to accommodate vertical spacing between bars, bar diameters, nominal cover etc.
      * If slab is not thick enough, a message is added to the validationMessages field to inform the user.
-     * @param slabThickness slab thickness in mm as an integer
+     *
+     * @param slabThickness     slab thickness in mm as an integer
      * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
-     * @param designParameters design parameters used in project defined in DesignParameters object
+     * @param designParameters  design parameters used in project defined in DesignParameters object
      */
     private void setValidateMessagesForSlabThickness(int slabThickness, SlabReinforcement slabReinforcement, DesignParameters designParameters) {
         List<Integer> clearSpacings = new ArrayList<>();
@@ -159,6 +165,7 @@ public class ValidateSlab implements Validation {
 
     /**
      * Getter for validationMessages.
+     *
      * @return List of validation messages
      */
     public List<String> getValidationMessages() {

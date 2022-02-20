@@ -140,13 +140,17 @@ public class SlabReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-    // TODO: 10/06/2020 Encapsulation
-    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
-
-        List<Integer> maxDiameters = IntStream
+    public List<Integer> getMaxDiametersForEachLayer(List<Integer> diameters, List<Integer> additionalDiameters) {
+        return IntStream
                 .range(0, diameters.size())
                 .mapToObj(i -> Math.max(diameters.get(i), additionalDiameters.get(i)))
                 .collect(Collectors.toList());
+    }
+
+    // TODO: 10/06/2020 Encapsulation
+    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
+
+        List<Integer> maxDiameters = getMaxDiametersForEachLayer(diameters, additionalDiameters);
 
         return IntStream
                 .range(0, maxDiameters.size())
@@ -154,6 +158,10 @@ public class SlabReinforcement extends Reinforcement {
                         + verticalSpacings.stream().limit(i).reduce(0, Integer::sum)
                         + maxDiameters.stream().limit(i).reduce(0, Integer::sum))
                 .collect(Collectors.toList());
+    }
+
+    public List<Double> getDistanceFromTopOfEachLayerToTopEdge() {
+
     }
 
     public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
@@ -215,6 +223,21 @@ public class SlabReinforcement extends Reinforcement {
 
     public double getSlabImageScale() {
         return slabImageScale;
+    }
+
+    private void drawAdditionalReinforcementLayer(double widthAvailableForRebar, double slabLeftEdgeX, double layerY, int additionalDiameter ,int diameter, int spacing) {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
+        }
+        graphicsContext.beginPath();
+
+        double slabEndArchDepth = slabStrip.getEndArchDepth();
+
+        int remainder = (int) (widthAvailableForRebar % spacing);
+
+        double widthForAdditionalRebar = widthAvailableForRebar - (remainder + spacing + diameter - additionalDiameter);
+
+//        this.drawReinforcementLayer(widthForAdditionalRebar, slabLeftEdgeX, );
     }
 
     private void drawReinforcementLayer(double widthAvailableForRebar, double slabLeftEdgeX, double layerY, int diameter, int spacing) {
