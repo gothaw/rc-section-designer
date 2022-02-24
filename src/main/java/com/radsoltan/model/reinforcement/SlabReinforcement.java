@@ -160,8 +160,24 @@ public class SlabReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-    public List<Double> getDistanceFromTopOfEachLayerToTopEdge() {
+    public List<Double> getDistanceFromTopOfTopLayersToTopEdge(int nominalCoverTop) {
+        List<Double> distanceFromCentreOfEachLayer = getDistanceFromCentreOfEachLayerToEdge(topDiameters, additionalTopDiameters, topVerticalSpacings, nominalCoverTop);
+        List<Integer> maxDiameters = getMaxDiametersForEachLayer(topDiameters, additionalTopDiameters);
 
+        return IntStream
+                .range(0, distanceFromCentreOfEachLayer.size())
+                .mapToObj(i -> distanceFromCentreOfEachLayer.get(i) - 0.5 * maxDiameters.get(i))
+                .collect(Collectors.toList());
+    }
+
+    public List<Double> getDistanceFromTopOBottomLayersToBottomEdge(int nominalCoverBottom) {
+        List<Double> distanceFromCentreOfEachLayer = getDistanceFromCentreOfEachLayerToEdge(bottomDiameters, additionalBottomDiameters, bottomVerticalSpacings, nominalCoverBottom);
+        List<Integer> maxDiameters = getMaxDiametersForEachLayer(bottomDiameters, additionalBottomDiameters);
+
+        return IntStream
+                .range(0, distanceFromCentreOfEachLayer.size())
+                .mapToObj(i -> distanceFromCentreOfEachLayer.get(i) + 0.5 * maxDiameters.get(i))
+                .collect(Collectors.toList());
     }
 
     public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
@@ -281,24 +297,19 @@ public class SlabReinforcement extends Reinforcement {
         double slabBottomEdgeY = slabTopEdgeY + slabStrip.getDepth();
         double slabEndArchDepth = slabStrip.getEndArchDepth();
         double widthAvailableForRebar = realWidth - 2 * slabEndArchDepth / slabImageScale;
-
+        List<Double> topReinforcementY = getDistanceFromTopOfTopLayersToTopEdge(designParameters.getNominalCoverTop());
+        List<Double> bottomReinforcementY = getDistanceFromTopOBottomLayersToBottomEdge(designParameters.getNominalCoverBottom());
 
         IntStream.range(0, topDiameters.size())
                 .forEach(i -> {
-                    int sumOfVerticalSpacings = topVerticalSpacings.stream().limit(i).mapToInt(Integer::intValue).sum();
-                    int sumOfDiameters = topDiameters.stream().limit(i).mapToInt(Integer::intValue).sum();
-
-                    double barCoordinateY = slabTopEdgeY + (designParameters.getNominalCoverTop() + sumOfVerticalSpacings + sumOfDiameters) * slabImageScale;
+                    double barCoordinateY = slabTopEdgeY + topReinforcementY.get(i) * slabImageScale;
 
                     drawReinforcementLayer(widthAvailableForRebar, slabLeftEdgeX, barCoordinateY, topDiameters.get(i), topSpacings.get(i));
                 });
 
         IntStream.range(0, bottomDiameters.size())
                 .forEach(i -> {
-                    int sumOfVerticalSpacings = bottomVerticalSpacings.stream().limit(i).mapToInt(Integer::intValue).sum();
-                    int sumOfDiameters = bottomDiameters.stream().limit(i).mapToInt(Integer::intValue).sum();
-
-                    double barCoordinateY = slabBottomEdgeY - (designParameters.getNominalCoverTop() + bottomDiameters.get(i) + sumOfVerticalSpacings + sumOfDiameters) * slabImageScale;
+                    double barCoordinateY = slabBottomEdgeY - bottomReinforcementY.get(i) * slabImageScale;
 
                     drawReinforcementLayer(widthAvailableForRebar, slabLeftEdgeX, barCoordinateY, bottomDiameters.get(i), bottomSpacings.get(i));
                 });
