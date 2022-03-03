@@ -252,32 +252,31 @@ public class SlabReinforcement extends Reinforcement {
         int remainder = (int) (widthAvailableForRebar % spacing);
 
         double widthForAdditionalRebar = widthAvailableForRebar - (remainder + spacing + diameter - additionalDiameter);
+//        double additionalReinforcementLayerX = slabLeftEdgeX + 0.5
 
 //        this.drawReinforcementLayer(widthForAdditionalRebar, slabLeftEdgeX, );
     }
 
-    private void drawReinforcementLayer(double widthAvailableForRebar, double slabLeftEdgeX, double layerY, int diameter, int spacing) {
+    private void drawReinforcementLayer(double widthAvailableForRebar, double layerX, double layerY, int numberOfBars, int diameter, int spacing) {
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
         }
         graphicsContext.beginPath();
 
-        double slabEndArchDepth = slabStrip.getEndArchDepth();
-
-        int quotient = (int) (widthAvailableForRebar / spacing);
-        int remainder = (int) (widthAvailableForRebar % spacing);
-
-        double firstBarDistanceFromLeftEdge = slabLeftEdgeX + 0.5 * remainder * slabImageScale + slabEndArchDepth;
         double barDiameterInScale = diameter * slabImageScale;
 
-        List<Double> barCoordinatesX = IntStream.range(0, quotient + 1)
-                .mapToObj(x -> firstBarDistanceFromLeftEdge + x * spacing * slabImageScale)
+        List<Double> barCoordinatesX = IntStream.range(0, numberOfBars)
+                .mapToObj(x -> layerX + x * spacing * slabImageScale)
                 .collect(Collectors.toList());
 
         barCoordinatesX.forEach(x -> graphicsContext.fillOval(x, layerY, barDiameterInScale, barDiameterInScale));
 
         graphicsContext.closePath();
     }
+//
+//    private void drawMainReinforcementLayers(List<Double> diameters, List<Double> spacings, ) {
+//
+//    }
 
     /**
      * Method draws slab reinforcement.
@@ -302,16 +301,30 @@ public class SlabReinforcement extends Reinforcement {
 
         IntStream.range(0, topDiameters.size())
                 .forEach(i -> {
-                    double barCoordinateY = slabTopEdgeY + topReinforcementY.get(i) * slabImageScale;
+                    int spacing = topSpacings.get(i);
+                    int quotient = (int) (widthAvailableForRebar / spacing);
+                    int remainder = (int) (widthAvailableForRebar % spacing);
 
-                    drawReinforcementLayer(widthAvailableForRebar, slabLeftEdgeX, barCoordinateY, topDiameters.get(i), topSpacings.get(i));
+                    double layerX = slabLeftEdgeX + 0.5 * remainder * slabImageScale + slabEndArchDepth;
+                    double layerY = slabTopEdgeY + topReinforcementY.get(i) * slabImageScale;
+
+                    int numberOfBars = quotient + 1;
+
+                    drawReinforcementLayer(widthAvailableForRebar, layerX, layerY, numberOfBars, topDiameters.get(i), topSpacings.get(i));
                 });
 
         IntStream.range(0, bottomDiameters.size())
                 .forEach(i -> {
-                    double barCoordinateY = slabBottomEdgeY - bottomReinforcementY.get(i) * slabImageScale;
+                    int spacing = bottomSpacings.get(i);
+                    int quotient = (int) (widthAvailableForRebar / spacing);
+                    int remainder = (int) (widthAvailableForRebar % spacing);
 
-                    drawReinforcementLayer(widthAvailableForRebar, slabLeftEdgeX, barCoordinateY, bottomDiameters.get(i), bottomSpacings.get(i));
+                    double layerX = slabLeftEdgeX + 0.5 * remainder * slabImageScale + slabEndArchDepth;
+                    double layerY = slabBottomEdgeY - bottomReinforcementY.get(i) * slabImageScale;
+
+                    int numberOfBars = quotient + 1;
+
+                    drawReinforcementLayer(widthAvailableForRebar, layerX, layerY, numberOfBars, bottomDiameters.get(i), bottomSpacings.get(i));
                 });
 
         graphicsContext.closePath();
