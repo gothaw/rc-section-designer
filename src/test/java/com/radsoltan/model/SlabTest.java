@@ -3,7 +3,7 @@ package com.radsoltan.model;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Constants;
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -128,7 +128,7 @@ class SlabTest {
         Exception exception = assertThrows(IllegalArgumentException.class, slab::calculateBendingCapacity);
 
         String errorMessage = exception.getMessage();
-        String expectedMessage = Messages.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE;
+        String expectedMessage = UIText.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE;
 
         assertEquals(expectedMessage, errorMessage);
     }

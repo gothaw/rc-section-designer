@@ -1,6 +1,6 @@
 package com.radsoltan.model.geometry;
 
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -87,7 +87,7 @@ public class SlabStrip extends Rectangle {
         Color stroke = getStroke();
 
         if (!isSetupToBeDrawn()) {
-            throw new IllegalArgumentException(Messages.INVALID_SLAB_GEOMETRY);
+            throw new IllegalArgumentException(UIText.INVALID_SLAB_GEOMETRY);
         }
 
         double width = getWidth();

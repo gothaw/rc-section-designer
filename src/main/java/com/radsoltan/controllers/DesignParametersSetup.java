@@ -8,7 +8,7 @@ import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.Project;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -218,19 +218,19 @@ public class DesignParametersSetup extends Controller {
     protected List<String> getValidationMessagesForEmptyFields() {
         List<String> validationMessages = new ArrayList<>();
         if (nominalCoverTop.getValue() == null || nominalCoverBottom.getValue() == null || nominalCoverSides.getValue() == null) {
-            validationMessages.add(Messages.SETUP_NOMINAL_COVER);
+            validationMessages.add(UIText.SETUP_NOMINAL_COVER);
         }
         if (concreteClass.getValue() == null) {
-            validationMessages.add(Messages.SETUP_CONCRETE_CLASS);
+            validationMessages.add(UIText.SETUP_CONCRETE_CLASS);
         }
         if (aggregateSize.getText().isEmpty()) {
-            validationMessages.add(Messages.SETUP_AGGREGATE);
+            validationMessages.add(UIText.SETUP_AGGREGATE);
         }
         if (yieldStrength.getText().isEmpty()) {
-            validationMessages.add(Messages.SETUP_YIELD_STRENGTH);
+            validationMessages.add(UIText.SETUP_YIELD_STRENGTH);
         }
         if (gammaS.getValue() == null || gammaC.getValue() == null) {
-            validationMessages.add(Messages.SETUP_PARTIAL_FACTORS);
+            validationMessages.add(UIText.SETUP_PARTIAL_FACTORS);
         }
         return validationMessages;
     }
@@ -243,6 +243,6 @@ public class DesignParametersSetup extends Controller {
      */
     private String getValidationMessageForRedistributionRatio() {
         double redistributionRatioValue = Double.parseDouble(redistributionRatio.getText());
-        return redistributionRatioValue > 1.0 || redistributionRatioValue < 0.7 ? Messages.INVALID_REDISTRIBUTION_RATIO : "";
+        return redistributionRatioValue > 1.0 || redistributionRatioValue < 0.7 ? UIText.INVALID_REDISTRIBUTION_RATIO : "";
     }
 }

@@ -1,6 +1,6 @@
 package com.radsoltan.model.geometry;
 
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -97,7 +97,7 @@ public class HorizontalDimensionLine extends DimensionLine {
     @Override
     public void draw() {
         if (!isSetupToBeDrawn()) {
-            throw new IllegalArgumentException(Messages.INVALID_DIMENSION_LINE);
+            throw new IllegalArgumentException(UIText.INVALID_DIMENSION_LINE);
         }
 
         graphicsContext.setStroke(color);

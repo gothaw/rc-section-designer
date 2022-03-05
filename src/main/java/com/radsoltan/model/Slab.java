@@ -3,7 +3,7 @@ package com.radsoltan.model;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 
 /**
  * Class that describes a slab with given geometry, materials, reinforcement and internal forces.
@@ -76,10 +76,10 @@ public class Slab implements Flexure, Cracking {
                 this.requiredTensileReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
                 this.bendingCapacity = providedTensileReinforcement * leverArm * fyd * Math.pow(10, -6);
             } else {
-                throw new IllegalArgumentException(Messages.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE);
+                throw new IllegalArgumentException(UIText.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE);
             }
         } else {
-            throw new IllegalArgumentException(Messages.WRONG_CONCRETE_CLASS);
+            throw new IllegalArgumentException(UIText.WRONG_CONCRETE_CLASS);
         }
     }
 

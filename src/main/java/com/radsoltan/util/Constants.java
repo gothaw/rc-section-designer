@@ -7,9 +7,10 @@ import java.util.List;
  * Utility class that includes constants used in the project.
  */
 public class Constants {
-    public static final String APP_TITLE = "RC Section Designer";
     public static final String ELEMENT_TYPE_BEAM = "beam";
     public static final String ELEMENT_TYPE_SLAB = "slab";
+    public static final String SLAB_TOP_FACE = "slab top face";
+    public static final String SLAB_BOTTOM_FACE = "slab bottom face";
     public static final int WINDOW_WIDTH = 1024;
     public static final int WINDOW_HEIGHT = 768;
     public static final int MIN_WINDOW_WIDTH = 900;

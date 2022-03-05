@@ -2,8 +2,10 @@ package com.radsoltan.util;
 
 /**
  * Utility class that includes String constants for various alerts messages, warnings and errors.
+ * These are shown in the UI.
  */
-public class Messages {
+public class UIText {
+    public static final String APP_TITLE = "RC Section Designer";
     public static final String ERROR = "Error!";
     public static final String INFO = "Info";
     public static final String WARNING = "Warning!";

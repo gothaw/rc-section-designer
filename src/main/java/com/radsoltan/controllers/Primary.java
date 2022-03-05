@@ -15,7 +15,7 @@ import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 import com.radsoltan.util.Utility;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -196,11 +196,11 @@ public class Primary extends Controller {
                         showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                     }
                     if (project.getFlexureCapacityCheckMessage() != null) {
-                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), Messages.FLEXURE, project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage());
+                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), UIText.FLEXURE, project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage());
                         flexureResultsWrapper.getChildren().add(flexureResults);
                     }
                     if (project.getShearCapacityCheckMessage() != null) {
-                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), Messages.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage());
+                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), UIText.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage());
                         shearResultsWrapper.getChildren().add(shearResults);
                     }
                     if (project.getCrackingCheckMessage() != null) {
@@ -213,7 +213,7 @@ public class Primary extends Controller {
                 showAlertBox(validationMessages.get(0), AlertKind.INFO);
             }
         } else {
-            showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
+            showAlertBox(UIText.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
     }
 
@@ -230,7 +230,7 @@ public class Primary extends Controller {
             setProjectProperties();
             App.setRoot("design-parameters");
         } else {
-            showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
+            showAlertBox(UIText.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
     }
 
@@ -253,10 +253,10 @@ public class Primary extends Controller {
                     App.setRoot("beam-reinforcement");
                     break;
                 default:
-                    showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
+                    showAlertBox(UIText.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
             }
         } else {
-            showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
+            showAlertBox(UIText.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
     }
 
@@ -279,10 +279,10 @@ public class Primary extends Controller {
                     App.setRoot("beam-geometry");
                     break;
                 default:
-                    showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
+                    showAlertBox(UIText.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
             }
         } else {
-            showAlertBox(Messages.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
+            showAlertBox(UIText.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
         }
     }
 
@@ -301,11 +301,11 @@ public class Primary extends Controller {
             if (UlsShearWrapper.getStyleClass().toString().isEmpty()) {
                 UlsShearWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
             }
-            setMomentsUnit(Messages.UNIT_MOMENT_SLAB);
+            setMomentsUnit(UIText.UNIT_MOMENT_SLAB);
         } else if (elementType.equals(Constants.ELEMENT_TYPE_BEAM)) {
             UlsShear.setText("");
             UlsShearWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
-            setMomentsUnit(Messages.UNIT_MOMENT_BEAM);
+            setMomentsUnit(UIText.UNIT_MOMENT_BEAM);
         }
         if (project.getElementType() != null && !project.getElementType().equals(elementType)) {
             // Resetting when switching between element types
@@ -314,9 +314,9 @@ public class Primary extends Controller {
             project.setDesignParameters(null);
             project.setConcrete(null);
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            geometryText.setText(Messages.ENTER_GEOMETRY);
+            geometryText.setText(UIText.ENTER_GEOMETRY);
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            reinforcementText.setText(Messages.ENTER_REINFORCEMENT);
+            reinforcementText.setText(UIText.ENTER_REINFORCEMENT);
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
             clearResultsArea();
         }
@@ -366,7 +366,7 @@ public class Primary extends Controller {
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add(CssStyleClasses.SUBHEADING);
         Label capacityLabel = new Label(capacityMessage);
-        Label passFailLabel = new Label((designValue <= maxValue) ? Messages.PASS : Messages.FAIL);
+        Label passFailLabel = new Label((designValue <= maxValue) ? UIText.PASS : UIText.FAIL);
         passFailLabel.getStyleClass().add((designValue <= maxValue) ? CssStyleClasses.PASS : CssStyleClasses.FAIL);
         HBox utilizationNoteWrapper = new HBox(capacityLabel, passFailLabel);
         utilizationNoteWrapper.getStyleClass().add(CssStyleClasses.UTILIZATION_WRAPPER);
@@ -400,7 +400,7 @@ public class Primary extends Controller {
                 }
                 break;
             default:
-                elementValidationMessages.add(Messages.INVALID_ELEMENT_TYPE);
+                elementValidationMessages.add(UIText.INVALID_ELEMENT_TYPE);
         }
         return elementValidationMessages;
     }
@@ -435,7 +435,7 @@ public class Primary extends Controller {
 
                     break;
                 default:
-                    showAlertBox(Messages.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
+                    showAlertBox(UIText.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
             }
         } catch (IllegalArgumentException e) {
             // Showing warning if geometry or reinforcement were instantiated using wrong constructor - no graphics context etc.
@@ -572,16 +572,16 @@ public class Primary extends Controller {
     protected List<String> getValidationMessagesForEmptyFields() {
         List<String> validationMessages = new ArrayList<>();
         if (UlsMoment.getText().isEmpty() || SlsMoment.getText().isEmpty() || UlsShear.getText().isEmpty()) {
-            validationMessages.add(Messages.SETUP_ANALYSIS_FORCES);
+            validationMessages.add(UIText.SETUP_ANALYSIS_FORCES);
         }
         if (project.getGeometry() == null) {
-            validationMessages.add(Messages.SETUP_GEOMETRY);
+            validationMessages.add(UIText.SETUP_GEOMETRY);
         }
         if (project.getReinforcement() == null) {
-            validationMessages.add(Messages.SETUP_REINFORCEMENT);
+            validationMessages.add(UIText.SETUP_REINFORCEMENT);
         }
         if (project.getDesignParameters() == null) {
-            validationMessages.add(Messages.SETUP_DESIGN_PARAMETERS);
+            validationMessages.add(UIText.SETUP_DESIGN_PARAMETERS);
         }
         return validationMessages;
     }

@@ -7,7 +7,7 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.CssStyleClasses;
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 import com.radsoltan.util.Utility;
 
 import javafx.application.Platform;
@@ -127,7 +127,7 @@ public class SlabReinforcementSetup extends Controller {
             });
         } else {
             // Show error if invalid reinforcement
-            showAlertBox(Messages.INVALID_SLAB_REINFORCEMENT, AlertKind.ERROR);
+            showAlertBox(UIText.INVALID_SLAB_REINFORCEMENT, AlertKind.ERROR);
         }
         Platform.runLater(() -> container.requestFocus());
     }

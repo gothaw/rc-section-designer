@@ -4,7 +4,7 @@ import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 
 /**
  * Class is used to represent project calculations. It includes values from fields shown in primary controller along with:
@@ -64,7 +64,7 @@ public class Project {
                 calculateBeamProject();
                 break;
             default:
-                throw new IllegalArgumentException(Messages.INVALID_ELEMENT_TYPE);
+                throw new IllegalArgumentException(UIText.INVALID_ELEMENT_TYPE);
         }
     }
 
@@ -74,10 +74,10 @@ public class Project {
      */
     private void calculateSlabProject() {
         if (!(geometry.getSection() instanceof SlabStrip)) {
-            throw new IllegalArgumentException(Messages.INVALID_SLAB_GEOMETRY);
+            throw new IllegalArgumentException(UIText.INVALID_SLAB_GEOMETRY);
         }
         if (!(reinforcement instanceof SlabReinforcement)) {
-            throw new IllegalArgumentException(Messages.INVALID_SLAB_REINFORCEMENT);
+            throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
         }
         // Getting slab section and slab reinforcement
         SlabStrip slabStrip = (SlabStrip) geometry.getSection();
@@ -94,10 +94,10 @@ public class Project {
             flexureCapacityCheckMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ?
                     String.format("%.2f kNm/m \u003c %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity) :
                     String.format("%.2f kNm/m \u003e %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity);
-            flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? Messages.SECTION_ADEQUATE : Messages.FLEXURE_FAIL_MESSAGE;
+            flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? UIText.SECTION_ADEQUATE : UIText.FLEXURE_FAIL_MESSAGE;
         } catch (IllegalArgumentException e) {
             flexureCapacity = 0;
-            flexureCapacityCheckMessage = Messages.CALCULATIONS_ERROR;
+            flexureCapacityCheckMessage = UIText.CALCULATIONS_ERROR;
             flexureResultsAdditionalMessage = e.getMessage();
         }
         if (designParameters.isIncludeCrackingCalculations()) {

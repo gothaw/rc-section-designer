@@ -4,7 +4,7 @@ import com.radsoltan.App;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.geometry.*;
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -61,7 +61,7 @@ public class SlabGeometrySetup extends Controller {
                 SlabStrip slabStrip = (SlabStrip) section;
                 slabThickness.setText(Integer.toString(slabStrip.getDepth()));
             } else {
-                showAlertBox(Messages.INVALID_SLAB_GEOMETRY, AlertKind.ERROR);
+                showAlertBox(UIText.INVALID_SLAB_GEOMETRY, AlertKind.ERROR);
             }
         }
         this.draw();
@@ -170,7 +170,7 @@ public class SlabGeometrySetup extends Controller {
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
         if (slabThickness.getText().equals("")) {
-            return new ArrayList<>(List.of(Messages.SETUP_SLAB_THICKNESS));
+            return new ArrayList<>(List.of(UIText.SETUP_SLAB_THICKNESS));
         }
         return new ArrayList<>();
     }

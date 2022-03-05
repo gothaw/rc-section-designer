@@ -1,15 +1,15 @@
 package com.radsoltan.controllers;
 
-import com.radsoltan.util.Messages;
+import com.radsoltan.util.UIText;
 
 /**
  * Enum for types of popup alerts in the app. The enum includes a url to the icon image and a text that is displayed in alert title bar.
  * The enum supports three different alert kinds: info, warning and error.
  */
 public enum AlertKind {
-    INFO("/images/alert/info.png", Messages.INFO),
-    WARNING("/images/alert/warning.png", Messages.WARNING),
-    ERROR("/images/alert/error.png", Messages.ERROR);
+    INFO("/images/alert/info.png", UIText.INFO),
+    WARNING("/images/alert/warning.png", UIText.WARNING),
+    ERROR("/images/alert/error.png", UIText.ERROR);
 
     private final String url;
     private final String title;

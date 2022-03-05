@@ -2,6 +2,7 @@ package com.radsoltan;
 
 import com.radsoltan.util.Constants;
 
+import com.radsoltan.util.UIText;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,7 +32,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("primary"), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         // Setting primary stage and its properties
         primaryStage.setScene(scene);
-        primaryStage.setTitle(Constants.APP_TITLE);
+        primaryStage.setTitle(UIText.APP_TITLE);
         primaryStage.getIcons().add(new Image(getClass().getResource("/images/beam.png").toExternalForm()));
         primaryStage.setResizable(true);
         setMinMaxStageSize(primaryStage);
