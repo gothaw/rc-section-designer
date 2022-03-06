@@ -264,16 +264,17 @@ public class SlabReinforcement extends Reinforcement {
         }
 
         double slabEndArchDepth = slabStrip.getEndArchDepth();
-        double widthAvailableForRebar = realWidth - 2 * slabEndArchDepth / slabImageScale;
 
         IntStream.range(0, diameters.size())
                 .forEach(i -> {
                     int spacing = spacings.get(i);
                     int diameter = diameters.get(i);
+                    double widthAvailableForRebar = realWidth - diameter - 2 * slabEndArchDepth / slabImageScale;
+
                     int quotient = (int) (widthAvailableForRebar / spacing);
                     int remainder = (int) (widthAvailableForRebar % spacing);
 
-                    double layerX = slabLeftEdgeX + (0.5 * remainder + slabEndArchDepth) * slabImageScale;
+                    double layerX = slabLeftEdgeX + (0.5 * remainder) * slabImageScale + slabEndArchDepth;
                     double layerY = slabFace.equals(Constants.SLAB_TOP_FACE)
                             ? slabEdgeY + reinforcementY.get(i) * slabImageScale
                             : slabEdgeY - reinforcementY.get(i) * slabImageScale;
@@ -290,18 +291,20 @@ public class SlabReinforcement extends Reinforcement {
         }
 
         double slabEndArchDepth = slabStrip.getEndArchDepth();
-        double widthAvailableForRebar = realWidth - 2 * slabEndArchDepth / slabImageScale;
 
         IntStream.range(0, additionalDiameters.size())
                 .forEach(i -> {
                     int spacing = spacings.get(i);
                     int diameter = diameters.get(i);
                     int additionalDiameter = additionalDiameters.get(i);
+
+                    double widthAvailableForRebar = realWidth - diameter - 2 * slabEndArchDepth / slabImageScale;
+
                     int remainder = (int) (widthAvailableForRebar % spacing);
 
-                    double widthForAdditionalRebar = widthAvailableForRebar - (remainder + diameter + spacing - additionalDiameter);
+                    double widthForAdditionalRebar = widthAvailableForRebar - (remainder + spacing - additionalDiameter);
 
-                    double layerX = slabLeftEdgeX + (0.5 * remainder + 0.5 * diameter + 0.5 * spacing - 0.5 * additionalDiameter + slabEndArchDepth) * slabImageScale;
+                    double layerX = slabLeftEdgeX + (0.5 * remainder + 0.5 * diameter + 0.5 * spacing - 0.5 * additionalDiameter) * slabImageScale + slabEndArchDepth;
                     double layerY = slabFace.equals(Constants.SLAB_TOP_FACE)
                             ? slabEdgeY + reinforcementY.get(i) * slabImageScale
                             : slabEdgeY - reinforcementY.get(i) * slabImageScale;
