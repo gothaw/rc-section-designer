@@ -492,6 +492,7 @@ public class Primary extends Controller {
         boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
 
         if (isReinforcementSetup) {
+            // Draw slab reinforcement
             drawSlabReinforcement(slabStrip, designParameters, slabImageScale);
         }
     }

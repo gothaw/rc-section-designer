@@ -8,6 +8,8 @@ import com.radsoltan.model.geometry.Drawable;
  */
 public abstract class Reinforcement implements Drawable {
 
+    public static final String DEFAULT_TEXT_FONT = "Source Sans Pro";
+
     /**
      * Gets total area of the top reinforcement.
      *

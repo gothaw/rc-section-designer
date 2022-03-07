@@ -4,8 +4,11 @@ import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.UIText;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +29,10 @@ public class SlabReinforcement extends Reinforcement {
     private final GraphicsContext graphicsContext;
     private final Color colour;
     private final double slabImageScale;
+
+    public static final int DEFAULT_TEXT_SIZE = 10;
+    public static final int DEFAULT_TEXT_OFFSET = 5;
+
 
     public SlabReinforcement(List<Integer> topDiameters,
                              List<Integer> additionalTopDiameters,
@@ -241,7 +248,29 @@ public class SlabReinforcement extends Reinforcement {
         return slabImageScale;
     }
 
-    private void drawReinforcementLayer(double widthAvailableForRebar, double layerX, double layerY, int numberOfBars, int diameter, int spacing) {
+    private void drawReinforcementDescription(double slabLeftEdgeX, double slabTopEdgeY, double slabBottomEdgeY) {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
+        }
+        graphicsContext.beginPath();
+
+        String descriptionTopLayers = "Top layers:\n" + getDescriptionForReinforcementLayers(topDiameters, additionalTopDiameters, topSpacings).replaceAll(",  ", "\n");
+        String descriptionBottomLayers = "Bottom layers:\n" + getDescriptionForReinforcementLayers(bottomDiameters, additionalBottomDiameters, bottomSpacings).replaceAll(",  ", "\n");
+
+        Font font = new Font(Reinforcement.DEFAULT_TEXT_FONT, SlabReinforcement.DEFAULT_TEXT_SIZE);
+        graphicsContext.setFont(font);
+        graphicsContext.setTextAlign(TextAlignment.LEFT);
+
+        graphicsContext.setTextBaseline(VPos.BOTTOM);
+        graphicsContext.fillText(descriptionTopLayers, slabLeftEdgeX, slabTopEdgeY - SlabReinforcement.DEFAULT_TEXT_OFFSET);
+
+        graphicsContext.setTextBaseline(VPos.TOP);
+        graphicsContext.fillText(descriptionBottomLayers, slabLeftEdgeX, slabBottomEdgeY + SlabReinforcement.DEFAULT_TEXT_OFFSET);
+
+        graphicsContext.closePath();
+    }
+
+    private void drawReinforcementLayer(double layerX, double layerY, int numberOfBars, int diameter, int spacing) {
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
         }
@@ -281,7 +310,7 @@ public class SlabReinforcement extends Reinforcement {
 
                     int numberOfBars = quotient + 1;
 
-                    drawReinforcementLayer(widthAvailableForRebar, layerX, layerY, numberOfBars, diameter, spacing);
+                    drawReinforcementLayer(layerX, layerY, numberOfBars, diameter, spacing);
                 });
     }
 
@@ -313,7 +342,7 @@ public class SlabReinforcement extends Reinforcement {
 
                     int numberOfBars = quotient + 1;
 
-                    drawReinforcementLayer(widthAvailableForRebar, layerX, layerY, numberOfBars, additionalDiameter, spacing);
+                    drawReinforcementLayer(layerX, layerY, numberOfBars, additionalDiameter, spacing);
                 });
     }
 
@@ -343,6 +372,8 @@ public class SlabReinforcement extends Reinforcement {
         drawAdditionalReinforcementLayer(realWidth, slabLeftEdgeX, slabTopEdgeY, topReinforcementY, topDiameters, additionalTopDiameters, topSpacings, Constants.SLAB_TOP_FACE);
 
         drawAdditionalReinforcementLayer(realWidth, slabLeftEdgeX, slabBottomEdgeY, bottomReinforcementY, bottomDiameters, additionalBottomDiameters, bottomSpacings, Constants.SLAB_BOTTOM_FACE);
+
+        drawReinforcementDescription(slabLeftEdgeX, slabTopEdgeY, slabBottomEdgeY);
 
         graphicsContext.closePath();
     }
