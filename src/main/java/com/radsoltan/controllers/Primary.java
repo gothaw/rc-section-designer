@@ -8,7 +8,6 @@ import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
 import com.radsoltan.model.geometry.DimensionLine;
-import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.VerticalDimensionLine;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
@@ -134,17 +133,6 @@ public class Primary extends Controller {
         }
         if (project.getUlsShear() != null) {
             UlsShear.setText(project.getUlsShear());
-        }
-        // Hardcoding
-        if (project.getGeometry() == null) {
-            SlabStrip slabStrip = new SlabStrip(400);
-            Geometry geometry = new Geometry(slabStrip);
-            DesignParameters designParameters = new DesignParameters(30, 0, 30, 500, 20, 1.5, 1.15, 0.85, true, false);
-            SlabReinforcement slabReinforcement = new SlabReinforcement(List.of(16), List.of(0), List.of(175), List.of(0), List.of(16), List.of(0), List.of(175), List.of(0));
-
-            project.setGeometry(geometry);
-            project.setDesignParameters(designParameters);
-            project.setReinforcement(slabReinforcement);
         }
         // Setting geometry, reinforcement and design parameters sections
         if (project.getGeometry() == null) {
@@ -318,6 +306,8 @@ public class Primary extends Controller {
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
             reinforcementText.setText(UIText.ENTER_REINFORCEMENT);
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
+            graphicsContext.clearRect(0, 0, elementImage.getWidth(), elementImage.getHeight());
             clearResultsArea();
         }
         project.setElementType(elementType);
