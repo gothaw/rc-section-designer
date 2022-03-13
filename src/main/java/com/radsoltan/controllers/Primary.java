@@ -434,7 +434,7 @@ public class Primary extends Controller {
     }
 
     /**
-     * Draws slab image along with dimension lines. It also invokes function to draw slab reinforcement.
+     * Draws slab image along with dimension lines. It also invokes method to draw slab reinforcement.
      * Slab image is drawn relatively to the canvas size using the ratios defined in constants.
      * It scales the image by using scale from getSlabImageScale method.
      */

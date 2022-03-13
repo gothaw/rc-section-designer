@@ -4,6 +4,7 @@ import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.UIText;
+
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -14,8 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Model for slab reinforcement. It is used to create an object that describes slab reinforcement that can be used in structural calculations.
+ * In addition, allows for drawing slab reinforcement on graphics context.
+ */
 public class SlabReinforcement extends Reinforcement {
 
+    // Lists that describe slab reinforcement
     private final List<Integer> topDiameters;
     private final List<Integer> additionalTopDiameters;
     private final List<Integer> topSpacings;
@@ -24,16 +30,43 @@ public class SlabReinforcement extends Reinforcement {
     private final List<Integer> additionalBottomDiameters;
     private final List<Integer> bottomSpacings;
     private final List<Integer> bottomVerticalSpacings;
+    // Fields required to draw slab reinforcement
     private final DesignParameters designParameters;
     private final SlabStrip slabStrip;
     private final GraphicsContext graphicsContext;
     private final Color colour;
     private final double slabImageScale;
-
+    // Constants used in drawing slab reinforcement
     public static final int DEFAULT_TEXT_SIZE = 10;
     public static final int DEFAULT_TEXT_OFFSET = 5;
 
 
+    /**
+     * Basic constructor. Used in structural calculations.
+     * <p>
+     * The reinforcement is described using lists of integers:
+     * <p>
+     * - topDiameters/bottomDiameters: these include main bar diameters in subsequent layers from the slab face (top/bottom).
+     * For instance, bottomDiameters of [16, 12, 8] has 16 mm diameter bars in the layer closest to the bottom edge, 12 mm in the next layer and 8 mm bars in the layer furthest away from the bottom face.
+     * <p>
+     * - topSpacings/bottomSpacings: lists that include spacings of main bar diameters centres in subsequent layers from the slab face (top/bottom).
+     * For instance, if topDiameters is [10, 12] and topSpacings is [200, 150] then the layer closest to the top edge has 10 mm bars at 200 mm and the second layer is 12 mm bars at 150 mm.
+     * <p>
+     * - additionalTopDiameters/additionalBottomDiameters: lists that include additional bars that are put between main bars. Similarly to lists that store main bar diameters, these lists include bar diameters in subsequent layers from the slab face (top/bottom).
+     * The additional bar diameters are assumed to have the same spacing as the main bars. For example, if additionalBottomDiameters are [8, 6] and bottomSpacings are [175, 200] then bottommost layer has 8 mm bars at 175 mm and the next layer is 6 mm bars at 200 mm.
+     * <p>
+     * - topVerticalSpacings/bottomVerticalSpacings: these include clear vertical spacings between subsequent layers for top/bottom face.
+     * For instance, if topDiameters is [10, 12], topSpacings is [175, 150] and topVerticalSpacings is [75] then the topmost layer is 10 mm bars at 175 mm, the second layer is 12 mm bars at 150 mm and the clear vertical distance between these layers is 75mm.
+     *
+     * @param topDiameters              main top bar diameters in subsequent layers
+     * @param additionalTopDiameters    additional top bar diameters placed between main bars in subsequent layers
+     * @param topSpacings               top bar spacings between bar centers in subsequent layers
+     * @param topVerticalSpacings       clear spacings between top layers
+     * @param bottomDiameters           main bottom bar diameters in subsequent layers
+     * @param additionalBottomDiameters additional bottom bar diameters placed between main bars in subsequent layers
+     * @param bottomSpacings            bottom bar spacings between bar centers in subsequent layers
+     * @param bottomVerticalSpacings    clear spacings between bottom layers
+     */
     public SlabReinforcement(List<Integer> topDiameters,
                              List<Integer> additionalTopDiameters,
                              List<Integer> topSpacings,
@@ -45,6 +78,24 @@ public class SlabReinforcement extends Reinforcement {
         this(topDiameters, additionalTopDiameters, topSpacings, topVerticalSpacings, bottomDiameters, additionalBottomDiameters, bottomSpacings, bottomVerticalSpacings, null, null, null, null, 0);
     }
 
+    /**
+     * Constructor. Includes all information required for structural calculations.
+     * In addition, it takes arguments that allow for drawing the slab reinforcement on graphics context.
+     *
+     * @param topDiameters              main top bar diameters in subsequent layers
+     * @param additionalTopDiameters    additional top bar diameters placed between main bars in subsequent layers
+     * @param topSpacings               top bar spacings between bar centers in subsequent layers
+     * @param topVerticalSpacings       clear spacings between top layers
+     * @param bottomDiameters           main bottom bar diameters in subsequent layers
+     * @param additionalBottomDiameters additional bottom bar diameters placed between main bars in subsequent layers
+     * @param bottomSpacings            bottom bar spacings between bar centers in subsequent layers
+     * @param bottomVerticalSpacings    clear spacings between bottom layers
+     * @param designParameters          DesignParameters object
+     * @param slabStrip                 SlabStrip object - created using constructor that allows for drawing the slab strip
+     * @param graphicsContext           graphics context to draw slab on
+     * @param colour                    colour to draw the reinforcement with
+     * @param slabImageScale            slab image scale
+     */
     public SlabReinforcement(List<Integer> topDiameters,
                              List<Integer> additionalTopDiameters,
                              List<Integer> topSpacings,
@@ -74,6 +125,71 @@ public class SlabReinforcement extends Reinforcement {
         this.slabImageScale = slabImageScale;
     }
 
+    /**
+     * Calculates total area of reinforcement for given slab face.
+     *
+     * @param diameters           main bar diameters in subsequent layers
+     * @param additionalDiameters additional bar diameters in subsequent layers
+     * @param spacings            bar spacings in subsequent layers
+     * @return total area of reinforcement
+     */
+    private List<Double> getAreaOfReinforcementLayers(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings) {
+
+        return IntStream.range(0, diameters.size())
+                .mapToObj(i -> 0.25 * Math.PI * (diameters.get(i) * diameters.get(i) + additionalDiameters.get(i) * additionalDiameters.get(i)) * 1000 / spacings.get(i))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * It creates a list of max diameters in each reinforcement layer for given slab face.
+     *
+     * @param diameters           main bar diameters in subsequent layers
+     * @param additionalDiameters additional bar diameters in subsequent layers
+     * @return list of max diameters in each reinforcement layer
+     */
+    private List<Integer> getMaxDiametersForEachLayer(List<Integer> diameters, List<Integer> additionalDiameters) {
+        return IntStream
+                .range(0, diameters.size())
+                .mapToObj(i -> Math.max(diameters.get(i), additionalDiameters.get(i)))
+                .collect(Collectors.toList());
+    }
+
+    private List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
+
+        List<Integer> maxDiameters = getMaxDiametersForEachLayer(diameters, additionalDiameters);
+
+        return IntStream
+                .range(0, maxDiameters.size())
+                .mapToObj(i -> nominalCover + 0.5 * maxDiameters.get(i)
+                        + verticalSpacings.stream().limit(i).reduce(0, Integer::sum)
+                        + maxDiameters.stream().limit(i).reduce(0, Integer::sum))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Calculates first moment of
+     *
+     * @param areaOfReinforcementLayers
+     * @param diameters
+     * @param additionalDiameters
+     * @param verticalSpacings
+     * @param nominalCover
+     * @return
+     */
+    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
+        List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(diameters, additionalDiameters, verticalSpacings, nominalCover);
+
+        return IntStream
+                .range(0, distanceFromEachLayerToEdge.size())
+                .mapToObj(i -> areaOfReinforcementLayers.get(i) * distanceFromEachLayerToEdge.get(i))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Calculates total area of top reinforcement. Invokes getAreaOfReinforcementLayers method.
+     *
+     * @return total area of top reinforcement
+     */
     @Override
     public double getTotalAreaOfTopReinforcement() {
         return getAreaOfReinforcementLayers(topDiameters, additionalTopDiameters, topSpacings).stream()
@@ -94,6 +210,11 @@ public class SlabReinforcement extends Reinforcement {
         return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
+    /**
+     * Calculates total area of bottom reinforcement. Invokes getAreaOfReinforcementLayers method.
+     *
+     * @return total area of bottom reinforcement
+     */
     @Override
     public double getTotalAreaOfBottomReinforcement() {
         return getAreaOfReinforcementLayers(bottomDiameters, additionalBottomDiameters, bottomSpacings).stream()
@@ -140,33 +261,6 @@ public class SlabReinforcement extends Reinforcement {
         return layersDescription;
     }
 
-    public List<Double> getAreaOfReinforcementLayers(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings) {
-
-        return IntStream.range(0, diameters.size())
-                .mapToObj(i -> 0.25 * Math.PI * (diameters.get(i) * diameters.get(i) + additionalDiameters.get(i) * additionalDiameters.get(i)) * 1000 / spacings.get(i))
-                .collect(Collectors.toList());
-    }
-
-    public List<Integer> getMaxDiametersForEachLayer(List<Integer> diameters, List<Integer> additionalDiameters) {
-        return IntStream
-                .range(0, diameters.size())
-                .mapToObj(i -> Math.max(diameters.get(i), additionalDiameters.get(i)))
-                .collect(Collectors.toList());
-    }
-
-    // TODO: 10/06/2020 Encapsulation
-    public List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
-
-        List<Integer> maxDiameters = getMaxDiametersForEachLayer(diameters, additionalDiameters);
-
-        return IntStream
-                .range(0, maxDiameters.size())
-                .mapToObj(i -> nominalCover + 0.5 * maxDiameters.get(i)
-                        + verticalSpacings.stream().limit(i).reduce(0, Integer::sum)
-                        + maxDiameters.stream().limit(i).reduce(0, Integer::sum))
-                .collect(Collectors.toList());
-    }
-
     public List<Double> getDistanceFromTopOfTopLayersToTopEdge(int nominalCoverTop) {
         List<Double> distanceFromCentreOfEachLayer = getDistanceFromCentreOfEachLayerToEdge(topDiameters, additionalTopDiameters, topVerticalSpacings, nominalCoverTop);
         List<Integer> maxDiameters = getMaxDiametersForEachLayer(topDiameters, additionalTopDiameters);
@@ -184,15 +278,6 @@ public class SlabReinforcement extends Reinforcement {
         return IntStream
                 .range(0, distanceFromCentreOfEachLayer.size())
                 .mapToObj(i -> distanceFromCentreOfEachLayer.get(i) + 0.5 * maxDiameters.get(i))
-                .collect(Collectors.toList());
-    }
-
-    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
-        List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(diameters, additionalDiameters, verticalSpacings, nominalCover);
-
-        return IntStream
-                .range(0, distanceFromEachLayerToEdge.size())
-                .mapToObj(i -> areaOfReinforcementLayers.get(i) * distanceFromEachLayerToEdge.get(i))
                 .collect(Collectors.toList());
     }
 
