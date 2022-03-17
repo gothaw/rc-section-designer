@@ -126,12 +126,13 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     /**
-     * Calculates total area of reinforcement for given slab face.
+     * It creates a list for given slab face that contains area of each reinforcement layer.
+     * This is the area per 1 m of the slab.
      *
      * @param diameters           main bar diameters in subsequent layers
      * @param additionalDiameters additional bar diameters in subsequent layers
      * @param spacings            bar spacings in subsequent layers
-     * @return total area of reinforcement
+     * @return list of areas of reinforcement layers
      */
     private List<Double> getAreaOfReinforcementLayers(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings) {
 
@@ -154,6 +155,15 @@ public class SlabReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * It creates a list for given slab face that contains distances from center of each layer to the edge.
+     *
+     * @param diameters           main bar diameters in subsequent layers
+     * @param additionalDiameters additional bar diameters in subsequent layers
+     * @param verticalSpacings    clear spacings between layers
+     * @param nominalCover        nominal cover in mm
+     * @return list of distances of each layer to the edge
+     */
     private List<Double> getDistanceFromCentreOfEachLayerToEdge(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
 
         List<Integer> maxDiameters = getMaxDiametersForEachLayer(diameters, additionalDiameters);
@@ -167,14 +177,14 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     /**
-     * Calculates first moment of
+     * It creates a list for given slab face that contains first moment of area for each layer in relation to the edge.
      *
-     * @param areaOfReinforcementLayers
-     * @param diameters
-     * @param additionalDiameters
-     * @param verticalSpacings
-     * @param nominalCover
-     * @return
+     * @param areaOfReinforcementLayers areas per 1 m of the slab of subsequent reinforcement layers
+     * @param diameters                 main bar diameters in subsequent layers
+     * @param additionalDiameters       additional bar diameters in subsequent layers
+     * @param verticalSpacings          clear spacings between layers
+     * @param nominalCover              nominal cover in mm
+     * @return list of first moment of area for each layer
      */
     public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
         List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(diameters, additionalDiameters, verticalSpacings, nominalCover);
