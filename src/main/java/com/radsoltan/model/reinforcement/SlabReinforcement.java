@@ -126,6 +126,87 @@ public class SlabReinforcement extends Reinforcement {
     }
 
     /**
+     * Getter for top diameters.
+     *
+     * @return top diameters
+     */
+    public List<Integer> getTopDiameters() {
+        return topDiameters;
+    }
+
+    /**
+     * Getter for additional top diameters.
+     *
+     * @return additional top diameters
+     */
+    public List<Integer> getAdditionalTopDiameters() {
+        return additionalTopDiameters;
+    }
+
+    /**
+     * Getter for top spacings.
+     *
+     * @return top spacings
+     */
+    public List<Integer> getTopSpacings() {
+        return topSpacings;
+    }
+
+    /**
+     * Getter for clear vertical spacings between top layers.
+     *
+     * @return clear vertical spacings between top layers
+     */
+    public List<Integer> getTopVerticalSpacings() {
+        return topVerticalSpacings;
+    }
+
+    /**
+     * Getter for bottom diameters.
+     *
+     * @return bottom diameters
+     */
+    public List<Integer> getBottomDiameters() {
+        return bottomDiameters;
+    }
+
+    /**
+     * Getter for additional bottom diameters.
+     *
+     * @return additional bottom diameters
+     */
+    public List<Integer> getAdditionalBottomDiameters() {
+        return additionalBottomDiameters;
+    }
+
+    /**
+     * Getter for bottom spacings.
+     *
+     * @return bottom spacings
+     */
+    public List<Integer> getBottomSpacings() {
+        return bottomSpacings;
+    }
+
+    /**
+     * Getter for clear vertical spacings between bottom layers.
+     *
+     * @return clear vertical spacings between bottom layers
+     */
+    public List<Integer> getBottomVerticalSpacings() {
+        return bottomVerticalSpacings;
+    }
+
+    /**
+     * Getter for design parameters object.
+     *
+     * @return design parameters object
+     */
+    public DesignParameters getDesignParameters() {
+        return designParameters;
+    }
+
+    /**
      * It creates a list for given slab face that contains area of each reinforcement layer.
      * This is the area per 1 m of the slab.
      *
@@ -186,7 +267,7 @@ public class SlabReinforcement extends Reinforcement {
      * @param nominalCover              nominal cover in mm
      * @return list of first moment of area for each layer
      */
-    public List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
+    private List<Double> getFirstMomentOfAreaReinforcementLayers(List<Double> areaOfReinforcementLayers, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> verticalSpacings, int nominalCover) {
         List<Double> distanceFromEachLayerToEdge = getDistanceFromCentreOfEachLayerToEdge(diameters, additionalDiameters, verticalSpacings, nominalCover);
 
         return IntStream
@@ -207,6 +288,12 @@ public class SlabReinforcement extends Reinforcement {
                 .sum();
     }
 
+    /**
+     * Calculates centroid of the top reinforcement relative to the top edge.
+     *
+     * @param nominalCoverTop nominal cover for the top face of the element in mm
+     * @return centroid of the top reinforcement
+     */
     @Override
     public double getCentroidOfTopReinforcement(int nominalCoverTop) {
         List<Double> areaOfTopLayers = getAreaOfReinforcementLayers(topDiameters, additionalTopDiameters, topSpacings);
@@ -232,6 +319,12 @@ public class SlabReinforcement extends Reinforcement {
                 .sum();
     }
 
+    /**
+     * Calculates centroid of the bottom reinforcement relative to the top edge.
+     *
+     * @param nominalCoverBottom nominal cover fore the bottom face of the element in mm
+     * @return centroid of the bottom reinforcement
+     */
     @Override
     public double getCentroidOfBottomReinforcement(int nominalCoverBottom) {
         List<Double> areaOfBottomLayers = getAreaOfReinforcementLayers(bottomDiameters, additionalBottomDiameters, bottomSpacings);
@@ -245,6 +338,11 @@ public class SlabReinforcement extends Reinforcement {
         return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
+    /**
+     * Gets general reinforcement description
+     *
+     * @return reinforcement description
+     */
     @Override
     public String getDescription() {
         String descriptionTopLayers = "Top layers:\n" + getDescriptionForReinforcementLayers(topDiameters, additionalTopDiameters, topSpacings);
@@ -252,6 +350,14 @@ public class SlabReinforcement extends Reinforcement {
         return descriptionTopLayers + "\n" + descriptionBottomLayers;
     }
 
+    /**
+     * Gets description for reinforcement layers for given slab face.
+     *
+     * @param diameters           main bar diameters in subsequent layers
+     * @param additionalDiameters additional bar diameters in subsequent layers
+     * @param spacings            bar spacings in subsequent layers
+     * @return reinforcement description for selected slab face
+     */
     private String getDescriptionForReinforcementLayers(List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings) {
         String layersDescription = "";
 
@@ -271,7 +377,13 @@ public class SlabReinforcement extends Reinforcement {
         return layersDescription;
     }
 
-    public List<Double> getDistanceFromTopOfTopLayersToTopEdge(int nominalCoverTop) {
+    /**
+     * It creates a list that contains distances from top of each top reinforcement layer to the top edge.
+     *
+     * @param nominalCoverTop nominal cover for the top face of the element in mm
+     * @return list of distances from top of each top reinforcement layer to the top edge
+     */
+    private List<Double> getDistanceFromTopOfTopLayersToTopEdge(int nominalCoverTop) {
         List<Double> distanceFromCentreOfEachLayer = getDistanceFromCentreOfEachLayerToEdge(topDiameters, additionalTopDiameters, topVerticalSpacings, nominalCoverTop);
         List<Integer> maxDiameters = getMaxDiametersForEachLayer(topDiameters, additionalTopDiameters);
 
@@ -281,7 +393,13 @@ public class SlabReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-    public List<Double> getDistanceFromTopOBottomLayersToBottomEdge(int nominalCoverBottom) {
+    /**
+     * It creates a list that contains distances from top of each bottom reinforcement layer to the bottom edge.
+     *
+     * @param nominalCoverBottom nominal cover for the bottom face of the element in mm
+     * @return list of distances from top of each bottom reinforcement layer to the bottom edge
+     */
+    private List<Double> getDistanceFromTopOBottomLayersToBottomEdge(int nominalCoverBottom) {
         List<Double> distanceFromCentreOfEachLayer = getDistanceFromCentreOfEachLayerToEdge(bottomDiameters, additionalBottomDiameters, bottomVerticalSpacings, nominalCoverBottom);
         List<Integer> maxDiameters = getMaxDiametersForEachLayer(bottomDiameters, additionalBottomDiameters);
 
@@ -291,58 +409,14 @@ public class SlabReinforcement extends Reinforcement {
                 .collect(Collectors.toList());
     }
 
-    public List<Integer> getTopDiameters() {
-        return topDiameters;
-    }
-
-    public List<Integer> getAdditionalTopDiameters() {
-        return additionalTopDiameters;
-    }
-
-    public List<Integer> getTopSpacings() {
-        return topSpacings;
-    }
-
-    public List<Integer> getTopVerticalSpacings() {
-        return topVerticalSpacings;
-    }
-
-    public List<Integer> getBottomDiameters() {
-        return bottomDiameters;
-    }
-
-    public List<Integer> getAdditionalBottomDiameters() {
-        return additionalBottomDiameters;
-    }
-
-    public List<Integer> getBottomSpacings() {
-        return bottomSpacings;
-    }
-
-    public List<Integer> getBottomVerticalSpacings() {
-        return bottomVerticalSpacings;
-    }
-
-    public DesignParameters getDesignParameters() {
-        return designParameters;
-    }
-
-    public SlabStrip getSlabStrip() {
-        return slabStrip;
-    }
-
-    public GraphicsContext getGraphicsContext() {
-        return graphicsContext;
-    }
-
-    public Color getColour() {
-        return colour;
-    }
-
-    public double getSlabImageScale() {
-        return slabImageScale;
-    }
-
+    /**
+     * Draws reinforcement description. It invokes getDescriptionForReinforcementLayers function.
+     * The description for the top reinforcement is placed above the image and for the bottom reinforcement is below the image.
+     *
+     * @param slabLeftEdgeX   slab image left edge x coordinate
+     * @param slabTopEdgeY    slab image top edge y coordinate
+     * @param slabBottomEdgeY slab image bottom edge y coordinate
+     */
     private void drawReinforcementDescription(double slabLeftEdgeX, double slabTopEdgeY, double slabBottomEdgeY) {
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
@@ -356,15 +430,28 @@ public class SlabReinforcement extends Reinforcement {
         graphicsContext.setFont(font);
         graphicsContext.setTextAlign(TextAlignment.LEFT);
 
+        // Drawings bottom reinforcement description
         graphicsContext.setTextBaseline(VPos.BOTTOM);
         graphicsContext.fillText(descriptionTopLayers, slabLeftEdgeX, slabTopEdgeY - SlabReinforcement.DEFAULT_TEXT_OFFSET);
 
+        // Drawings top reinforcement description
         graphicsContext.setTextBaseline(VPos.TOP);
         graphicsContext.fillText(descriptionBottomLayers, slabLeftEdgeX, slabBottomEdgeY + SlabReinforcement.DEFAULT_TEXT_OFFSET);
 
         graphicsContext.closePath();
     }
 
+    /**
+     * Draws a single reinforcement layer. The requires numbers of bars in the layer to be specified.
+     * It also takes bar diameter and spacing and x and y coordinates of where to start drawing the layer.
+     * The method uses slabImageScale to scale up or down the drawing.
+     *
+     * @param layerX       x coordinate of the left edge of the first reinforcement bar in the layer
+     * @param layerY       y coordinate of the top edge of the reinforcement layer
+     * @param numberOfBars number of bars to be drawn
+     * @param diameter     bar diameter in mm
+     * @param spacing      bar spacing in mm
+     */
     private void drawReinforcementLayer(double layerX, double layerY, int numberOfBars, int diameter, int spacing) {
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
@@ -373,6 +460,7 @@ public class SlabReinforcement extends Reinforcement {
 
         double barDiameterInScale = diameter * slabImageScale;
 
+        // Creates a list of x coordinates of left edges of the reinforcement bars
         List<Double> barCoordinatesX = IntStream.range(0, numberOfBars)
                 .mapToObj(i -> layerX + i * spacing * slabImageScale)
                 .collect(Collectors.toList());
@@ -382,6 +470,17 @@ public class SlabReinforcement extends Reinforcement {
         graphicsContext.closePath();
     }
 
+    /**
+     * Draws main reinforcement layers for given slab face (top or bottom).
+     *
+     * @param realWidth      real width of the slab (not in scale) in mm
+     * @param slabLeftEdgeX  slab image left edge x coordinate
+     * @param slabEdgeY      slab image top edge y coordinate
+     * @param reinforcementY list that contains distances from top of each main reinforcement layer to the edge
+     * @param diameters      list with main bar diameters
+     * @param spacings       list with bar spacings
+     * @param slabFace       slab face (top or bottom)
+     */
     private void drawMainReinforcementLayers(double realWidth, double slabLeftEdgeX, double slabEdgeY, List<Double> reinforcementY, List<Integer> diameters, List<Integer> spacings, String slabFace) {
         if (!slabFace.equals(Constants.SLAB_BOTTOM_FACE) && !slabFace.equals(Constants.SLAB_TOP_FACE)) {
             throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
@@ -393,23 +492,40 @@ public class SlabReinforcement extends Reinforcement {
                 .forEach(i -> {
                     int spacing = spacings.get(i);
                     int diameter = diameters.get(i);
+                    // Calculating width that is available for rebar
                     double widthAvailableForRebar = realWidth - diameter - 2 * slabEndArchDepth / slabImageScale;
 
                     int quotient = (int) (widthAvailableForRebar / spacing);
+                    // Remainder to be left on each side of the layer
                     int remainder = (int) (widthAvailableForRebar % spacing);
 
+                    // X coordinate of the left edge of the first reinforcement bar in the layer
                     double layerX = slabLeftEdgeX + (0.5 * remainder) * slabImageScale + slabEndArchDepth;
+                    // Y coordinate of the top edge of the reinforcement layer
                     double layerY = slabFace.equals(Constants.SLAB_TOP_FACE)
                             ? slabEdgeY + reinforcementY.get(i) * slabImageScale
                             : slabEdgeY - reinforcementY.get(i) * slabImageScale;
 
                     int numberOfBars = quotient + 1;
 
+                    // Drawing reinforcement layer
                     drawReinforcementLayer(layerX, layerY, numberOfBars, diameter, spacing);
                 });
     }
 
-    private void drawAdditionalReinforcementLayer(double realWidth, double slabLeftEdgeX, double slabEdgeY, List<Double> reinforcementY, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings, String slabFace) {
+    /**
+     * Draws additional reinforcement layers for given slab face (top or bottom). These are placed between main bars.
+     *
+     * @param realWidth           real width of the slab (not in scale) in mm
+     * @param slabLeftEdgeX       slab image left edge x coordinate
+     * @param slabEdgeY           slab image top edge y coordinate
+     * @param reinforcementY      list that contains distances from top of each additional reinforcement layer to the edge
+     * @param diameters           list with main bar diameters
+     * @param additionalDiameters list with additional bar diameters
+     * @param spacings            list with bar spacings
+     * @param slabFace            slab face (top or bottom)
+     */
+    private void drawAdditionalReinforcementLayers(double realWidth, double slabLeftEdgeX, double slabEdgeY, List<Double> reinforcementY, List<Integer> diameters, List<Integer> additionalDiameters, List<Integer> spacings, String slabFace) {
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
         }
@@ -424,11 +540,14 @@ public class SlabReinforcement extends Reinforcement {
 
                     double widthAvailableForRebar = realWidth - diameter - 2 * slabEndArchDepth / slabImageScale;
 
+                    // Remainder to be left on each side of the layer
                     int remainder = (int) (widthAvailableForRebar % spacing);
 
                     double widthForAdditionalRebar = widthAvailableForRebar - (remainder + spacing - additionalDiameter);
 
+                    // X coordinate of the left edge of the first reinforcement bar in the layer
                     double layerX = slabLeftEdgeX + (0.5 * remainder + 0.5 * diameter + 0.5 * spacing - 0.5 * additionalDiameter) * slabImageScale + slabEndArchDepth;
+                    // Y coordinate of the top edge of the reinforcement layer
                     double layerY = slabFace.equals(Constants.SLAB_TOP_FACE)
                             ? slabEdgeY + reinforcementY.get(i) * slabImageScale
                             : slabEdgeY - reinforcementY.get(i) * slabImageScale;
@@ -437,12 +556,14 @@ public class SlabReinforcement extends Reinforcement {
 
                     int numberOfBars = quotient + 1;
 
+                    // Drawing reinforcement layer
                     drawReinforcementLayer(layerX, layerY, numberOfBars, additionalDiameter, spacing);
                 });
     }
 
     /**
-     * Method draws slab reinforcement.
+     * Method draws slab reinforcement. It draws main and additional reinforcement for both top and bottom edge.
+     * It also ads reinforcement description.
      */
     @Override
     public void draw() throws IllegalArgumentException {
@@ -457,22 +578,30 @@ public class SlabReinforcement extends Reinforcement {
         double slabLeftEdgeX = slabStrip.getStartX();
         double slabTopEdgeY = slabStrip.getStartY();
         double slabBottomEdgeY = slabTopEdgeY + slabStrip.getDepth();
+
+        // Lists that contain distances from top of each layer to the edge (top/bottom)
         List<Double> topReinforcementY = getDistanceFromTopOfTopLayersToTopEdge(designParameters.getNominalCoverTop());
         List<Double> bottomReinforcementY = getDistanceFromTopOBottomLayersToBottomEdge(designParameters.getNominalCoverBottom());
 
+        // Drawing main reinforcement
         drawMainReinforcementLayers(realWidth, slabLeftEdgeX, slabTopEdgeY, topReinforcementY, topDiameters, topSpacings, Constants.SLAB_TOP_FACE);
-
         drawMainReinforcementLayers(realWidth, slabLeftEdgeX, slabBottomEdgeY, bottomReinforcementY, bottomDiameters, bottomSpacings, Constants.SLAB_BOTTOM_FACE);
 
-        drawAdditionalReinforcementLayer(realWidth, slabLeftEdgeX, slabTopEdgeY, topReinforcementY, topDiameters, additionalTopDiameters, topSpacings, Constants.SLAB_TOP_FACE);
+        // Drawing additional reinforcement
+        drawAdditionalReinforcementLayers(realWidth, slabLeftEdgeX, slabTopEdgeY, topReinforcementY, topDiameters, additionalTopDiameters, topSpacings, Constants.SLAB_TOP_FACE);
+        drawAdditionalReinforcementLayers(realWidth, slabLeftEdgeX, slabBottomEdgeY, bottomReinforcementY, bottomDiameters, additionalBottomDiameters, bottomSpacings, Constants.SLAB_BOTTOM_FACE);
 
-        drawAdditionalReinforcementLayer(realWidth, slabLeftEdgeX, slabBottomEdgeY, bottomReinforcementY, bottomDiameters, additionalBottomDiameters, bottomSpacings, Constants.SLAB_BOTTOM_FACE);
-
+        // Drawing reinforcement description
         drawReinforcementDescription(slabLeftEdgeX, slabTopEdgeY, slabBottomEdgeY);
 
         graphicsContext.closePath();
     }
 
+    /**
+     * Checks if reinforcement can be drawn and all necessary fields are set up.
+     *
+     * @return true if reinforcement can be drawn
+     */
     @Override
     public boolean isSetupToBeDrawn() {
         return !(designParameters == null || slabStrip == null || graphicsContext == null || colour == null || slabImageScale == 0);
