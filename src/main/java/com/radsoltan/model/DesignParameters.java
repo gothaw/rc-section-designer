@@ -38,7 +38,7 @@ public class DesignParameters {
      * @param includeCrackingCalculations Should include cracking calculations
      */
     public DesignParameters(int nominalCoverTop, int nominalCoverSides, int nominalCoverBottom, int yieldStrength, int aggregateSize,
-                            double gammaC, double gammaS, double redistributionRatio, boolean isRecommendedRatio, boolean includeCrackingCalculations) {
+                            double gammaC, double gammaS, double redistributionRatio, boolean isRecommendedRatio, boolean includeCrackingCalculations, double crackWidthLimit) {
         this.nominalCoverTop = nominalCoverTop;
         this.nominalCoverSides = nominalCoverSides;
         this.nominalCoverBottom = nominalCoverBottom;
@@ -49,6 +49,7 @@ public class DesignParameters {
         this.redistributionRatio = redistributionRatio;
         this.isRecommendedRatio = isRecommendedRatio;
         this.includeCrackingCalculations = includeCrackingCalculations;
+        this.crackWidthLimit = crackWidthLimit;
     }
 
     /**

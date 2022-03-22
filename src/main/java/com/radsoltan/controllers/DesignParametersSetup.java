@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
  * - partial factors of safety for steel and concrete
  * - redistribution ratio
  * - option to exclude cracking calculations
+ * - limiting crack width
  * The controller also does validation if any of the fields are empty when user presses okay button.
  * It allows for creating designParameters and concrete objects in project instance.
  */
@@ -60,9 +62,13 @@ public class DesignParametersSetup extends Controller {
     @FXML
     public NumericalTextField redistributionRatio;
     @FXML
+    public NumericalTextField maxCrackWidth;
+    @FXML
     public CheckBox isRecommendedRedistributionRatio;
     @FXML
     public CheckBox includeCrackingCalculations;
+    @FXML
+    public HBox maxCrackWidthWrapper;
 
     private final Project project;
     private final DesignParameters designParameters;
@@ -121,6 +127,7 @@ public class DesignParametersSetup extends Controller {
             aggregateSize.setText(Integer.toString(Constants.DEFAULT_AGGREGATE_SIZE));
             redistributionRatio.setText(Double.toString(Constants.DEFAULT_REDISTRIBUTION_RATIO));
             isRecommendedRedistributionRatio.selectedProperty().setValue(true);
+            maxCrackWidthWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
         } else {
             // If design parameters set, show values that are stored in the instance
             nominalCoverTop.setValue(designParameters.getNominalCoverTop());
@@ -133,6 +140,7 @@ public class DesignParametersSetup extends Controller {
             redistributionRatio.setText(Double.toString(designParameters.getRedistributionRatio()));
             isRecommendedRedistributionRatio.selectedProperty().setValue(designParameters.isRecommendedRatio());
             includeCrackingCalculations.selectedProperty().setValue(designParameters.isIncludeCrackingCalculations());
+            maxCrackWidth.setText(Double.toString(designParameters.getCrackWidthLimit()));
         }
         if (concrete != null) {
             concreteClass.setValue(concrete.toString());
@@ -156,8 +164,13 @@ public class DesignParametersSetup extends Controller {
         List<String> validationMessages = getValidationMessagesForEmptyFields();
         // Validating redistribution ratio
         String validationMessageForRedistributionRatio = getValidationMessageForRedistributionRatio();
+        // Validating max crack width
+        String validationMessageForMaxCrackWidth = getValidationMessageForMaxCrackWidths();
         if (!validationMessageForRedistributionRatio.isEmpty()) {
             validationMessages.add(validationMessageForRedistributionRatio);
+        }
+        if (!validationMessageForMaxCrackWidth.isEmpty()) {
+            validationMessages.add(validationMessageForMaxCrackWidth);
         }
         if (validationMessages.isEmpty()) {
             // Creating designParameters and concrete objects based on values provided
@@ -169,11 +182,23 @@ public class DesignParametersSetup extends Controller {
             double gammaC = this.gammaC.getValue();
             double gammaS = this.gammaS.getValue();
             double redistributionRatio = Double.parseDouble(this.redistributionRatio.getText());
+            double maxCrackWidth = Double.parseDouble(this.maxCrackWidth.getText());
             boolean isRecommendedRedistributionRatio = this.isRecommendedRedistributionRatio.isSelected();
             boolean includeCrackingCalculations = this.includeCrackingCalculations.isSelected();
 
-            DesignParameters designParameters = new DesignParameters(nominalCoverTop, nominalCoverSides, nominalCoverBottom,
-                    yieldStrength, aggregateSize, gammaC, gammaS, redistributionRatio, isRecommendedRedistributionRatio, includeCrackingCalculations);
+            DesignParameters designParameters = new DesignParameters(
+                    nominalCoverTop,
+                    nominalCoverSides,
+                    nominalCoverBottom,
+                    yieldStrength,
+                    aggregateSize,
+                    gammaC,
+                    gammaS,
+                    redistributionRatio,
+                    isRecommendedRedistributionRatio,
+                    includeCrackingCalculations,
+                    maxCrackWidth
+            );
 
             String concreteClass = this.concreteClass.getValue();
             Concrete concrete = Concrete.valueOf(concreteClass.replace('/', '_'));
@@ -209,8 +234,22 @@ public class DesignParametersSetup extends Controller {
     }
 
     /**
+     * Handler for include cracking calculation checkbox.
+     *
+     * @param actionEvent Enable cracking calculation checkbox click
+     */
+    public void enableIncludeCrackingCalculation(ActionEvent actionEvent) {
+        if (this.includeCrackingCalculations.isSelected()) {
+            maxCrackWidthWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        } else {
+            maxCrackWidthWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
+        }
+    }
+
+    /**
      * Checks if the fields in view are empty or don't have any value set.
      * If this is the case a message is added to the list of validation messages.
+     * This does not include redistribution ratio and max crack width input fields.
      *
      * @return List of validation messages
      */
@@ -242,7 +281,26 @@ public class DesignParametersSetup extends Controller {
      * @return validation message for the redistribution ratio
      */
     private String getValidationMessageForRedistributionRatio() {
+        if (redistributionRatio.getText().isEmpty()) {
+            return UIText.INVALID_REDISTRIBUTION_RATIO;
+        }
         double redistributionRatioValue = Double.parseDouble(redistributionRatio.getText());
         return redistributionRatioValue > 1.0 || redistributionRatioValue < 0.7 ? UIText.INVALID_REDISTRIBUTION_RATIO : "";
+    }
+
+    /**
+     * Checks if value for max crack width is correct. The assumption is that this should be greater than 0.05 and less 0.5 mm.
+     * If the value is within limits and empty string is return. Otherwise, a validation message is returned.
+     *
+     * @return validation message for max crack width
+     */
+    private String getValidationMessageForMaxCrackWidths() {
+        if (maxCrackWidth.getText().isEmpty()) {
+            return UIText.INVALID_MAX_CRACK_WIDTH;
+        }
+        double maxCrackWidthValue = Double.parseDouble(maxCrackWidth.getText());
+        return maxCrackWidthValue < 0.05 || maxCrackWidthValue > 0.5
+                ? UIText.INVALID_MAX_CRACK_WIDTH
+                : "";
     }
 }

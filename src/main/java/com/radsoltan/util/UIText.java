@@ -21,6 +21,7 @@ public class UIText {
     public static final String INVALID_SLAB_REINFORCEMENT = "Invalid slab reinforcement.";
     public static final String INVALID_SLAB_GEOMETRY = "Invalid slab geometry.";
     public static final String INVALID_DIMENSION_LINE = "Invalid dimension line.";
+    public static final String INVALID_MAX_CRACK_WIDTH = "Max crack width must be between 0.05 and 0.5";
     public static final String PASS = "Pass";
     public static final String REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE = "Compressive force greater than the capacity. Redesign section.";
     public static final String REDESIGN_SECTION_DUE_TO_HIGH_SHEAR = "Shear force greater than compressive strut capacity. Redesign section.";

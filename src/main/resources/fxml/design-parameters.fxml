@@ -104,8 +104,13 @@
                             <Label text="Use recommended redistribution ratio" />
                         </HBox>
                         <HBox styleClass="padding-top">
-                            <CheckBox fx:id="includeCrackingCalculations" />
+                            <CheckBox fx:id="includeCrackingCalculations" onAction="#enableIncludeCrackingCalculation" />
                             <Label text="Include cracking calculations" />
+                        </HBox>
+                        <HBox styleClass="padding-top" fx:id="maxCrackWidthWrapper">
+                            <Label styleClass="field-label" text="Max crack width" />
+                            <NumericalTextField fx:id="maxCrackWidth" styleClass="numerical-field-medium" />
+                            <Label styleClass="unit-label" text="mm" />
                         </HBox>
                     </VBox>
                 </VBox>
