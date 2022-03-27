@@ -21,7 +21,7 @@ class ValidateSlabTest {
 
     @BeforeAll
     static void beforeAll() {
-        designParameters = new DesignParameters(30, 0, 35, 500, 20, 1.5, 1.15, 0.85, true, true);
+        designParameters = new DesignParameters(30, 0, 35, 500, 20, 1.5, 1.15, 0.85, true, true, 0.3);
         List<Integer> topDiameters = new ArrayList<>(List.of(32, 25, 32));
         List<Integer> additionalTopDiameters = new ArrayList<>(List.of(20, 40, 20));
         List<Integer> bottomDiameters = new ArrayList<>(List.of(32, 25, 32, 20));

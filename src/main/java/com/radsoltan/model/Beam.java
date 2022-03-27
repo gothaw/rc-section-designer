@@ -136,11 +136,6 @@ public class Beam implements Flexure, Shear, Cracking {
         }
     }
 
-    @Override
-    public void calculateCracks() {
-
-    }
-
     public double getProvidedTensileReinforcement() {
         return providedTensileReinforcement;
     }

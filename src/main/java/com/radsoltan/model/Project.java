@@ -103,7 +103,6 @@ public class Project {
         if (designParameters.isIncludeCrackingCalculations()) {
             // TODO: 11/08/2020 Wrap in try catch and implement method
             // Calculating crack widths
-            slab.calculateCracks();
 
         }
     }

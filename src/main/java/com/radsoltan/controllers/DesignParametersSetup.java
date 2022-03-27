@@ -140,7 +140,11 @@ public class DesignParametersSetup extends Controller {
             redistributionRatio.setText(Double.toString(designParameters.getRedistributionRatio()));
             isRecommendedRedistributionRatio.selectedProperty().setValue(designParameters.isRecommendedRatio());
             includeCrackingCalculations.selectedProperty().setValue(designParameters.isIncludeCrackingCalculations());
-            maxCrackWidth.setText(Double.toString(designParameters.getCrackWidthLimit()));
+            if (designParameters.isIncludeCrackingCalculations()) {
+                maxCrackWidth.setText(Double.toString(designParameters.getCrackWidthLimit()));
+            } else {
+                maxCrackWidthWrapper.getStyleClass().add(CssStyleClasses.HIDDEN);
+            }
         }
         if (concrete != null) {
             concreteClass.setValue(concrete.toString());
@@ -182,9 +186,9 @@ public class DesignParametersSetup extends Controller {
             double gammaC = this.gammaC.getValue();
             double gammaS = this.gammaS.getValue();
             double redistributionRatio = Double.parseDouble(this.redistributionRatio.getText());
-            double maxCrackWidth = Double.parseDouble(this.maxCrackWidth.getText());
             boolean isRecommendedRedistributionRatio = this.isRecommendedRedistributionRatio.isSelected();
             boolean includeCrackingCalculations = this.includeCrackingCalculations.isSelected();
+            double maxCrackWidth = includeCrackingCalculations ? Double.parseDouble(this.maxCrackWidth.getText()) : 0;
 
             DesignParameters designParameters = new DesignParameters(
                     nominalCoverTop,
@@ -295,6 +299,9 @@ public class DesignParametersSetup extends Controller {
      * @return validation message for max crack width
      */
     private String getValidationMessageForMaxCrackWidths() {
+        if (!this.includeCrackingCalculations.isSelected()) {
+            return "";
+        }
         if (maxCrackWidth.getText().isEmpty()) {
             return UIText.INVALID_MAX_CRACK_WIDTH;
         }

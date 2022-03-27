@@ -23,6 +23,8 @@ public class DesignParameters {
     private final boolean includeCrackingCalculations;
     private double crackWidthLimit;
 
+    public static final int steelYoungsModulus = 200; // Steel youngs modulus in GPa
+
     /**
      * Constructor.
      *
