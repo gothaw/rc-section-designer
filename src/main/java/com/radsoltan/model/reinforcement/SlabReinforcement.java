@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -336,6 +337,33 @@ public class SlabReinforcement extends Reinforcement {
                 .sum();
 
         return sumOfFirstMomentsOfArea / sumOfAreas;
+    }
+
+    /**
+     * Gets max horizontal spacing between reinforcement bars for tensile reinforcement. This is measured between bar centres.
+     *
+     * @param SlsMoment SLS moment in kNm/m
+     * @return max bar spacing for tensile reinforcement
+     */
+    @Override
+    public int getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
+        List<Integer> spacings = SlsMoment >= 0 ? bottomSpacings : topSpacings;
+
+        return Collections.max(spacings);
+    }
+
+    /**
+     * Gets max reinforcement bar diameter for tensile reinforcement.
+     *
+     * @param SlsMoment SLS moment in kNm/m
+     * @return max bar diameter for tensile reinforcement
+     */
+    @Override
+    public int getMaxBarDiameterForTensileReinforcement(double SlsMoment) {
+        List<Integer> mainReinforcement = SlsMoment >= 0 ? bottomDiameters : topDiameters;
+        List<Integer> additionalReinforcement = SlsMoment >= 0 ? additionalBottomDiameters : additionalTopDiameters;
+
+        return Math.max(Collections.max(mainReinforcement), Collections.max(additionalReinforcement));
     }
 
     /**

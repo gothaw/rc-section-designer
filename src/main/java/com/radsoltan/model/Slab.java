@@ -19,6 +19,7 @@ public class Slab implements Flexure, Cracking {
     private final double effectiveDepth;
     private double leverArm;
     /* Material Properties */
+    private final Concrete concrete;
     private final int fck;
     private final double fcd;
     private final int fy;
@@ -49,6 +50,7 @@ public class Slab implements Flexure, Cracking {
         this.reinforcement = reinforcement;
         this.designParameters = designParameters;
         this.geometry = new Geometry(slabStrip);
+        this.concrete = concrete;
         this.fck = concrete.getCompressiveStrength();
         this.fcd = concrete.getDesignCompressiveResistance(designParameters.getPartialFactorOfSafetyForConcrete());
         this.fctm = concrete.getMeanAxialTensileStrength();
@@ -81,6 +83,20 @@ public class Slab implements Flexure, Cracking {
         } else {
             throw new IllegalArgumentException(UIText.WRONG_CONCRETE_CLASS);
         }
+    }
+
+    @Override
+    public void calculateCracking() {
+        if (this.bendingCapacity == 0) {
+            throw new IllegalArgumentException(UIText.INVALID_BENDING_CAPACITY);
+        }
+        int width = geometry.getWidth();
+        int depth = geometry.getDepth();
+        double neutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
+        int maxSpacing = reinforcement.getMaxBarSpacingForTensileReinforcement(SlsMoment);
+        int maxBarDiameter = reinforcement.getMaxBarDiameterForTensileReinforcement(SlsMoment);
+
+        this.crackWidth = calculateCrackWidth(width, depth, effectiveDepth, neutralAxis, SlsMoment, maxSpacing, maxBarDiameter, providedTensileReinforcement, requiredTensileReinforcement, concrete, designParameters);
     }
 
     /**

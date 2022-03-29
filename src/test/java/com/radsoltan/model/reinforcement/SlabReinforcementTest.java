@@ -15,10 +15,14 @@ class SlabReinforcementTest {
     private static SlabReinforcement slabReinforcementWithMultipleLayers;
     private static SlabReinforcement slabReinforcementWithAdditionalReinforcement;
     private static DecimalFormat decimalFormat;
+    private static double SlsMomentSagging;
+    private static double SlsMomentHogging;
 
     @BeforeAll
     static void beforeAll() {
         decimalFormat = new DecimalFormat("##.000");
+        SlsMomentSagging = 100;
+        SlsMomentHogging = -100;
 
         slabReinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
                 List.of(32), List.of(0), List.of(175), Collections.emptyList());
@@ -110,5 +114,49 @@ class SlabReinforcementTest {
         double centroid = slabReinforcementWithAdditionalReinforcement.getCentroidOfBottomReinforcement(35);
 
         assertEquals(124.531, Double.parseDouble(decimalFormat.format(centroid)));
+    }
+
+    @Test
+    void shouldCalculateMaxSpacingForSaggingMoment() {
+        double maxSpacing = slabReinforcement.getMaxBarSpacingForTensileReinforcement(SlsMomentSagging);
+        double maxSpacingForReinforcementWithAdditionalRebar = slabReinforcementWithAdditionalReinforcement.getMaxBarSpacingForTensileReinforcement(SlsMomentSagging);
+        double maxSpacingForReinforcementWithMultipleLayers = slabReinforcementWithMultipleLayers.getMaxBarSpacingForTensileReinforcement(SlsMomentSagging);
+
+        assertEquals(175, maxSpacing);
+        assertEquals(250, maxSpacingForReinforcementWithAdditionalRebar);
+        assertEquals(250, maxSpacingForReinforcementWithMultipleLayers);
+    }
+
+    @Test
+    void shouldCalculateMaxDiameterForSaggingMoment() {
+        double maxDiameter = slabReinforcement.getMaxBarDiameterForTensileReinforcement(SlsMomentSagging);
+        double maxDiameterForReinforcementWithAdditionalRebar = slabReinforcementWithAdditionalReinforcement.getMaxBarDiameterForTensileReinforcement(SlsMomentSagging);
+        double maxDiameterForReinforcementWithMultipleLayers = slabReinforcementWithMultipleLayers.getMaxBarDiameterForTensileReinforcement(SlsMomentSagging);
+
+        assertEquals(32, maxDiameter);
+        assertEquals(25, maxDiameterForReinforcementWithAdditionalRebar);
+        assertEquals(20, maxDiameterForReinforcementWithMultipleLayers);
+    }
+
+    @Test
+    void shouldCalculateMaxSpacingForHoggingMoment() {
+        double maxSpacing = slabReinforcement.getMaxBarSpacingForTensileReinforcement(SlsMomentHogging);
+        double maxSpacingForReinforcementWithAdditionalRebar = slabReinforcementWithAdditionalReinforcement.getMaxBarSpacingForTensileReinforcement(SlsMomentHogging);
+        double maxSpacingForReinforcementWithMultipleLayers = slabReinforcementWithMultipleLayers.getMaxBarSpacingForTensileReinforcement(SlsMomentHogging);
+
+        assertEquals(200, maxSpacing);
+        assertEquals(200, maxSpacingForReinforcementWithAdditionalRebar);
+        assertEquals(200, maxSpacingForReinforcementWithMultipleLayers);
+    }
+
+    @Test
+    void shouldCalculateMaxDiameterForHoggingMoment() {
+        double maxDiameter = slabReinforcement.getMaxBarDiameterForTensileReinforcement(SlsMomentHogging);
+        double maxDiameterForReinforcementWithAdditionalRebar = slabReinforcementWithAdditionalReinforcement.getMaxBarDiameterForTensileReinforcement(SlsMomentHogging);
+        double maxDiameterForReinforcementWithMultipleLayers = slabReinforcementWithMultipleLayers.getMaxBarDiameterForTensileReinforcement(SlsMomentHogging);
+
+        assertEquals(25, maxDiameter);
+        assertEquals(20, maxDiameterForReinforcementWithAdditionalRebar);
+        assertEquals(20, maxDiameterForReinforcementWithMultipleLayers);
     }
 }

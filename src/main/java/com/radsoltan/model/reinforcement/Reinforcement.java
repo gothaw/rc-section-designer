@@ -41,6 +41,22 @@ public abstract class Reinforcement implements Drawable {
     public abstract double getCentroidOfBottomReinforcement(int nominalCoverBottom);
 
     /**
+     * Gets max horizontal spacing between reinforcement bars for tensile reinforcement. This is measured between bar centres.
+     *
+     * @param SlsMoment SLS moment in kNm or kNm/m
+     * @return max bar spacing for tensile reinforcement
+     */
+    public abstract int getMaxBarSpacingForTensileReinforcement(double SlsMoment);
+
+    /**
+     * Gets max reinforcement bar diameter for tensile reinforcement.
+     *
+     * @param SlsMoment SLS moment in kNm or kNm/m
+     * @return max bar diameter for tensile reinforcement
+     */
+    public abstract int getMaxBarDiameterForTensileReinforcement(double SlsMoment);
+
+    /**
      * Gets reinforcement description.
      *
      * @return reinforcement description

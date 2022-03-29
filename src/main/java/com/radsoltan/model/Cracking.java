@@ -1,5 +1,7 @@
 package com.radsoltan.model;
 
+import com.radsoltan.util.UIText;
+
 import java.util.stream.DoubleStream;
 
 /**
@@ -7,15 +9,16 @@ import java.util.stream.DoubleStream;
  */
 public interface Cracking {
 
-    default double calculateCracks(
+    void calculateCracking();
+
+    default double calculateCrackWidth(
             int width,
             int depth,
             double effectiveDepth,
             double neutralAxis,
-            double UlsMoment,
             double SlsMoment,
-            double maxSpacing,
-            double maxBarDiameter,
+            int maxSpacing,
+            int maxBarDiameter,
             double providedReinforcement,
             double requirementReinforcement,
             Concrete concrete,
@@ -25,7 +28,6 @@ public interface Cracking {
         double k2 = 0.5; // for bending
         double k3 = 3.4; // from National Annex, see cl. 7.3.4 in EC2
         double k4 = 0.425; // from National Annex, see cl. 7.3.4 in EC2
-
 
         double permanentLoadRatio = requirementReinforcement / providedReinforcement;
         double yieldStrength = designParameters.getYieldStrength();
@@ -39,10 +41,16 @@ public interface Cracking {
 
         double reinforcingRatio = providedReinforcement / effectiveTensionArea;
 
-        if (isReinforcementCloselySpaced(maxSpacing, maxBarDiameter, SlsMoment, designParameters)) {
-            return 1.0;
+        int nominalCover = SlsMoment >= 0 ? designParameters.getNominalCoverBottom() : designParameters.getNominalCoverTop();
+
+        boolean isReinforcementCloselySpaced = maxSpacing <= 5 * (nominalCover + 0.5 * maxBarDiameter);
+
+        if (isReinforcementCloselySpaced) {
+            double cracksSpacing = k3 * nominalCover + k1 * k2 * k4 * maxBarDiameter / reinforcingRatio;
+            double differenceBetweenSteelAndConcreteStrain = calculateDifferenceBetweenSteelAndConcreteStrain(serviceStress, concrete, reinforcingRatio);
+            return cracksSpacing * differenceBetweenSteelAndConcreteStrain;
         } else {
-            throw new IllegalArgumentException("Error");
+            throw new IllegalArgumentException(UIText.INVALID_BAR_SPACING_CRACKS);
         }
     }
 
@@ -67,11 +75,5 @@ public interface Cracking {
                 (serviceStress - loadingFactor * fctm / reinforcingRatio * (1 + alpha * reinforcingRatio)) / (steelYoungsModulus * 1000),
                 0.6 * serviceStress / (steelYoungsModulus * 1000)
                 );
-    }
-
-    default boolean isReinforcementCloselySpaced(double maxSpacing, double maxBarDiameter, double SlsMoment, DesignParameters designParameters) {
-        int nominalCover = SlsMoment >= 0 ? designParameters.getNominalCoverBottom() : designParameters.getNominalCoverTop();
-
-        return maxSpacing <= 5 * (nominalCover + 0.5 * maxBarDiameter);
     }
 }

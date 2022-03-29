@@ -99,6 +99,16 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     @Override
+    public int getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
+        return 0;
+    }
+
+    @Override
+    public int getMaxBarDiameterForTensileReinforcement(double SlsMoment) {
+        return 0;
+    }
+
+    @Override
     public String getDescription() {
         // TODO: 02/08/2020
         return null;
