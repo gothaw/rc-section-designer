@@ -24,6 +24,7 @@ public interface Cracking {
      * @param depth element depth in mm
      * @param effectiveDepth effective depth in mm
      * @param neutralAxis neutral axis in mm
+     * @param UlsMoment ULS moment in kNm
      * @param SlsMoment SLS moment in kNm
      * @param maxSpacing max spacing between bars in tension in mm
      * @param maxBarDiameter max bar diameters for bars in tension
@@ -38,6 +39,7 @@ public interface Cracking {
             int depth,
             double effectiveDepth,
             double neutralAxis,
+            double UlsMoment,
             double SlsMoment,
             int maxSpacing,
             int maxBarDiameter,
@@ -51,7 +53,7 @@ public interface Cracking {
         double k3 = 3.4; // from National Annex, see cl. 7.3.4 in EC2
         double k4 = 0.425; // from National Annex, see cl. 7.3.4 in EC2
 
-        double permanentLoadRatio = requirementReinforcement / providedReinforcement;
+        double permanentLoadRatio = SlsMoment / UlsMoment;
         double yieldStrength = designParameters.getYieldStrength();
         double steelPartialFactorOfSafety = designParameters.getPartialFactorOfSafetyForSteel();
         double redistributionRatio = designParameters.getRedistributionRatio();

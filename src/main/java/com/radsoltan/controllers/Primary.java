@@ -184,15 +184,15 @@ public class Primary extends Controller {
                         showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                     }
                     if (project.getFlexureCapacityCheckMessage() != null) {
-                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), UIText.FLEXURE, project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage());
+                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), UIText.FLEXURE, project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage(), project.getIsFlexureError());
                         flexureResultsWrapper.getChildren().add(flexureResults);
                     }
                     if (project.getShearCapacityCheckMessage() != null) {
-                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), UIText.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage());
+                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), UIText.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage(), project.getIsShearError());
                         shearResultsWrapper.getChildren().add(shearResults);
                     }
                     if (project.getCrackingCheckMessage() != null) {
-                        VBox crackingResults = generateResultsArea(project.getCrackWidth(), project.getCrackWidthLimit(), UIText.CRACKING, project.getCrackingCheckMessage(), project.getCrackingResultsAdditionalMessage());
+                        VBox crackingResults = generateResultsArea(project.getCrackWidth(), project.getCrackWidthLimit(), UIText.CRACKING, project.getCrackingCheckMessage(), project.getCrackingResultsAdditionalMessage(), project.getIsCrackingError());
                         crackingResultsWrapper.getChildren().add(crackingResults);
                     }
                 } else {
@@ -351,14 +351,15 @@ public class Primary extends Controller {
      * @param title             Title for the analysis result area, for example, 'Flexure', 'Shear' etc.
      * @param capacityMessage   Message that that includes comparison of designValue and maxValue. for instance: '12 kNm < 15 kNm'
      * @param additionalMessage Additional message for the user if section fails. For example: 'Increase reinforcement or redesign section.'
+     * @param isError           Indicates if error has been encountered during calculations
      * @return wrapper VBox
      */
-    private VBox generateResultsArea(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage) {
+    private VBox generateResultsArea(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage, boolean isError) {
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add(CssStyleClasses.SUBHEADING);
         Label capacityLabel = new Label(capacityMessage);
-        Label passFailLabel = new Label((designValue <= maxValue) ? UIText.PASS : UIText.FAIL);
-        passFailLabel.getStyleClass().add((designValue <= maxValue) ? CssStyleClasses.PASS : CssStyleClasses.FAIL);
+        Label passFailLabel = new Label((designValue <= maxValue && !isError) ? UIText.PASS : UIText.FAIL);
+        passFailLabel.getStyleClass().add((designValue <= maxValue && !isError) ? CssStyleClasses.PASS : CssStyleClasses.FAIL);
         HBox utilizationNoteWrapper = new HBox(capacityLabel, passFailLabel);
         utilizationNoteWrapper.getStyleClass().add(CssStyleClasses.UTILIZATION_WRAPPER);
         Label additionalMessageLabel = new Label(additionalMessage);

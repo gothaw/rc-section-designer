@@ -29,15 +29,18 @@ public class Project {
     private Concrete concrete;
     /* Results */
     private double flexureCapacity;
+    private String flexureResultsAdditionalMessage;
+    private String flexureCapacityCheckMessage;
+    private boolean isFlexureError;
     private double shearCapacity;
+    private String shearCapacityCheckMessage;
+    private String shearResultsAdditionalMessage;
+    private boolean isShearError;
     private double crackWidth;
     private double crackWidthLimit;
-    private String flexureCapacityCheckMessage;
-    private String shearCapacityCheckMessage;
     private String crackingCheckMessage;
-    private String flexureResultsAdditionalMessage;
-    private String shearResultsAdditionalMessage;
     private String crackingResultsAdditionalMessage;
+    private boolean isCrackingError;
 
     private static Project project;
 
@@ -96,10 +99,12 @@ public class Project {
                     String.format("%.2f kNm/m \u003c %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity) :
                     String.format("%.2f kNm/m \u003e %.2f kNm/m", Math.abs(UlsMomentValue), flexureCapacity);
             flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? UIText.SECTION_ADEQUATE : UIText.FLEXURE_FAIL_MESSAGE;
+            isFlexureError = false;
         } catch (IllegalArgumentException e) {
             flexureCapacity = 0;
             flexureCapacityCheckMessage = UIText.CALCULATIONS_ERROR;
             flexureResultsAdditionalMessage = e.getMessage();
+            isFlexureError = true;
         }
         if (designParameters.isIncludeCrackingCalculations()) {
             try {
@@ -111,11 +116,12 @@ public class Project {
                         String.format("%.2f mmm \u003c %.2f mmm", crackWidth, crackWidthLimit) :
                         String.format("%.2f mmm \u003e %.2f mmm", crackWidth, crackWidthLimit);
                 crackingResultsAdditionalMessage = (crackWidth <= crackWidthLimit) ? UIText.SECTION_ADEQUATE : UIText.CRACKING_FAIL_MESSAGE;
-
+                isCrackingError = false;
             } catch (IllegalArgumentException e) {
                 crackWidth = 0;
                 crackingCheckMessage = UIText.CALCULATIONS_ERROR;
                 crackingResultsAdditionalMessage = e.getMessage();
+                isCrackingError = true;
             }
         }
     }
@@ -432,5 +438,32 @@ public class Project {
      */
     public String getCrackingResultsAdditionalMessage() {
         return crackingResultsAdditionalMessage;
+    }
+
+    /**
+     * Getter for boolean flag that indicates if there was an error in flexure calculations.
+     *
+     * @return boolean flag for error in flexure calculations
+     */
+    public boolean getIsFlexureError() {
+        return isFlexureError;
+    }
+
+    /**
+     * Getter for boolean flag that indicates if there was an error in shear calculations.
+     *
+     * @return boolean flag for error in shear calculations
+     */
+    public boolean getIsShearError() {
+        return isShearError;
+    }
+
+    /**
+     * Getter for boolean flag that indicates if there was an error in cracking calculations.
+     *
+     * @return boolean flag for error in cracking calculations
+     */
+    public boolean getIsCrackingError() {
+        return isCrackingError;
     }
 }

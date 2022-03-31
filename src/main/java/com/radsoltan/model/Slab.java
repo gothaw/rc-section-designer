@@ -100,7 +100,7 @@ public class Slab implements Flexure, Cracking {
         int maxSpacing = reinforcement.getMaxBarSpacingForTensileReinforcement(SlsMoment);
         int maxBarDiameter = reinforcement.getMaxBarDiameterForTensileReinforcement(SlsMoment);
 
-        this.crackWidth = calculateCrackWidth(width, depth, effectiveDepth, neutralAxis, SlsMoment, maxSpacing, maxBarDiameter, providedTensileReinforcement, requiredTensileReinforcement, concrete, designParameters);
+        this.crackWidth = calculateCrackWidth(width, depth, effectiveDepth, neutralAxis, UlsMoment, SlsMoment, maxSpacing, maxBarDiameter, providedTensileReinforcement, requiredTensileReinforcement, concrete, designParameters);
     }
 
     /**
