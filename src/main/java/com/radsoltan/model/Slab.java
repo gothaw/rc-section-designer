@@ -21,7 +21,6 @@ public class Slab implements Flexure, Cracking {
     /* Material Properties */
     private final Concrete concrete;
     private final int fck;
-    private final double fcd;
     private final int fy;
     private final double fyd;
     private final double fctm;
@@ -34,11 +33,12 @@ public class Slab implements Flexure, Cracking {
 
     /**
      * Slab constructor. It includes internal forces, slab geometry, reinforcement, materials and all design parameters.
-     * @param UlsMoment ULS bending moment
-     * @param SlsMoment SLS bending moment
-     * @param slabStrip SlabStrip geometry object
-     * @param concrete Concrete enum
-     * @param reinforcement Slab reinforcement object
+     *
+     * @param UlsMoment        ULS bending moment
+     * @param SlsMoment        SLS bending moment
+     * @param slabStrip        SlabStrip geometry object
+     * @param concrete         Concrete enum
+     * @param reinforcement    Slab reinforcement object
      * @param designParameters Design parameters object
      */
     public Slab(double UlsMoment, double SlsMoment,
@@ -52,7 +52,6 @@ public class Slab implements Flexure, Cracking {
         this.geometry = new Geometry(slabStrip);
         this.concrete = concrete;
         this.fck = concrete.getCompressiveStrength();
-        this.fcd = concrete.getDesignCompressiveResistance(designParameters.getPartialFactorOfSafetyForConcrete());
         this.fctm = concrete.getMeanAxialTensileStrength();
         this.fy = designParameters.getYieldStrength();
         this.fyd = designParameters.getDesignYieldStrength();
@@ -64,6 +63,7 @@ public class Slab implements Flexure, Cracking {
      * Calculates bending capacity of the slab with accordance to Eurocode 2. Calculations support only singly reinforced section and are valid for concrete with fck less than 50 MPa.
      * The method calculates required section properties such as minimum reinforcement, width in compression zone and lever arm.
      * Based on these bendingCapacity and requiredTensileReinforcement fields are set up with relevant bending capacity and reinforcement required for bending.
+     *
      * @throws IllegalArgumentException exception if wrong concrete class or compressive force too large
      */
     @Override
@@ -85,6 +85,10 @@ public class Slab implements Flexure, Cracking {
         }
     }
 
+    /**
+     * Calculates crack widths with accordance to Eurocode 2. It requires flexure capacity to be calculated beforehand to run the calculations.
+     * It uses calculateCrackWidth default method from cracking interface. The crack width value is assigned to member variable.
+     */
     @Override
     public void calculateCracking() {
         if (this.bendingCapacity == 0) {
@@ -101,6 +105,7 @@ public class Slab implements Flexure, Cracking {
 
     /**
      * Getter for provided tensile reinforcement.
+     *
      * @return provided tensile reinforcement area
      */
     public double getProvidedTensileReinforcement() {
@@ -109,6 +114,7 @@ public class Slab implements Flexure, Cracking {
 
     /**
      * Getter for bending Capacity.
+     *
      * @return bending capacity in kNm
      */
     public double getBendingCapacity() {
@@ -117,9 +123,19 @@ public class Slab implements Flexure, Cracking {
 
     /**
      * Getter for required tensile reinforcement.
+     *
      * @return required tensile reinforcement area
      */
     public double getRequiredTensileReinforcement() {
         return requiredTensileReinforcement;
+    }
+
+    /**
+     * Getter for crack width.
+     *
+     * @return crack width
+     */
+    public double getCrackWidth() {
+        return crackWidth;
     }
 }

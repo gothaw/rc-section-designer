@@ -11,6 +11,8 @@ public class UIText {
     public static final String WARNING = "Warning!";
     public static final String OK = "OK";
     public static final String CALCULATIONS_ERROR = "Calculations error";
+    public static final String CRACKING = "Cracking";
+    public static final String CRACKING_FAIL_MESSAGE = "Increase reinforcement or redesign section.";
     public static final String ENTER_GEOMETRY = "Enter geometry...";
     public static final String ENTER_REINFORCEMENT = "Enter reinforcement...";
     public static final String FAIL = "Fail";

@@ -192,7 +192,8 @@ public class Primary extends Controller {
                         shearResultsWrapper.getChildren().add(shearResults);
                     }
                     if (project.getCrackingCheckMessage() != null) {
-                        // TODO: 13/08/2020 Implement cracking calcs
+                        VBox crackingResults = generateResultsArea(project.getCrackWidth(), project.getCrackWidthLimit(), UIText.CRACKING, project.getCrackingCheckMessage(), project.getCrackingResultsAdditionalMessage());
+                        crackingResultsWrapper.getChildren().add(crackingResults);
                     }
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);

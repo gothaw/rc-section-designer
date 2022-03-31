@@ -30,7 +30,8 @@ public class Project {
     /* Results */
     private double flexureCapacity;
     private double shearCapacity;
-    private double crackWidths;
+    private double crackWidth;
+    private double crackWidthLimit;
     private String flexureCapacityCheckMessage;
     private String shearCapacityCheckMessage;
     private String crackingCheckMessage;
@@ -101,8 +102,21 @@ public class Project {
             flexureResultsAdditionalMessage = e.getMessage();
         }
         if (designParameters.isIncludeCrackingCalculations()) {
-            // TODO: 11/08/2020 Wrap in try catch and implement method
-            // Calculating crack widths
+            try {
+                // Calculate cracking
+                slab.calculateCracking();
+                crackWidth = slab.getCrackWidth();
+                crackWidthLimit = designParameters.getCrackWidthLimit();
+                crackingCheckMessage = (crackWidth < crackWidthLimit) ?
+                        String.format("%.2f mmm \u003c %.2f mmm", crackWidth, crackWidthLimit) :
+                        String.format("%.2f mmm \u003e %.2f mmm", crackWidth, crackWidthLimit);
+                crackingResultsAdditionalMessage = (crackWidth <= crackWidthLimit) ? UIText.SECTION_ADEQUATE : UIText.CRACKING_FAIL_MESSAGE;
+
+            } catch (IllegalArgumentException e) {
+                crackWidth = 0;
+                crackingCheckMessage = UIText.CALCULATIONS_ERROR;
+                crackingResultsAdditionalMessage = e.getMessage();
+            }
         }
     }
 
@@ -353,8 +367,17 @@ public class Project {
      *
      * @return crack widths
      */
-    public double getCrackWidths() {
-        return crackWidths;
+    public double getCrackWidth() {
+        return crackWidth;
+    }
+
+    /**
+     * Getter for limiting crack width.
+     *
+     * @return crack width limit
+     */
+    public double getCrackWidthLimit() {
+        return crackWidthLimit;
     }
 
     /**
