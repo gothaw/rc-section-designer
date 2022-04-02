@@ -23,7 +23,7 @@ public interface Cracking {
      * @param width element width in mm
      * @param depth element depth in mm
      * @param effectiveDepth effective depth in mm
-     * @param neutralAxis neutral axis in mm
+     * @param neutralAxis depth of neutral axis in mm
      * @param UlsMoment ULS moment in kNm
      * @param SlsMoment SLS moment in kNm
      * @param maxSpacing max spacing between bars in tension in mm
