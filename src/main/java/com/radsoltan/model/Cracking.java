@@ -48,6 +48,9 @@ public interface Cracking {
             Concrete concrete,
             DesignParameters designParameters
     ) {
+        if (UlsMoment == 0 || SlsMoment == 0) {
+            return 0;
+        }
         double k1 = 0.8; // for high bond bars
         double k2 = 0.5; // for bending
         double k3 = 3.4; // from National Annex, see cl. 7.3.4 in EC2

@@ -14,7 +14,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SlabTest {
-
     private static double UlsMomentHogging;
     private static double SlsMomentHogging;
     private static double UlsMomentSagging;
@@ -26,10 +25,12 @@ class SlabTest {
     private static SlabReinforcement slabReinforcementWithAdditionalReinforcement;
     private static DesignParameters designParameters;
     private static DecimalFormat decimalFormat;
+    private static DecimalFormat decimalFormatCracks;
 
     @BeforeAll
     static void beforeAll() {
         decimalFormat = new DecimalFormat("##.000");
+        decimalFormatCracks = new DecimalFormat("##.0000");
         UlsMomentHogging = -400;
         SlsMomentHogging = 0.7 * UlsMomentHogging;
         UlsMomentSagging = 600;
@@ -129,6 +130,80 @@ class SlabTest {
 
         String errorMessage = exception.getMessage();
         String expectedMessage = UIText.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE;
+
+        assertEquals(expectedMessage, errorMessage);
+    }
+
+    @Test
+    void crackingIsCalculatedForSaggingMoment() {
+        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcement, designParameters);
+
+        slab.calculateBendingCapacity();
+        slab.calculateCracking();
+
+        double crackWidth = slab.getCrackWidth();
+
+        assertEquals(0.3792, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
+    }
+
+    @Test
+    void crackingIsNotCalculatedForExcessiveSpacing() {
+        Slab slab = new Slab(UlsMomentHogging, SlsMomentHogging, slabStrip, concrete, slabReinforcement, designParameters);
+
+        slab.calculateBendingCapacity();
+
+        Exception exception = assertThrows(IllegalArgumentException.class, slab::calculateCracking);
+
+        String errorMessage = exception.getMessage();
+        String expectedMessage = UIText.INVALID_BAR_SPACING_CRACKS;
+
+        assertEquals(expectedMessage, errorMessage);
+    }
+
+    @Test
+    void crackingIsCalculatedForMinimumReinforcement() {
+        Slab slab = new Slab(0, 0, slabStrip, concrete, slabReinforcement, designParameters);
+
+        slab.calculateBendingCapacity();
+        slab.calculateCracking();
+
+        double crackWidth = slab.getCrackWidth();
+
+        assertEquals(0, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
+    }
+
+    @Test
+    void crackingIsCalculatedForSlabReinforcementWithAdditionalReinforcement() {
+        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithAdditionalReinforcement, designParameters);
+
+        slab.calculateBendingCapacity();
+        slab.calculateCracking();
+
+        double crackWidth = slab.getCrackWidth();
+
+        assertEquals(0.4739, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
+    }
+
+    @Test
+    void crackingIsCalculatedForSlabReinforcementWithMultipleLayers() {
+        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithMultipleLayers, designParameters);
+
+        slab.calculateBendingCapacity();
+        slab.calculateCracking();
+
+        double crackWidth = slab.getCrackWidth();
+
+        assertEquals(0.4084, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
+    }
+
+    @Test
+    void errorIsThrownForCrackingWhenBendingCapacityIsNotCalculated() {
+        Slab slab = new Slab(UlsMomentHogging, SlsMomentHogging, slabStrip, concrete, slabReinforcement, designParameters);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, slab::calculateCracking);
+
+        String errorMessage = exception.getMessage();
+        String expectedMessage = UIText.INVALID_BENDING_CAPACITY;
 
         assertEquals(expectedMessage, errorMessage);
     }
