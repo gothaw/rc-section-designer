@@ -2,19 +2,21 @@ package com.radsoltan.controllers;
 
 import com.radsoltan.App;
 import com.radsoltan.util.Constants;
-
 import com.radsoltan.util.UIText;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.util.List;
 
 /**
  * Abstract class for controllers. Includes functionality to be shared between all controllers.
+ * It also handles events for top menu.
  */
 public abstract class Controller {
 
@@ -77,4 +79,58 @@ public abstract class Controller {
      * @return List of validation messages
      */
     protected abstract List<String> getValidationMessagesForEmptyFields();
+
+    /**
+     * Method that handles click on the "File -> New" top menu item.
+     *
+     * @param actionEvent top menu item click event
+     */
+    public void onNewMenuItemClickedHandler(ActionEvent actionEvent) {
+        System.out.println("New");
+    }
+
+    /**
+     * Method that handles click on the "File -> Open" top menu item.
+     *
+     * @param actionEvent top menu item click event
+     */
+    public void onOpenMenuItemClickedHandler(ActionEvent actionEvent) {
+        System.out.println("Open");
+    }
+
+    /**
+     * Method that handles click on the "File -> Save" top menu item.
+     *
+     * @param actionEvent top menu item click event
+     */
+    public void onSaveMenuItemClickedHandler(ActionEvent actionEvent) {
+        System.out.println("Save");
+    }
+
+    /**
+     * Method that handles click on the "File -> Save As" top menu item.
+     *
+     * @param actionEvent top menu item click event
+     */
+    public void onSaveAsMenuItemClickedHandler(ActionEvent actionEvent) {
+        System.out.println("Save As");
+    }
+
+    /**
+     * Method that handles click on the "About" top menu item.
+     *
+     * @param mouseEvent top menu item click event
+     */
+    public void onAboutMenuItemClickedHandler(MouseEvent mouseEvent) {
+        System.out.println("About");
+    }
+
+    /**
+     * Method that handles click on the "Help" top menu item.
+     *
+     * @param mouseEvent top menu item click event
+     */
+    public void onHelpMenuItemClickedHandler(MouseEvent mouseEvent) {
+        System.out.println("Help");
+    }
 }

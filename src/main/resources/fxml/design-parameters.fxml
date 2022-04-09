@@ -4,20 +4,27 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.radsoltan.components.PositiveIntegerField?>
-<?import javafx.scene.canvas.Canvas?>
 <?import com.radsoltan.components.NumericalTextField?>
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.radsoltan.controllers.DesignParametersSetup">
     <MenuBar>
         <Menu text="File">
-            <MenuItem text="New"/>
-            <MenuItem text="Open"/>
-            <MenuItem text="Save"/>
-            <MenuItem text="Save As"/>
+            <MenuItem text="New" onAction="#onNewMenuItemClickedHandler"/>
+            <MenuItem text="Open" onAction="#onOpenMenuItemClickedHandler"/>
+            <MenuItem text="Save" onAction="#onSaveMenuItemClickedHandler"/>
+            <MenuItem text="Save As" onAction="#onSaveAsMenuItemClickedHandler"/>
         </Menu>
-        <Menu text="About"/>
-        <Menu text="Help"/>
+        <Menu>
+            <graphic>
+                <Label text="About" onMouseClicked="#onAboutMenuItemClickedHandler" />
+            </graphic>
+        </Menu>
+        <Menu>
+            <graphic>
+                <Label text="Help" onMouseClicked="#onHelpMenuItemClickedHandler"/>
+            </graphic>
+        </Menu>
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <VBox styleClass="design-parameters-wrapper">

@@ -10,13 +10,21 @@
       fx:controller="com.radsoltan.controllers.SlabGeometrySetup">
     <MenuBar>
         <Menu text="File">
-            <MenuItem text="New"/>
-            <MenuItem text="Open"/>
-            <MenuItem text="Save"/>
-            <MenuItem text="Save As"/>
+            <MenuItem text="New" onAction="#onNewMenuItemClickedHandler"/>
+            <MenuItem text="Open" onAction="#onOpenMenuItemClickedHandler"/>
+            <MenuItem text="Save" onAction="#onSaveMenuItemClickedHandler"/>
+            <MenuItem text="Save As" onAction="#onSaveAsMenuItemClickedHandler"/>
         </Menu>
-        <Menu text="About"/>
-        <Menu text="Help"/>
+        <Menu>
+            <graphic>
+                <Label text="About" onMouseClicked="#onAboutMenuItemClickedHandler" />
+            </graphic>
+        </Menu>
+        <Menu>
+            <graphic>
+                <Label text="Help" onMouseClicked="#onHelpMenuItemClickedHandler"/>
+            </graphic>
+        </Menu>
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
         <VBox styleClass="slab-geometry">
