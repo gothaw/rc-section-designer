@@ -19,12 +19,12 @@
         </Menu>
         <Menu>
             <graphic>
-                <Label text="About" onMouseClicked="#onAboutMenuItemClickedHandler" />
+                <Label styleClass="menu-label" text="About" onMouseClicked="#onAboutMenuItemClickedHandler" />
             </graphic>
         </Menu>
         <Menu>
             <graphic>
-                <Label text="Help" onMouseClicked="#onHelpMenuItemClickedHandler"/>
+                <Label styleClass="menu-label" text="Help" onMouseClicked="#onHelpMenuItemClickedHandler"/>
             </graphic>
         </Menu>
     </MenuBar>
