@@ -149,7 +149,11 @@ public class Primary extends Controller {
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         this.drawElementImage();
-        Platform.runLater(() -> container.requestFocus());
+
+        Platform.runLater(() -> {
+            App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
+            container.requestFocus();
+        });
     }
 
     /**
@@ -312,6 +316,25 @@ public class Primary extends Controller {
             clearResultsArea();
         }
         project.setElementType(elementType);
+    }
+
+    /**
+     * Resets project properties. Clears results area and structural element image on canvas.
+     */
+    public void resetProject() {
+        //// TODO: 10/04/2022 Refactor
+        project.setGeometry(null);
+        project.setReinforcement(null);
+        project.setDesignParameters(null);
+        project.setConcrete(null);
+        geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+        geometryText.setText(UIText.ENTER_GEOMETRY);
+        reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+        reinforcementText.setText(UIText.ENTER_REINFORCEMENT);
+        designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+        GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
+        graphicsContext.clearRect(0, 0, elementImage.getWidth(), elementImage.getHeight());
+        clearResultsArea();
     }
 
     /**

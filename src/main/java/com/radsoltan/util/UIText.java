@@ -6,10 +6,12 @@ package com.radsoltan.util;
  */
 public class UIText {
     public static final String APP_TITLE = "RC Section Designer";
+    public static final String ALERT_NEW_ITEM = "Are you sure you want to create a new project?";
     public static final String ERROR = "Error!";
     public static final String INFO = "Info";
     public static final String WARNING = "Warning!";
     public static final String OK = "OK";
+    public static final String CANCEL = "Cancel";
     public static final String CALCULATIONS_ERROR = "Calculations error";
     public static final String CRACKING = "Cracking";
     public static final String CRACKING_FAIL_MESSAGE = "Increase reinforcement or redesign section.";
@@ -42,6 +44,7 @@ public class UIText {
     public static final String SETUP_SLAB_THICKNESS = "Please set up slab thickness";
     public static final String SETUP_YIELD_STRENGTH = "Please set up steel yield strength.";
     public static final String SETUP_PARTIAL_FACTORS = "Please set up partial factors for steel and concrete.";
+    public static final String SOMETHING_WENT_WRONG = "Sorry. Something went wrong.";
     public static final String UNIT_MOMENT_BEAM = "kNm";
     public static final String UNIT_MOMENT_SLAB = "kNm/m";
     public static final String UNIT_SHEAR = "kN";

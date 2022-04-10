@@ -22,7 +22,7 @@ public class Project {
     private String UlsMoment;
     private String SlsMoment;
     private String UlsShear;
-    private String elementType = "slab";
+    private String elementType;
     private Geometry geometry;
     private Reinforcement reinforcement;
     private DesignParameters designParameters;
