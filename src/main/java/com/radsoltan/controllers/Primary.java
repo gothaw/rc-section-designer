@@ -151,9 +151,17 @@ public class Primary extends Controller {
         this.drawElementImage();
 
         Platform.runLater(() -> {
-            App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
+            addEventHandlersForTopMenu();
             container.requestFocus();
         });
+    }
+
+    /**
+     * Method adds event handlers for top menu. This handles creating new project, opening file, saving.
+     * It also handles about and help menu items. The events are added to main stage of the app.
+     */
+    private void addEventHandlersForTopMenu() {
+        App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
     }
 
     /**
@@ -302,27 +310,53 @@ public class Primary extends Controller {
         }
         if (project.getElementType() != null && !project.getElementType().equals(elementType)) {
             // Resetting when switching between element types
-            project.setGeometry(null);
-            project.setReinforcement(null);
-            project.setDesignParameters(null);
-            project.setConcrete(null);
-            geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            geometryText.setText(UIText.ENTER_GEOMETRY);
-            reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            reinforcementText.setText(UIText.ENTER_REINFORCEMENT);
-            designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
-            graphicsContext.clearRect(0, 0, elementImage.getWidth(), elementImage.getHeight());
-            clearResultsArea();
+            resetProject(false, false);
         }
         project.setElementType(elementType);
     }
 
+
     /**
-     * Resets project properties. Clears results area and structural element image on canvas.
+     * Resets project properties. It also clears results area and structural element image on canvas.
      */
-    public void resetProject() {
-        //// TODO: 10/04/2022 Refactor
+    private void resetProject() {
+        resetProject(true, true);
+    }
+
+    /**
+     * Resets project properties. It also clears results area and structural element image on canvas.
+     *
+     * @param shouldResetProjectDetails if true it resets project details
+     * @param shouldResetElementType if true it resets element type
+     */
+    private void resetProject(boolean shouldResetProjectDetails, boolean shouldResetElementType) {
+        if (shouldResetProjectDetails) {
+            // Resetting project details
+            project.setName(null);
+            project.setId(null);
+            project.setDescription(null);
+            project.setAuthor(null);
+            projectName.setText("");
+            projectNumber.setText("");
+            projectDescription.setText("");
+            projectAuthor.setText("");
+        }
+
+        // Resetting analysis results
+        project.setUlsMoment(null);
+        project.setSlsMoment(null);
+        project.setUlsShear(null);
+        UlsMoment.setText("");
+        SlsMoment.setText("");
+        UlsShear.setText("");
+
+        // Resetting element type
+        if (shouldResetElementType) {
+            project.setElementType(null);
+            elementTypeChoiceBox.hide();
+        }
+
+        // Resetting main Project properties
         project.setGeometry(null);
         project.setReinforcement(null);
         project.setDesignParameters(null);
@@ -332,8 +366,12 @@ public class Primary extends Controller {
         reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         reinforcementText.setText(UIText.ENTER_REINFORCEMENT);
         designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+
+        // Clearing Image
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
         graphicsContext.clearRect(0, 0, elementImage.getWidth(), elementImage.getHeight());
+
+        // Clearing Results Area
         clearResultsArea();
     }
 
