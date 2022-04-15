@@ -152,6 +152,7 @@ public class Primary extends Controller {
 
         Platform.runLater(() -> {
             addEventHandlersForTopMenu();
+            addEventListenersForInputFields();
             container.requestFocus();
         });
     }
@@ -162,6 +163,15 @@ public class Primary extends Controller {
      */
     private void addEventHandlersForTopMenu() {
         App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
+    }
+
+    /**
+     * Method that event listeners for forces input fields. These clear results area if user changes analysis forces.
+     */
+    private void addEventListenersForInputFields() {
+        UlsMoment.textProperty().addListener((observable, oldValue, newValue) -> clearResultsArea());
+        SlsMoment.textProperty().addListener((observable, oldValue, newValue) -> clearResultsArea());
+        UlsShear.textProperty().addListener((observable, oldValue, newValue) -> clearResultsArea());
     }
 
     /**
