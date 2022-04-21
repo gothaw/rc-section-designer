@@ -13,8 +13,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -143,7 +145,11 @@ public abstract class Controller {
      * @param actionEvent top menu item click event
      */
     public void onOpenMenuItemClickedHandler(ActionEvent actionEvent) {
-        System.out.println("Open");
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(App.getStage());
+        if (selectedFile != null) {
+            System.out.println("Found something!");
+        }
     }
 
     /**
@@ -153,6 +159,12 @@ public abstract class Controller {
      */
     public void onSaveMenuItemClickedHandler(ActionEvent actionEvent) {
         System.out.println("Save");
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showSaveDialog(App.getStage());
+        if (file != null) {
+            System.out.println("Saving!");
+        }
+
     }
 
     /**
