@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,9 +149,23 @@ public abstract class Controller {
      */
     public void onOpenMenuItemClickedHandler(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Project file", "*.txt"));
         File selectedFile = fileChooser.showOpenDialog(App.getStage());
         if (selectedFile != null) {
             System.out.println("Found something!");
+        }
+    }
+
+    private void writeToFile(File file) {
+        String sampleText = "Hello World";
+
+        Path path = file.toPath();
+        byte[] bytes = sampleText.getBytes(StandardCharsets.UTF_8);
+
+        try {
+            Files.write(path, bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -160,11 +177,11 @@ public abstract class Controller {
     public void onSaveMenuItemClickedHandler(ActionEvent actionEvent) {
         System.out.println("Save");
         FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Project file", "*.txt"));
         File file = fileChooser.showSaveDialog(App.getStage());
         if (file != null) {
-            System.out.println("Saving!");
+            writeToFile(file);
         }
-
     }
 
     /**
