@@ -28,7 +28,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,6 +165,19 @@ public class Primary extends Controller {
      */
     private void addEventHandlersForTopMenu() {
         App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
+        App.getStage().addEventHandler(saveFileEvent, event -> this.saveProjectToFile());
+    }
+
+    /**
+     * Saving project to file.
+     */
+    private void saveProjectToFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Project file", "*.txt"));
+        File selectedFile = fileChooser.showSaveDialog(App.getStage());
+        if (selectedFile != null) {
+            System.out.println("Saving to file.");
+        }
     }
 
     /**

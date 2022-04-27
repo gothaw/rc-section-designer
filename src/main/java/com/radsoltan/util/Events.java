@@ -5,4 +5,6 @@ package com.radsoltan.util;
  */
 public class Events {
     public static final String NEW_FILE = "new_file";
+    public static final String OPEN_FILE = "open_file";
+    public static final String SAVE_FILE = "save_file";
 }

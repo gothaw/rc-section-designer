@@ -6,6 +6,8 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.UIText;
 
+import java.io.Serializable;
+
 /**
  * Class is used to represent project calculations. It includes values from fields shown in primary controller along with:
  * - Geometry
@@ -14,7 +16,7 @@ import com.radsoltan.util.UIText;
  * - Concrete type
  * It uses all that information to calculate flexural and shear capacity and crack widths (if applicable). The class uses singleton pattern.
  */
-public class Project {
+public class Project implements Serializable {
     private String name;
     private String id;
     private String description;

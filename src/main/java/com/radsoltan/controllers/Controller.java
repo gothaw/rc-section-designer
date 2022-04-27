@@ -13,14 +13,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +26,7 @@ import java.util.Optional;
 public abstract class Controller {
 
     public static final EventType<?> newFileEvent = new EventType<>(Events.NEW_FILE);
+    public static final EventType<?> saveFileEvent = new EventType<>(Events.SAVE_FILE);
 
     /**
      * Shows an alert box with a default width and height.
@@ -148,25 +144,7 @@ public abstract class Controller {
      * @param actionEvent top menu item click event
      */
     public void onOpenMenuItemClickedHandler(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Project file", "*.txt"));
-        File selectedFile = fileChooser.showOpenDialog(App.getStage());
-        if (selectedFile != null) {
-            System.out.println("Found something!");
-        }
-    }
-
-    private void writeToFile(File file) {
-        String sampleText = "Hello World";
-
-        Path path = file.toPath();
-        byte[] bytes = sampleText.getBytes(StandardCharsets.UTF_8);
-
-        try {
-            Files.write(path, bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Opening file.");
     }
 
     /**
@@ -175,13 +153,7 @@ public abstract class Controller {
      * @param actionEvent top menu item click event
      */
     public void onSaveMenuItemClickedHandler(ActionEvent actionEvent) {
-        System.out.println("Save");
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Project file", "*.txt"));
-        File file = fileChooser.showSaveDialog(App.getStage());
-        if (file != null) {
-            writeToFile(file);
-        }
+        App.getStage().fireEvent(new Event(saveFileEvent));
     }
 
     /**
@@ -190,7 +162,7 @@ public abstract class Controller {
      * @param actionEvent top menu item click event
      */
     public void onSaveAsMenuItemClickedHandler(ActionEvent actionEvent) {
-        System.out.println("Save As");
+        App.getStage().fireEvent(new Event(saveFileEvent));
     }
 
     /**
