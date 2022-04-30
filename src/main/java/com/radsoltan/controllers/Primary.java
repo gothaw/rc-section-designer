@@ -12,10 +12,7 @@ import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.VerticalDimensionLine;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.Constants;
-import com.radsoltan.util.CssStyleClasses;
-import com.radsoltan.util.UIText;
-import com.radsoltan.util.Utility;
+import com.radsoltan.util.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -96,7 +93,8 @@ public class Primary extends Controller {
 
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.75;
     private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.5;
-    public static final int MAX_SLAB_THICKNESS_WHEN_DRAWING = 500;
+    private static final int MAX_SLAB_THICKNESS_WHEN_DRAWING = 500;
+    private static File projectFile;
 
     /**
      * Constructor. Gets project instance.
@@ -166,17 +164,61 @@ public class Primary extends Controller {
     private void addEventHandlersForTopMenu() {
         App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
         App.getStage().addEventHandler(saveFileEvent, event -> this.saveProjectToFile());
+        App.getStage().addEventHandler(saveAsFileEvent, event -> this.saveAsProjectToFile());
+        App.getStage().addEventHandler(openFileEvent, event -> this.openProjectFromFile());
     }
 
     /**
-     * Saving project to file.
+     * It handles saving project to a file.
+     * If there is a project file already it uses it. Otherwise it invokes method for save as functionality.
      */
     private void saveProjectToFile() {
+        if (projectFile == null) {
+            saveAsProjectToFile();
+        } else {
+            try {
+                setProjectProperties();
+                ProjectFile.save(projectFile, project);
+            } catch (IOException e) {
+                showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+            }
+        }
+    }
+
+    /**
+     * It handles saving project to a file. It uses file chooser to show a save dialog.
+     * If file object is created it invokes static method on ProjectFile class to save the project.
+     */
+    private void saveAsProjectToFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Project file", "*.txt"));
-        File selectedFile = fileChooser.showSaveDialog(App.getStage());
-        if (selectedFile != null) {
-            System.out.println("Saving to file.");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.PROJECT_FILE, Constants.PROJECT_FILE_EXTENSION));
+        File file = fileChooser.showSaveDialog(App.getStage());
+        if (file != null) {
+            try {
+                setProjectProperties();
+                ProjectFile.save(file, project);
+                // Saving file in static field
+                projectFile = file;
+            } catch (IOException e) {
+                showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+            }
+        }
+    }
+
+    /**
+     * It handles opening project from a file. It uses file chooser to show an open dialog.
+     * If file object is created it invokes static method on ProjectFile class to open file.
+     */
+    private void openProjectFromFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.PROJECT_FILE, Constants.PROJECT_FILE_EXTENSION));
+        File file = fileChooser.showOpenDialog(App.getStage());
+        if (file != null) {
+            try {
+                ProjectFile.open(file);
+            } catch (IOException | ClassNotFoundException | ClassCastException e) {
+                showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+            }
         }
     }
 
@@ -352,7 +394,7 @@ public class Primary extends Controller {
      * Resets project properties. It also clears results area and structural element image on canvas.
      *
      * @param shouldResetProjectDetails if true it resets project details
-     * @param shouldResetElementType if true it resets element type
+     * @param shouldResetElementType    if true it resets element type
      */
     private void resetProject(boolean shouldResetProjectDetails, boolean shouldResetElementType) {
         if (shouldResetProjectDetails) {
@@ -411,7 +453,9 @@ public class Primary extends Controller {
         project.setUlsMoment(UlsMoment.getText());
         project.setSlsMoment(SlsMoment.getText());
         project.setUlsShear(UlsShear.getText());
-        project.setElementType(elementTypeChoiceBox.getValue().toLowerCase());
+        if (elementTypeChoiceBox.getValue() != null) {
+            project.setElementType(elementTypeChoiceBox.getValue().toLowerCase());
+        }
     }
 
     /**
@@ -578,8 +622,9 @@ public class Primary extends Controller {
     /**
      * Draws slab reinforcement. It adds reinforcement description as text on canvas.
      * Slab reinforcement is scaled using the scale from getSlabImageScale method.
-     * @param slabStrip slab strip object instantiated using constructor with graphics context
-     * @param slabImageScale slab image scale
+     *
+     * @param slabStrip        slab strip object instantiated using constructor with graphics context
+     * @param slabImageScale   slab image scale
      * @param designParameters design parameters object
      */
     private void drawSlabReinforcement(SlabStrip slabStrip, DesignParameters designParameters, double slabImageScale) {
@@ -611,7 +656,7 @@ public class Primary extends Controller {
      * Otherwise, the slabImageHeight stays constant when increasing slab depth, scale decreases and the slab strip width increases and is greater than 1m.
      *
      * @param slabImageWidth slab image width
-     * @param slabThickness actual slab thickness in mm
+     * @param slabThickness  actual slab thickness in mm
      * @return scale of the slab image
      */
     private double getSlabImageScale(double slabImageWidth, int slabThickness) {
@@ -628,6 +673,7 @@ public class Primary extends Controller {
 
     /**
      * Calculates the scale for the end arch depth. This is a ratio of MAX_SLAB_THICKNESS_WHEN_DRAWING to the slab thickness.
+     *
      * @param slabThickness slab thickness in mm
      * @return scale for the end arch depth
      */
