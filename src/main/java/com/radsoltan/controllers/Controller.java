@@ -27,6 +27,8 @@ public abstract class Controller {
 
     public static final EventType<?> newFileEvent = new EventType<>(Events.NEW_FILE);
     public static final EventType<?> saveFileEvent = new EventType<>(Events.SAVE_FILE);
+    public static final EventType<?> saveAsFileEvent = new EventType<>(Events.SAVE_AS_FILE);
+    public static final EventType<?> openFileEvent = new EventType<>(Events.OPEN_FILE);
 
     /**
      * Shows an alert box with a default width and height.
@@ -47,21 +49,7 @@ public abstract class Controller {
      * @param prefHeight Height in pixels.
      */
     protected void showAlertBox(String message, AlertKind kind, double prefWidth, double prefHeight) {
-        showAlertBox(message, kind, prefWidth, prefHeight, false);
-    }
-
-    /**
-     * Shows an alert box with custom preferred width and preferred height. It invokes createAlertBox method.
-     * The alert includes an OK button and it can also include a second button - Cancel button.
-     *
-     * @param message             Text to be shown as an alert message.
-     * @param kind                Type of alert box as a AlertKind enum.
-     * @param prefWidth           Width in pixels.
-     * @param prefHeight          Height in pixels.
-     * @param includeCancelButton Boolean used to include a second button - cancel button.
-     */
-    protected void showAlertBox(String message, AlertKind kind, double prefWidth, double prefHeight, boolean includeCancelButton) {
-        Alert alert = createAlertBox(message, kind, prefWidth, prefHeight, includeCancelButton);
+        Alert alert = createAlertBox(message, kind, prefWidth, prefHeight, false);
         alert.showAndWait();
     }
 
@@ -144,7 +132,7 @@ public abstract class Controller {
      * @param actionEvent top menu item click event
      */
     public void onOpenMenuItemClickedHandler(ActionEvent actionEvent) {
-        System.out.println("Opening file.");
+        App.getStage().fireEvent(new Event(openFileEvent));
     }
 
     /**
@@ -162,7 +150,7 @@ public abstract class Controller {
      * @param actionEvent top menu item click event
      */
     public void onSaveAsMenuItemClickedHandler(ActionEvent actionEvent) {
-        App.getStage().fireEvent(new Event(saveFileEvent));
+        App.getStage().fireEvent(new Event(saveAsFileEvent));
     }
 
     /**
