@@ -20,6 +20,7 @@ public class ProjectFile {
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(project);
+        objectOutputStream.close();
     }
 
     /**
@@ -35,6 +36,7 @@ public class ProjectFile {
         FileInputStream fileInputStream = new FileInputStream(file);
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
         Object object = objectInputStream.readObject();
+        objectInputStream.close();
         return (Project) object;
     }
 }

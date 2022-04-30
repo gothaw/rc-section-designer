@@ -89,7 +89,7 @@ public class Primary extends Controller {
     @FXML
     private ChoiceBox<String> elementTypeChoiceBox;
 
-    private final Project project;
+    private Project project;
 
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.75;
     private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.5;
@@ -216,7 +216,8 @@ public class Primary extends Controller {
         File file = fileChooser.showOpenDialog(App.getStage());
         if (file != null) {
             try {
-                ProjectFile.open(file);
+                project = ProjectFile.open(file);
+                App.setRoot("primary");
             } catch (IOException | ClassNotFoundException | ClassCastException e) {
                 showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
             }
