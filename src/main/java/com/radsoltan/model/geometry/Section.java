@@ -3,11 +3,13 @@ package com.radsoltan.model.geometry;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
+
 /**
  * Abstract class that should be inherited by more specific structural cross sections with a defined shape.
  * That is rectangle, T shape and L shape sections.
  */
-public abstract class Section implements Drawable {
+public abstract class Section implements Drawable, Serializable {
 
     /**
      * Getter for section depth.

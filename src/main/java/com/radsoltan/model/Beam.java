@@ -5,7 +5,9 @@ import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
 import com.radsoltan.util.UIText;
 
-public class Beam implements Flexure, Shear, Cracking {
+import java.io.Serializable;
+
+public class Beam implements Flexure, Shear, Cracking, Serializable {
     private final double UlsMoment;
     private final double UlsShear;
     private final double SlsMoment;

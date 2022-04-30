@@ -1,5 +1,7 @@
 package com.radsoltan.model;
 
+import java.io.Serializable;
+
 /**
  * Class that is used to describe various design parameters needed for project calculations.
  * It includes:
@@ -10,7 +12,7 @@ package com.radsoltan.model;
  * - limiting crack widths
  * - moment redistribution ratio
  */
-public class DesignParameters {
+public class DesignParameters implements Serializable {
     private final int nominalCoverTop;
     private final int nominalCoverSides;
     private final int nominalCoverBottom;

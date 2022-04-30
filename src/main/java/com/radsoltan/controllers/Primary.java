@@ -201,6 +201,7 @@ public class Primary extends Controller {
                 projectFile = file;
             } catch (IOException e) {
                 showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+                e.printStackTrace();
             }
         }
     }

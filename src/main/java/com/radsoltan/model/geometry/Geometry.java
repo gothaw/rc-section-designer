@@ -1,10 +1,12 @@
 package com.radsoltan.model.geometry;
 
+import java.io.Serializable;
+
 /**
  * Class used for describing project geometry.
  * It holds an object that describes the section and it inherits from Section class.
  */
-public class Geometry {
+public class Geometry implements Serializable {
     private Rectangle rectangle;
     private LSection lSection;
     private TSection tSection;

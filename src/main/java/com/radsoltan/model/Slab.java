@@ -5,12 +5,14 @@ import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.UIText;
 
+import java.io.Serializable;
+
 /**
  * Class that describes a slab with given geometry, materials, reinforcement and internal forces.
  * It implements Flexure and Cracking interfaces.
  * Includes methods that calculate bending capacity and crack widths.
  */
-public class Slab implements Flexure, Cracking {
+public class Slab implements Flexure, Cracking, Serializable {
     private final double UlsMoment;
     private final double SlsMoment;
     private final Geometry geometry;
