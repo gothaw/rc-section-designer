@@ -15,6 +15,7 @@ import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -89,7 +90,7 @@ public class Primary extends Controller {
     @FXML
     private ChoiceBox<String> elementTypeChoiceBox;
 
-    private Project project;
+    private final Project project;
 
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.75;
     private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.5;
@@ -165,7 +166,7 @@ public class Primary extends Controller {
         App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
         App.getStage().addEventHandler(saveFileEvent, event -> this.saveProjectToFile());
         App.getStage().addEventHandler(saveAsFileEvent, event -> this.saveAsProjectToFile());
-        App.getStage().addEventHandler(openFileEvent, event -> this.openProjectFromFile());
+        App.getStage().addEventHandler(openFileEvent, this::openProjectFromFile);
     }
 
     /**
@@ -177,7 +178,7 @@ public class Primary extends Controller {
             saveAsProjectToFile();
         } else {
             try {
-                setProjectProperties();
+                setProjectPropertiesFromInputFields();
                 ProjectFile.save(projectFile, project);
             } catch (IOException e) {
                 showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
@@ -195,7 +196,7 @@ public class Primary extends Controller {
         File file = fileChooser.showSaveDialog(App.getStage());
         if (file != null) {
             try {
-                setProjectProperties();
+                setProjectPropertiesFromInputFields();
                 ProjectFile.save(file, project);
                 // Saving file in static field
                 projectFile = file;
@@ -207,20 +208,92 @@ public class Primary extends Controller {
     }
 
     /**
-     * It handles opening project from a file. It uses file chooser to show an open dialog.
-     * If file object is created it invokes static method on ProjectFile class to open file.
+     *
+     *
      */
-    private void openProjectFromFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.PROJECT_FILE, Constants.PROJECT_FILE_EXTENSION));
-        File file = fileChooser.showOpenDialog(App.getStage());
-        if (file != null) {
-            try {
-                project = ProjectFile.open(file);
-                App.setRoot("primary");
-            } catch (IOException | ClassNotFoundException | ClassCastException e) {
-                showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+
+    /**
+     * It handles opening project from a file. It requires passing a FileEvent as a parameter.
+     * If that is the case, it invokes static method on ProjectFile class to open the file and sets up project instance fields.
+     * It also sets up text fields and redirects to the primary view.
+     *
+     * @param event open file event.
+     */
+    private void openProjectFromFile(Event event) {
+        try {
+            File file = ((FileEvent) event).getFile();
+
+            if (file == null) {
+                throw new IOException(UIText.SOMETHING_WENT_WRONG);
             }
+
+            Project projectFromFile = ProjectFile.open(file);
+
+            // Setting project details
+            project.setName(projectFromFile.getName());
+            project.setId(projectFromFile.getId());
+            project.setDescription(projectFromFile.getDescription());
+            project.setAuthor(projectFromFile.getAuthor());
+            // Setting analysis forces
+            project.setUlsMoment(projectFromFile.getUlsMoment());
+            project.setSlsMoment(projectFromFile.getSlsMoment());
+            project.setUlsShear(projectFromFile.getUlsShear());
+            // Setting element type
+            project.setElementType(projectFromFile.getElementType());
+            // Setting geometry
+            project.setGeometry(projectFromFile.getGeometry());
+            // Setting reinforcement
+            project.setReinforcement(projectFromFile.getReinforcement());
+            // Setting design parameters
+            project.setDesignParameters(projectFromFile.getDesignParameters());
+            // Setting concrete
+            project.setConcrete(projectFromFile.getConcrete());
+            // Setting Results
+            // TODO: 01/05/2022 Set results
+
+            // Setting project details
+            projectName.setText(project.getName());
+            if (project.getId() != null) {
+                projectNumber.setText(project.getId());
+            }
+            projectDescription.setText(project.getDescription());
+            projectAuthor.setText(project.getAuthor());
+
+            UlsMomentWrapper = (HBox) UlsMoment.getParent();
+            SlsMomentWrapper = (HBox) SlsMoment.getParent();
+            UlsShearWrapper = (HBox) UlsShear.getParent();
+
+            // Setting element type
+            elementTypeChoiceBox.setValue(Utility.capitalize(project.getElementType()));
+            // Setting analysis forces
+            if (project.getUlsMoment() != null) {
+                UlsMoment.setText(project.getUlsMoment());
+            }
+            if (project.getSlsMoment() != null) {
+                SlsMoment.setText(project.getSlsMoment());
+            }
+            if (project.getUlsShear() != null) {
+                UlsShear.setText(project.getUlsShear());
+            }
+            // Setting geometry, reinforcement and design parameters sections
+            if (project.getGeometry() == null) {
+                geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            } else {
+                geometryText.setText(project.getGeometry().getDescription());
+            }
+            if (project.getReinforcement() == null) {
+                reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            } else {
+                reinforcementText.setText(project.getReinforcement().getDescription());
+            }
+            if (project.getDesignParameters() == null) {
+                designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
+            }
+            this.drawElementImage();
+            App.setRoot("primary");
+
+        } catch (IOException | ClassNotFoundException | ClassCastException e) {
+            showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
         }
     }
 
@@ -253,7 +326,7 @@ public class Primary extends Controller {
             List<String> validationMessages = getValidationMessagesForEmptyFields();
             // Checking if project properties are set
             if (validationMessages.isEmpty()) {
-                setProjectProperties();
+                setProjectPropertiesFromInputFields();
                 clearResultsArea();
                 List<String> elementValidationMessages = getValidationMessagesBasedOnElementType(project.getElementType());
                 // Checking if project properties are valid
@@ -297,7 +370,7 @@ public class Primary extends Controller {
     public void setDesignParameters(ActionEvent actionEvent) throws IOException {
         if (project.getElementType() != null) {
             // Saving project properties before redirect
-            setProjectProperties();
+            setProjectPropertiesFromInputFields();
             App.setRoot("design-parameters");
         } else {
             showAlertBox(UIText.SETUP_ELEMENT_TYPE, AlertKind.ERROR);
@@ -314,7 +387,7 @@ public class Primary extends Controller {
     public void setReinforcement(ActionEvent actionEvent) throws IOException {
         if (project.getElementType() != null) {
             // Saving project properties before redirect
-            setProjectProperties();
+            setProjectPropertiesFromInputFields();
             switch (project.getElementType().toLowerCase()) {
                 case Constants.ELEMENT_TYPE_SLAB:
                     App.setRoot("slab-reinforcement");
@@ -340,7 +413,7 @@ public class Primary extends Controller {
     public void setGeometry(ActionEvent actionEvent) throws IOException {
         if (project.getElementType() != null) {
             // Saving project properties before redirect
-            setProjectProperties();
+            setProjectPropertiesFromInputFields();
             switch (project.getElementType().toLowerCase()) {
                 case Constants.ELEMENT_TYPE_SLAB:
                     App.setRoot("slab-geometry");
@@ -447,7 +520,7 @@ public class Primary extends Controller {
     /**
      * Sets project properties. It takes values from the input fields and sets them in project instance properties.
      */
-    private void setProjectProperties() {
+    private void setProjectPropertiesFromInputFields() {
         project.setName(projectName.getText());
         project.setId(projectNumber.getText());
         project.setDescription(projectDescription.getText());

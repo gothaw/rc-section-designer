@@ -3,6 +3,7 @@ package com.radsoltan.controllers;
 import com.radsoltan.App;
 import com.radsoltan.util.Constants;
 import com.radsoltan.util.Events;
+import com.radsoltan.util.FileEvent;
 import com.radsoltan.util.UIText;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -13,8 +14,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -128,11 +131,17 @@ public abstract class Controller {
 
     /**
      * Method that handles click on the "File -> Open" top menu item.
+     * It uses file chooser to show an open dialog. If file is created it fires open file event.
      *
      * @param actionEvent top menu item click event
      */
     public void onOpenMenuItemClickedHandler(ActionEvent actionEvent) {
-        App.getStage().fireEvent(new Event(openFileEvent));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.PROJECT_FILE, Constants.PROJECT_FILE_EXTENSION));
+        File file = fileChooser.showOpenDialog(App.getStage());
+        if (file != null) {
+            App.getStage().fireEvent(new FileEvent(file, openFileEvent));
+        }
     }
 
     /**
