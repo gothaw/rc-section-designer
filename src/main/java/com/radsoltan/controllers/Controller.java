@@ -33,6 +33,8 @@ public abstract class Controller {
     public static final EventType<?> saveAsFileEvent = new EventType<>(Events.SAVE_AS_FILE);
     public static final EventType<?> openFileEvent = new EventType<>(Events.OPEN_FILE);
 
+    private static File mainFile;
+
     /**
      * Shows an alert box with a default width and height.
      *
@@ -146,20 +148,34 @@ public abstract class Controller {
 
     /**
      * Method that handles click on the "File -> Save" top menu item.
+     * If main project file is already set up, it passes that file to an event and fires save file event.
+     * Otherwise it invokes method for save as functionality.
      *
      * @param actionEvent top menu item click event
      */
     public void onSaveMenuItemClickedHandler(ActionEvent actionEvent) {
-        App.getStage().fireEvent(new Event(saveFileEvent));
+        if (mainFile != null) {
+            App.getStage().fireEvent(new FileEvent(mainFile, saveFileEvent));
+        } else {
+            onSaveAsMenuItemClickedHandler(actionEvent);
+        }
     }
 
     /**
      * Method that handles click on the "File -> Save As" top menu item.
+     * It uses file chooser to show a save dialog. If file object is created it fires save as file event.
      *
      * @param actionEvent top menu item click event
      */
     public void onSaveAsMenuItemClickedHandler(ActionEvent actionEvent) {
-        App.getStage().fireEvent(new Event(saveAsFileEvent));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.PROJECT_FILE, Constants.PROJECT_FILE_EXTENSION));
+        File file = fileChooser.showSaveDialog(App.getStage());
+        if (file != null) {
+            // Saving file to the static field for future use
+            mainFile = file;
+            App.getStage().fireEvent(new FileEvent(file, saveAsFileEvent));
+        }
     }
 
     /**

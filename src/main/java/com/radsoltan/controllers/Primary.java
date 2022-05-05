@@ -26,7 +26,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +94,6 @@ public class Primary extends Controller {
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.75;
     private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.5;
     private static final int MAX_SLAB_THICKNESS_WHEN_DRAWING = 500;
-    private static File projectFile;
 
     /**
      * Constructor. Gets project instance.
@@ -164,60 +162,40 @@ public class Primary extends Controller {
      */
     private void addEventHandlersForTopMenu() {
         App.getStage().addEventHandler(newFileEvent, event -> this.resetProject());
-        App.getStage().addEventHandler(saveFileEvent, event -> this.saveProjectToFile());
-        App.getStage().addEventHandler(saveAsFileEvent, event -> this.saveAsProjectToFile());
+        App.getStage().addEventHandler(saveFileEvent, this::saveProjectToFile);
+        App.getStage().addEventHandler(saveAsFileEvent, this::saveProjectToFile);
         App.getStage().addEventHandler(openFileEvent, this::openProjectFromFile);
     }
 
     /**
-     * It handles saving project to a file.
-     * If there is a project file already it uses it. Otherwise it invokes method for save as functionality.
+     * It handles saving project to a file. It requires passing a FileEvent as a parameter.
+     * If that is the case, it invokes static method on ProjectFile class to save the project to the file.
+     *
+     * @param event save as file event
      */
-    private void saveProjectToFile() {
-        if (projectFile == null) {
-            saveAsProjectToFile();
-        } else {
-            try {
-                setProjectPropertiesFromInputFields();
-                ProjectFile.save(projectFile, project);
-            } catch (IOException e) {
-                showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+    private void saveProjectToFile(Event event) {
+        try {
+            File file = ((FileEvent) event).getFile();
+
+            if (file == null) {
+                throw new IOException(UIText.SOMETHING_WENT_WRONG);
             }
+
+            // Setting project properties from input fields before saving
+            setProjectPropertiesFromInputFields();
+            ProjectFile.save(file, project);
+        } catch (IOException e) {
+            showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+            e.printStackTrace();
         }
     }
-
-    /**
-     * It handles saving project to a file. It uses file chooser to show a save dialog.
-     * If file object is created it invokes static method on ProjectFile class to save the project.
-     */
-    private void saveAsProjectToFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.PROJECT_FILE, Constants.PROJECT_FILE_EXTENSION));
-        File file = fileChooser.showSaveDialog(App.getStage());
-        if (file != null) {
-            try {
-                setProjectPropertiesFromInputFields();
-                ProjectFile.save(file, project);
-                // Saving file in static field
-                projectFile = file;
-            } catch (IOException e) {
-                showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     *
-     *
-     */
 
     /**
      * It handles opening project from a file. It requires passing a FileEvent as a parameter.
      * If that is the case, it invokes static method on ProjectFile class to open the file and sets up project instance fields.
      * It also sets up text fields and redirects to the primary view.
      *
-     * @param event open file event.
+     * @param event open file event
      */
     private void openProjectFromFile(Event event) {
         try {
