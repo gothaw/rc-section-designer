@@ -36,6 +36,8 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     private final double maximumLinksSpacing;
     private double requiredShearReinforcement;
 
+    private static final long serialVersionUID = 1L;
+
     public Beam(double UlsMoment, double UlsShear, double SlsMoment,
                 Geometry geometry, Concrete concrete,
                 BeamReinforcement reinforcement,

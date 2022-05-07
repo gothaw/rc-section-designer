@@ -209,6 +209,8 @@ public class DesignParametersSetup extends Controller {
 
             project.setDesignParameters(designParameters);
             project.setConcrete(concrete);
+            project.resetResults();
+
             App.setRoot("primary");
         } else {
             // Show validation message

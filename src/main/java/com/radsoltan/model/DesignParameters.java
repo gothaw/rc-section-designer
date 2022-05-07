@@ -27,6 +27,8 @@ public class DesignParameters implements Serializable {
 
     public static final int steelYoungsModulus = 200; // Steel youngs modulus in GPa
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constructor.
      *

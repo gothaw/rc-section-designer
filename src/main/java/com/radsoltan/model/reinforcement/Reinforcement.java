@@ -12,6 +12,8 @@ public abstract class Reinforcement implements Drawable, Serializable {
 
     public static final String DEFAULT_TEXT_FONT = "Source Sans Pro";
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Gets total area of the top reinforcement.
      *

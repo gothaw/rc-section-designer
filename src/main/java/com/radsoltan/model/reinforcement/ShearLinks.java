@@ -14,6 +14,8 @@ public class ShearLinks implements Drawable, Serializable {
     private final int spacing;
     private final int legs;
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constructor.
      *

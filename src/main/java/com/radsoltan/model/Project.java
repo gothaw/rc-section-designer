@@ -31,8 +31,8 @@ public class Project implements Serializable {
     private Concrete concrete;
     /* Results */
     private double flexureCapacity;
-    private String flexureResultsAdditionalMessage;
     private String flexureCapacityCheckMessage;
+    private String flexureResultsAdditionalMessage;
     private boolean isFlexureError;
     private double shearCapacity;
     private String shearCapacityCheckMessage;
@@ -45,6 +45,8 @@ public class Project implements Serializable {
     private boolean isCrackingError;
 
     private static Project project;
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Gets project instance. Singleton pattern.
@@ -134,6 +136,25 @@ public class Project implements Serializable {
      */
     private void calculateBeamProject() {
         // TODO: 11/08/2020 Implement method
+    }
+
+    /**
+     * It resets results fields. This includes capacities and calculation messages.
+     */
+    public void resetResults() {
+        setFlexureCapacity(0);
+        setFlexureCapacityCheckMessage(null);
+        setFlexureResultsAdditionalMessage(null);
+        setFlexureError(false);
+        setShearCapacity(0);
+        setShearCapacityCheckMessage(null);
+        setShearResultsAdditionalMessage(null);
+        setShearError(false);
+        setCrackWidth(0);
+        setCrackWidthLimit(0);
+        setCrackingCheckMessage(null);
+        setCrackingResultsAdditionalMessage(null);
+        setCrackingError(false);
     }
 
     /**

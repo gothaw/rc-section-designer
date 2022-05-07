@@ -151,6 +151,7 @@ public class SlabReinforcementSetup extends Controller {
                     bottomReinforcement.get("diameters"), bottomReinforcement.get("additionalDiameters"), bottomReinforcement.get("spacings"), bottomReinforcement.get("verticalSpacings"));
 
             project.setReinforcement(slabReinforcement);
+            project.resetResults();
 
             App.setRoot("primary");
         } else {

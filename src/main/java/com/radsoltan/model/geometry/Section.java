@@ -11,6 +11,8 @@ import java.io.Serializable;
  */
 public abstract class Section implements Drawable, Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Getter for section depth.
      *

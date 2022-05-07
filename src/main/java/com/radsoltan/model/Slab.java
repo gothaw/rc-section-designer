@@ -33,6 +33,8 @@ public class Slab implements Flexure, Cracking, Serializable {
     private double bendingCapacity;
     private double requiredTensileReinforcement;
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Slab constructor. It includes internal forces, slab geometry, reinforcement, materials and all design parameters.
      *

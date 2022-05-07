@@ -83,6 +83,7 @@ public class SlabGeometrySetup extends Controller {
             Geometry geometry = new Geometry(slabStrip);
 
             project.setGeometry(geometry);
+            project.resetResults();
 
             App.setRoot("primary");
         } else {

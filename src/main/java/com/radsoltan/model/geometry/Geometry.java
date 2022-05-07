@@ -14,6 +14,8 @@ public class Geometry implements Serializable {
     private final Section section;
     private Flanged flangedSection;
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constructor. Used for rectangular sections.
      *
