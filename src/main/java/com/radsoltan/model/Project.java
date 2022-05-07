@@ -468,4 +468,121 @@ public class Project implements Serializable {
     public boolean getIsCrackingError() {
         return isCrackingError;
     }
+
+    /**
+     * Setter for flexure capacity.
+     *
+     * @param flexureCapacity bending capacity in kNm or kNm/m
+     */
+    public void setFlexureCapacity(double flexureCapacity) {
+        this.flexureCapacity = flexureCapacity;
+    }
+
+    /**
+     * Setter for bending capacity calculation message.
+     *
+     * @param flexureCapacityCheckMessage message
+     */
+    public void setFlexureCapacityCheckMessage(String flexureCapacityCheckMessage) {
+        this.flexureCapacityCheckMessage = flexureCapacityCheckMessage;
+    }
+
+    /**
+     * Setter for bending capacity additional calculation message.
+     *
+     * @param flexureResultsAdditionalMessage message
+     */
+    public void setFlexureResultsAdditionalMessage(String flexureResultsAdditionalMessage) {
+        this.flexureResultsAdditionalMessage = flexureResultsAdditionalMessage;
+    }
+
+    /**
+     * Setter for boolean flag that indicates if there was an error in bending calculations.
+     *
+     * @param flexureError true/false
+     */
+    public void setFlexureError(boolean flexureError) {
+        isFlexureError = flexureError;
+    }
+
+    /**
+     * Setter for shear capacity.
+     *
+     * @param shearCapacity in kN
+     */
+    public void setShearCapacity(double shearCapacity) {
+        this.shearCapacity = shearCapacity;
+    }
+
+    /**
+     * Setter for shear capacity calculation message.
+     *
+     * @param shearCapacityCheckMessage message
+     */
+    public void setShearCapacityCheckMessage(String shearCapacityCheckMessage) {
+        this.shearCapacityCheckMessage = shearCapacityCheckMessage;
+    }
+
+    /**
+     * Setter for shear capacity additional calculation message.
+     *
+     * @param shearResultsAdditionalMessage message
+     */
+    public void setShearResultsAdditionalMessage(String shearResultsAdditionalMessage) {
+        this.shearResultsAdditionalMessage = shearResultsAdditionalMessage;
+    }
+
+    /**
+     * Setter for boolean flag that indicates if there was an error in shear calculations.
+     *
+     * @param shearError true/false
+     */
+    public void setShearError(boolean shearError) {
+        isShearError = shearError;
+    }
+
+    /**
+     * Setter for crack width.
+     *
+     * @param crackWidth crack width in mm
+     */
+    public void setCrackWidth(double crackWidth) {
+        this.crackWidth = crackWidth;
+    }
+
+    /**
+     * Setter for crack width limit.
+     *
+     * @param crackWidthLimit crack width limit in mm
+     */
+    public void setCrackWidthLimit(double crackWidthLimit) {
+        this.crackWidthLimit = crackWidthLimit;
+    }
+
+    /**
+     * Setter for cracking calculation message.
+     *
+     * @param crackingCheckMessage message
+     */
+    public void setCrackingCheckMessage(String crackingCheckMessage) {
+        this.crackingCheckMessage = crackingCheckMessage;
+    }
+
+    /**
+     * Setter for cracking additional calculation message.
+     *
+     * @param crackingResultsAdditionalMessage message
+     */
+    public void setCrackingResultsAdditionalMessage(String crackingResultsAdditionalMessage) {
+        this.crackingResultsAdditionalMessage = crackingResultsAdditionalMessage;
+    }
+
+    /**
+     * Setter for boolean flag that indicates if there was an error in cracking calculations.
+     *
+     * @param crackingError true/false
+     */
+    public void setCrackingError(boolean crackingError) {
+        isCrackingError = crackingError;
+    }
 }

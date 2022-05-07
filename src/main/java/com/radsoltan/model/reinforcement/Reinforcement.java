@@ -2,11 +2,13 @@ package com.radsoltan.model.reinforcement;
 
 import com.radsoltan.model.geometry.Drawable;
 
+import java.io.Serializable;
+
 /**
  * Abstract class used to describe both slab and beam reinforcement.
  * Includes abstract method that needs to be implemented by both classes.
  */
-public abstract class Reinforcement implements Drawable {
+public abstract class Reinforcement implements Drawable, Serializable {
 
     public static final String DEFAULT_TEXT_FONT = "Source Sans Pro";
 

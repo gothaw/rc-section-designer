@@ -147,7 +147,10 @@ public class Primary extends Controller {
         if (project.getDesignParameters() == null) {
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
+        // Drawing main image
         this.drawElementImage();
+
+        generateResultsArea();
 
         Platform.runLater(() -> {
             addEventHandlersForTopMenu();
@@ -193,7 +196,7 @@ public class Primary extends Controller {
     /**
      * It handles opening project from a file. It requires passing a FileEvent as a parameter.
      * If that is the case, it invokes static method on ProjectFile class to open the file and sets up project instance fields.
-     * It also sets up text fields and redirects to the primary view.
+     * It also redirects to primary view.
      *
      * @param event open file event
      */
@@ -227,51 +230,29 @@ public class Primary extends Controller {
             // Setting concrete
             project.setConcrete(projectFromFile.getConcrete());
             // Setting Results
-            // TODO: 01/05/2022 Set results
+            // Flexure
+            project.setFlexureCapacity(projectFromFile.getFlexureCapacity());
+            project.setFlexureCapacityCheckMessage(projectFromFile.getFlexureCapacityCheckMessage());
+            project.setFlexureResultsAdditionalMessage(projectFromFile.getFlexureResultsAdditionalMessage());
+            project.setFlexureError(projectFromFile.getIsFlexureError());
+            // Shear
+            project.setShearCapacity(projectFromFile.getShearCapacity());
+            project.setShearCapacityCheckMessage(projectFromFile.getShearCapacityCheckMessage());
+            project.setShearResultsAdditionalMessage(projectFromFile.getShearResultsAdditionalMessage());
+            project.setShearError(projectFromFile.getIsShearError());
+            // Cracking
+            project.setCrackWidth(projectFromFile.getCrackWidth());
+            project.setCrackWidthLimit(projectFromFile.getCrackWidthLimit());
+            project.setCrackingCheckMessage(projectFromFile.getCrackingCheckMessage());
+            project.setCrackingResultsAdditionalMessage(projectFromFile.getCrackingResultsAdditionalMessage());
+            project.setCrackingError(projectFromFile.getIsCrackingError());
 
-            // Setting project details
-            projectName.setText(project.getName());
-            if (project.getId() != null) {
-                projectNumber.setText(project.getId());
-            }
-            projectDescription.setText(project.getDescription());
-            projectAuthor.setText(project.getAuthor());
-
-            UlsMomentWrapper = (HBox) UlsMoment.getParent();
-            SlsMomentWrapper = (HBox) SlsMoment.getParent();
-            UlsShearWrapper = (HBox) UlsShear.getParent();
-
-            // Setting element type
-            elementTypeChoiceBox.setValue(Utility.capitalize(project.getElementType()));
-            // Setting analysis forces
-            if (project.getUlsMoment() != null) {
-                UlsMoment.setText(project.getUlsMoment());
-            }
-            if (project.getSlsMoment() != null) {
-                SlsMoment.setText(project.getSlsMoment());
-            }
-            if (project.getUlsShear() != null) {
-                UlsShear.setText(project.getUlsShear());
-            }
-            // Setting geometry, reinforcement and design parameters sections
-            if (project.getGeometry() == null) {
-                geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            } else {
-                geometryText.setText(project.getGeometry().getDescription());
-            }
-            if (project.getReinforcement() == null) {
-                reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            } else {
-                reinforcementText.setText(project.getReinforcement().getDescription());
-            }
-            if (project.getDesignParameters() == null) {
-                designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
-            }
-            this.drawElementImage();
+            // Redirecting to primary - this handles initializing primary view
             App.setRoot("primary");
 
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
             showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+            e.printStackTrace();
         }
     }
 
@@ -311,22 +292,11 @@ public class Primary extends Controller {
                 if (elementValidationMessages.isEmpty()) {
                     try {
                         project.calculate();
-                        designResultsWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
                     } catch (IllegalArgumentException e) {
                         showAlertBox(e.getMessage(), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                     }
-                    if (project.getFlexureCapacityCheckMessage() != null) {
-                        VBox flexureResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), UIText.FLEXURE, project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage(), project.getIsFlexureError());
-                        flexureResultsWrapper.getChildren().add(flexureResults);
-                    }
-                    if (project.getShearCapacityCheckMessage() != null) {
-                        VBox shearResults = generateResultsArea(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), UIText.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage(), project.getIsShearError());
-                        shearResultsWrapper.getChildren().add(shearResults);
-                    }
-                    if (project.getCrackingCheckMessage() != null) {
-                        VBox crackingResults = generateResultsArea(project.getCrackWidth(), project.getCrackWidthLimit(), UIText.CRACKING, project.getCrackingCheckMessage(), project.getCrackingResultsAdditionalMessage(), project.getIsCrackingError());
-                        crackingResultsWrapper.getChildren().add(crackingResults);
-                    }
+                    // Generating results area
+                    generateResultsArea();
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                 }
@@ -497,6 +467,10 @@ public class Primary extends Controller {
 
     /**
      * Sets project properties. It takes values from the input fields and sets them in project instance properties.
+     * It sets fields from:
+     * - project details
+     * - analysis results
+     * - element type
      */
     private void setProjectPropertiesFromInputFields() {
         project.setName(projectName.getText());
@@ -524,7 +498,7 @@ public class Primary extends Controller {
     }
 
     /**
-     * It creates a wrapper VBox that includes a title and an inner VBox with results.
+     * It creates a wrapper VBox that includes a title and an inner VBox with results for a single capacity check (shear/bending/cracking etc.).
      * The inner VBox includes:
      * - capacity note with a pass and fail text, for example: '12 kNm < 15 kNm Pass'
      * - additional message, which can include info why design is failing
@@ -537,7 +511,7 @@ public class Primary extends Controller {
      * @param isError           Indicates if error has been encountered during calculations
      * @return wrapper VBox
      */
-    private VBox generateResultsArea(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage, boolean isError) {
+    private VBox generateResultsForSingleCheck(double designValue, double maxValue, String title, String capacityMessage, String additionalMessage, boolean isError) {
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add(CssStyleClasses.SUBHEADING);
         Label capacityLabel = new Label(capacityMessage);
@@ -550,6 +524,28 @@ public class Primary extends Controller {
         VBox results = new VBox(utilizationNoteWrapper, additionalMessageLabel);
         results.getStyleClass().add(CssStyleClasses.RESULTS);
         return new VBox(titleLabel, results);
+    }
+
+    /**
+     * Generates results area for flexure, shear and bending. It invokes the method that generates results for a single capacity check.
+     */
+    private void generateResultsArea() {
+        if (project.getFlexureCapacityCheckMessage() != null || project.getShearCapacityCheckMessage() != null || project.getCrackingCheckMessage() != null) {
+            designResultsWrapper.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        }
+
+        if (project.getFlexureCapacityCheckMessage() != null) {
+            VBox flexureResults = generateResultsForSingleCheck(Math.abs(Double.parseDouble(project.getUlsMoment())), project.getFlexureCapacity(), UIText.FLEXURE, project.getFlexureCapacityCheckMessage(), project.getFlexureResultsAdditionalMessage(), project.getIsFlexureError());
+            flexureResultsWrapper.getChildren().add(flexureResults);
+        }
+        if (project.getShearCapacityCheckMessage() != null) {
+            VBox shearResults = generateResultsForSingleCheck(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), UIText.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage(), project.getIsShearError());
+            shearResultsWrapper.getChildren().add(shearResults);
+        }
+        if (project.getCrackingCheckMessage() != null) {
+            VBox crackingResults = generateResultsForSingleCheck(project.getCrackWidth(), project.getCrackWidthLimit(), UIText.CRACKING, project.getCrackingCheckMessage(), project.getCrackingResultsAdditionalMessage(), project.getIsCrackingError());
+            crackingResultsWrapper.getChildren().add(crackingResults);
+        }
     }
 
     /**

@@ -2,10 +2,12 @@ package com.radsoltan.model.reinforcement;
 
 import com.radsoltan.model.geometry.Drawable;
 
+import java.io.Serializable;
+
 /**
  * Class used to describe shear links for a beam.
  */
-public class ShearLinks implements Drawable {
+public class ShearLinks implements Drawable, Serializable {
 
     private final int fyw;
     private final int diameter;
