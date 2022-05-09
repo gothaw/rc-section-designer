@@ -4,7 +4,7 @@ import com.radsoltan.App;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.geometry.*;
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.UIText;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

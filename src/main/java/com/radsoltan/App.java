@@ -1,8 +1,8 @@
 package com.radsoltan;
 
-import com.radsoltan.util.Constants;
+import com.radsoltan.constants.Constants;
 
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.UIText;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

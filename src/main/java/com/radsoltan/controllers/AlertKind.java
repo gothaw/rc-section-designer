@@ -1,6 +1,6 @@
 package com.radsoltan.controllers;
 
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.UIText;
 
 /**
  * Enum for types of popup alerts in the app. The enum includes a url to the icon image and a text that is displayed in alert title bar.

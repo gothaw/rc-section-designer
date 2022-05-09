@@ -4,7 +4,7 @@ import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.Constants;
+import com.radsoltan.constants.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

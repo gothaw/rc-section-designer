@@ -1,6 +1,6 @@
 package com.radsoltan.model.geometry;
 
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.UIText;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

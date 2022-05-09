@@ -1,4 +1,4 @@
-package com.radsoltan.util;
+package com.radsoltan.constants;
 
 import java.util.ArrayList;
 import java.util.List;

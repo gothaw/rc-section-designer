@@ -2,8 +2,8 @@ package com.radsoltan.model.reinforcement;
 
 import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.geometry.SlabStrip;
-import com.radsoltan.util.Constants;
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.Constants;
+import com.radsoltan.constants.UIText;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;

@@ -1,4 +1,4 @@
-package com.radsoltan.util;
+package com.radsoltan.constants;
 
 /**
  * Utility class that includes String constants for various alerts messages, warnings and errors.

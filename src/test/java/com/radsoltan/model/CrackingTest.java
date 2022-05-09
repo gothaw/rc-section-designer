@@ -1,6 +1,6 @@
 package com.radsoltan.model;
 
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.UIText;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

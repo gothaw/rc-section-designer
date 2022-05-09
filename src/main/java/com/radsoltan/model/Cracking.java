@@ -1,6 +1,6 @@
 package com.radsoltan.model;
 
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.UIText;
 
 import java.util.Collections;
 import java.util.List;

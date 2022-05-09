@@ -3,7 +3,7 @@ package com.radsoltan.model;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.UIText;
 
 import java.io.Serializable;
 

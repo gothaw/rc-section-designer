@@ -1,7 +1,7 @@
 package com.radsoltan.model;
 
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.Constants;
+import com.radsoltan.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,9 +5,9 @@ import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.Constants;
-import com.radsoltan.util.CssStyleClasses;
-import com.radsoltan.util.UIText;
+import com.radsoltan.constants.Constants;
+import com.radsoltan.constants.CssStyleClasses;
+import com.radsoltan.constants.UIText;
 import com.radsoltan.util.Utility;
 
 import javafx.application.Platform;

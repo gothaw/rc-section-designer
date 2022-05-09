@@ -1,4 +1,4 @@
-package com.radsoltan.util;
+package com.radsoltan.constants;
 
 /**
  * Class that includes event names used in the app.

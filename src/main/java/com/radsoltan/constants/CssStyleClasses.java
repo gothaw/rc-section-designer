@@ -1,4 +1,4 @@
-package com.radsoltan.util;
+package com.radsoltan.constants;
 
 /**
  * Utility class that includes Css class names as String constants.

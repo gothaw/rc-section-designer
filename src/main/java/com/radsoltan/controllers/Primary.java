@@ -3,6 +3,9 @@ package com.radsoltan.controllers;
 import com.radsoltan.App;
 import com.radsoltan.components.NumericalTextField;
 import com.radsoltan.components.PositiveIntegerField;
+import com.radsoltan.constants.Constants;
+import com.radsoltan.constants.CssStyleClasses;
+import com.radsoltan.constants.UIText;
 import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
@@ -461,8 +464,9 @@ public class Primary extends Controller {
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
         graphicsContext.clearRect(0, 0, elementImage.getWidth(), elementImage.getHeight());
 
-        // Clearing Results Area
+        // Resetting Results Area
         clearResultsArea();
+        project.resetResults();
     }
 
     /**
