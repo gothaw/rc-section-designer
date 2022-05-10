@@ -1,10 +1,11 @@
 package com.radsoltan.controllers;
 
 import com.radsoltan.App;
+import com.radsoltan.components.MenuDialog;
 import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.Events;
-import com.radsoltan.util.FileEvent;
 import com.radsoltan.constants.UIText;
+import com.radsoltan.util.FileEvent;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventType;
@@ -184,8 +185,12 @@ public abstract class Controller {
      * @param mouseEvent top menu item click event
      */
     public void onAboutMenuItemClickedHandler(MouseEvent mouseEvent) {
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.show();
+        MenuDialog menuDialog = new MenuDialog("about-menu-item");
+        try {
+            menuDialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
