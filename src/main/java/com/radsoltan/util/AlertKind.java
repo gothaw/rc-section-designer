@@ -1,4 +1,4 @@
-package com.radsoltan.controllers;
+package com.radsoltan.util;
 
 import com.radsoltan.constants.UIText;
 

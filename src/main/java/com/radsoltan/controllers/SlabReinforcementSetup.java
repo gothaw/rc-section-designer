@@ -8,6 +8,7 @@ import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.CssStyleClasses;
 import com.radsoltan.constants.UIText;
+import com.radsoltan.util.AlertKind;
 import com.radsoltan.util.Utility;
 
 import javafx.application.Platform;

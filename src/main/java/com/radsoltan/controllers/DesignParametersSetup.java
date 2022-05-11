@@ -10,6 +10,7 @@ import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.CssStyleClasses;
 import com.radsoltan.constants.UIText;
 
+import com.radsoltan.util.AlertKind;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -10,6 +10,8 @@
 @import "modules/geometry.css";
 @import "modules/reinforcement.css";
 @import "modules/design-parameters.css";
+@import "modules/menu.css";
+@import "modules/secondary-window.css";
 /*============== Fonts ==============*/
 @font-face {
     src: url("../fonts/SourceSansPro-Regular.ttf");
@@ -167,8 +169,4 @@
 
 .combo-box-wide {
     -fx-pref-width: 80px;
-}
-
-.menu:hover .menu-label{
-    -fx-text-fill: white;
 }

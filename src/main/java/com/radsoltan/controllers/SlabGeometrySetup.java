@@ -6,6 +6,7 @@ import com.radsoltan.model.Project;
 import com.radsoltan.model.geometry.*;
 import com.radsoltan.constants.UIText;
 
+import com.radsoltan.util.AlertKind;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

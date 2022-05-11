@@ -1,0 +1,12 @@
+.menu-bar .menu {
+     -fx-padding: 0px;
+     -fx-margin: 0px;
+}
+
+.menu .menu-label {
+    -fx-padding: 5px 10px;
+}
+
+.menu:hover .menu-label{
+    -fx-text-fill: white;
+}

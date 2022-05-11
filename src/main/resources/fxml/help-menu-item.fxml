@@ -9,10 +9,8 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             id="secondary-window" stylesheets="@../css/main.css"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.radsoltan.controllers.About">
+            fx:controller="com.radsoltan.controllers.Help">
     <VBox>
-        <Label>Hello world!</Label>
-        <Label>About</Label>
-        <Label styleClass="hidden">Hello world but hidden!</Label>
+        <Label>Help!</Label>
     </VBox>
 </AnchorPane>

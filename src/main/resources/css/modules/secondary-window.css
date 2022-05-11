@@ -1,0 +1,7 @@
+#secondary-window {
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+.secondary-window-container {
+    -fx-background-color: #fff;
+}

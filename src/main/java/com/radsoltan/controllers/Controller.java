@@ -1,18 +1,16 @@
 package com.radsoltan.controllers;
 
 import com.radsoltan.App;
-import com.radsoltan.components.MenuDialog;
+import com.radsoltan.components.SecondaryWindow;
 import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.Events;
 import com.radsoltan.constants.UIText;
+import com.radsoltan.util.AlertKind;
 import com.radsoltan.util.FileEvent;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventType;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -185,10 +183,11 @@ public abstract class Controller {
      * @param mouseEvent top menu item click event
      */
     public void onAboutMenuItemClickedHandler(MouseEvent mouseEvent) {
-        MenuDialog menuDialog = new MenuDialog("about-menu-item");
+        SecondaryWindow secondaryWindow = new SecondaryWindow(500, 500, "About", "about-menu-item");
         try {
-            menuDialog.show();
+            secondaryWindow.show();
         } catch (IOException e) {
+            showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
             e.printStackTrace();
         }
     }
@@ -199,6 +198,11 @@ public abstract class Controller {
      * @param mouseEvent top menu item click event
      */
     public void onHelpMenuItemClickedHandler(MouseEvent mouseEvent) {
-        System.out.println("Help");
+        SecondaryWindow secondaryWindow = new SecondaryWindow(500, 500, "Help", "help-menu-item");
+        try {
+            secondaryWindow.show();
+        } catch (IOException e) {
+            showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
+        }
     }
 }
