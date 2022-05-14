@@ -11,7 +11,8 @@
 @import "modules/reinforcement.css";
 @import "modules/design-parameters.css";
 @import "modules/menu.css";
-@import "modules/secondary-window.css";
+@import "modules/about.css";
+
 /*============== Fonts ==============*/
 @font-face {
     src: url("../fonts/SourceSansPro-Regular.ttf");
@@ -56,6 +57,10 @@
 .button {
     -fx-cursor: hand;
     -fx-min-width: 60px;
+}
+
+.text-fill-main-color {
+    -fx-text-fill: rgb(41.0, 103.0, 243.0);
 }
 
 .heading {
@@ -169,4 +174,12 @@
 
 .combo-box-wide {
     -fx-pref-width: 80px;
+}
+
+#secondary-window {
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+.secondary-window-container {
+    -fx-background-color: #fff;
 }

@@ -48,4 +48,13 @@ public class SecondaryWindow {
         stage.setScene(scene);
         stage.show();
     }
+
+    /**
+     * Getter for stage field.
+     *
+     * @return stage
+     */
+    public Stage getStage() {
+        return stage;
+    }
 }

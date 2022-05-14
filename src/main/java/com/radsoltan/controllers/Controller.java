@@ -183,12 +183,12 @@ public abstract class Controller {
      * @param mouseEvent top menu item click event
      */
     public void onAboutMenuItemClickedHandler(MouseEvent mouseEvent) {
-        SecondaryWindow secondaryWindow = new SecondaryWindow(500, 500, "About", "about-menu-item");
+        App.setSecondaryWindow(new SecondaryWindow(350, 180, "About", "about-menu-item"));
         try {
-            secondaryWindow.show();
+            App.getSecondaryWindow().show();
         } catch (IOException e) {
+            App.setSecondaryWindow(null);
             showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
-            e.printStackTrace();
         }
     }
 
@@ -198,10 +198,11 @@ public abstract class Controller {
      * @param mouseEvent top menu item click event
      */
     public void onHelpMenuItemClickedHandler(MouseEvent mouseEvent) {
-        SecondaryWindow secondaryWindow = new SecondaryWindow(500, 500, "Help", "help-menu-item");
+        App.setSecondaryWindow(new SecondaryWindow(500, 500, "Help", "help-menu-item"));
         try {
-            secondaryWindow.show();
+            App.getSecondaryWindow().show();
         } catch (IOException e) {
+            App.setSecondaryWindow(null);
             showAlertBox(UIText.SOMETHING_WENT_WRONG, AlertKind.ERROR);
         }
     }

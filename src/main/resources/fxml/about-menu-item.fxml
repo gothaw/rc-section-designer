@@ -10,9 +10,21 @@
             id="secondary-window" stylesheets="@../css/main.css"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.radsoltan.controllers.About">
-    <VBox>
-        <Label>Hello world!</Label>
-        <Label>About</Label>
-        <Label styleClass="hidden">Hello world but hidden!</Label>
+    <VBox styleClass="about-wrapper">
+        <HBox styleClass="about-field-wrapper">
+            <Label styleClass="subheading, text-fill-main-color" fx:id="appTitle"/>
+        </HBox>
+        <HBox styleClass="about-field-wrapper">
+            <Label fx:id="buildLabel">Build v1.0.0</Label>
+        </HBox>
+        <HBox styleClass="about-field-wrapper">
+            <Label>Created by</Label>
+            <Label styleClass="subheading, text-fill-main-color" fx:id="author"/>
+            <Label fx:id="year"/>
+        </HBox>
     </VBox>
+    <VBox styleClass="about-button-wrapper" AnchorPane.bottomAnchor="0">
+        <Button styleClass="about-button" text="OK" onAction="#close"/>
+    </VBox>
+
 </AnchorPane>

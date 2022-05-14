@@ -6,6 +6,7 @@ package com.radsoltan.constants;
  */
 public class UIText {
     public static final String APP_TITLE = "RC Section Designer";
+    public static final String APP_AUTHOR = "Radoslaw Soltan";
     public static final String ALERT_NEW_ITEM = "Are you sure you want to create a new project?";
     public static final String ERROR = "Error!";
     public static final String INFO = "Info";

@@ -69,5 +69,5 @@ jlink {
 application {
     mainClassName = 'com.radsoltan/com.radsoltan.EntryPoint'
     group 'com.radsoltan'
-    version '1.0'
+    version '1.0.0'
 }

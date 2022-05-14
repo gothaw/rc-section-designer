@@ -1,0 +1,21 @@
+.about-bold-text {
+    -fx-font-weight: bold;
+}
+
+.about-wrapper {
+    -fx-padding: 15px 0 0 0;
+    -fx-pref-width: 350px;
+    -fx-alignment: center;
+}
+
+.about-field-wrapper {
+    -fx-spacing: 2px;
+    -fx-padding: 0 0 2px 0;
+    -fx-alignment: center;
+}
+
+.about-button-wrapper {
+    -fx-padding: 0 0 15px 0;
+    -fx-pref-width: 350px;
+    -fx-alignment: center;
+}

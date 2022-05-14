@@ -1,7 +1,7 @@
 package com.radsoltan;
 
+import com.radsoltan.components.SecondaryWindow;
 import com.radsoltan.constants.Constants;
-
 import com.radsoltan.constants.UIText;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +19,7 @@ public class App extends Application {
 
     private static Scene scene;
     private static Stage stage;
+    private static SecondaryWindow secondaryWindow;
 
     /**
      * Method that runs when starting the application. It sets scene and its properties.
@@ -82,6 +83,25 @@ public class App extends Application {
      */
     public static Stage getStage() {
         return stage;
+    }
+
+
+    /**
+     * Getter for secondary window.
+     *
+     * @return secondary window
+     */
+    public static SecondaryWindow getSecondaryWindow() {
+        return secondaryWindow;
+    }
+
+    /**
+     * Setter for secondary window.
+     *
+     * @param secondaryWindow secondary window
+     */
+    public static void setSecondaryWindow(SecondaryWindow secondaryWindow) {
+        App.secondaryWindow = secondaryWindow;
     }
 
     /**
