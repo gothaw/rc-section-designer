@@ -12,6 +12,7 @@
 @import "modules/design-parameters.css";
 @import "modules/menu.css";
 @import "modules/about.css";
+@import "modules/help.css";
 
 /*============== Fonts ==============*/
 @font-face {

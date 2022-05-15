@@ -23,7 +23,7 @@ public class About {
     public Label author;
 
     /**
-     * Initializes fields.
+     * Initializes label fields.
      */
     @FXML
     public void initialize() {

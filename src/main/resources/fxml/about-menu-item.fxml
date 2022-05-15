@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -24,7 +21,7 @@
         </HBox>
     </VBox>
     <VBox styleClass="about-button-wrapper" AnchorPane.bottomAnchor="0">
-        <Button styleClass="about-button" text="OK" onAction="#close"/>
+        <Button text="OK" onAction="#close"/>
     </VBox>
 
 </AnchorPane>

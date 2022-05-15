@@ -1,0 +1,17 @@
+.help-wrapper {
+    -fx-padding: 15px;
+}
+
+.help-button-wrapper {
+    -fx-padding: 0 0 15px 0;
+    -fx-pref-width: 600px;
+    -fx-alignment: center;
+}
+
+.help-sub-bullet-point {
+    -fx-padding: 0 0 0 15px;
+}
+
+.help-sub-bullet-point-next-line {
+    -fx-padding: 0 0 0 25px;
+}

@@ -198,7 +198,7 @@ public abstract class Controller {
      * @param mouseEvent top menu item click event
      */
     public void onHelpMenuItemClickedHandler(MouseEvent mouseEvent) {
-        App.setSecondaryWindow(new SecondaryWindow(500, 500, "Help", "help-menu-item"));
+        App.setSecondaryWindow(new SecondaryWindow(600, 550, "Help", "help-menu-item"));
         try {
             App.getSecondaryWindow().show();
         } catch (IOException e) {

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -10,7 +7,27 @@
             id="secondary-window" stylesheets="@../css/main.css"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.radsoltan.controllers.Help">
-    <VBox>
-        <Label>Help!</Label>
+    <VBox styleClass="help-wrapper">
+        <Label styleClass="heading">How to use:</Label>
+        <Label>• Fill in project details (optional)</Label>
+        <Label>• Select element type (slab/beam)</Label>
+        <Label>• Set up analysis forces. These should be design forces and include partial factors of safety.</Label>
+        <Label>• Set up geometry</Label>
+        <Label styleClass="help-sub-bullet-point">◦ For slab, this is just thickness of the slab in mm.</Label>
+        <Label styleClass="help-sub-bullet-point">◦ For beam, this is width and depth in mm. This app only supports rectangular sections.</Label>
+        <Label>• Set up reinforcement</Label>
+        <Label styleClass="help-sub-bullet-point">◦ For slab, this can be up to six layers of reinforcement for each face.</Label>
+        <Label styleClass="help-sub-bullet-point-next-line">Alternate bars can be also added by clicking add button for each layer.</Label>
+        <Label styleClass="help-sub-bullet-point">◦ For beam, (todo)</Label>
+        <Label>• Set up design parameters. This includes:</Label>
+        <Label styleClass="help-sub-bullet-point">◦ Nominal cover</Label>
+        <Label styleClass="help-sub-bullet-point">◦ Concrete class and aggregate size</Label>
+        <Label styleClass="help-sub-bullet-point">◦ Steel yield strength</Label>
+        <Label styleClass="help-sub-bullet-point">◦ Partial factors of safety for steel and concrete</Label>
+        <Label styleClass="help-sub-bullet-point">◦ Redistribution ratio</Label>
+        <Label>• Click calculate</Label>
+    </VBox>
+    <VBox styleClass="help-button-wrapper" AnchorPane.bottomAnchor="0">
+        <Button text="OK" onAction="#close"/>
     </VBox>
 </AnchorPane>
