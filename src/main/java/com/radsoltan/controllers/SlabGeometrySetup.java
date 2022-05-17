@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller for setting up geometry view.
+ * Controller for setting up slab geometry view.
  * This mostly includes setting up slab thickness.
  */
 public class SlabGeometrySetup extends Controller {
 
     @FXML
     public Canvas slabImage;
+    @FXML
     public StackPane slabImageWrapper;
     @FXML
     private VBox container;
@@ -102,9 +103,8 @@ public class SlabGeometrySetup extends Controller {
         App.setRoot("primary");
     }
 
-
     /**
-     * Draws slab image along with dimension lines.
+     * Draws a typical slab image along with dimension lines.
      * Slab image is drawn relatively to the canvas size using the ratios defined in constants.
      */
     private void draw() {

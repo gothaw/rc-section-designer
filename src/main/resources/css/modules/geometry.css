@@ -1,15 +1,15 @@
-.slab-geometry {
+.slab-geometry, .beam-geometry {
     -fx-padding: 10px;
     -fx-alignment: center;
     -fx-spacing: 8px;
 }
 
-.slab-geometry-edit-buttons {
+.slab-geometry-edit-buttons, .beam-geometry-edit-buttons {
     -fx-pref-height: 375px;
     -fx-spacing: 8px;
     -fx-alignment: bottom-right;
 }
 
-.slab-image {
+.slab-image, .beam-image {
     -fx-background-color: #000;
 }

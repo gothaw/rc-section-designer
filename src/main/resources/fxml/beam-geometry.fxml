@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import com.radsoltan.components.PositiveIntegerField?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.radsoltan.controllers.BeamGeometrySetup">
@@ -31,22 +29,29 @@
         </Menu>
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <GridPane styleClass="main-grid">
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
-
+        <VBox styleClass="beam-geometry">
+            <VBox styleClass="section-wrapper, padding-bottom">
+                <StackPane fx:id="beamImageWrapper" styleClass="canvas-wrapper">
+                    <Canvas styleClass="beam-image" fx:id="beamImage" height="350" width="800"/>
+                </StackPane>
             </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
-
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
-
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <HBox>
-                    <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
-                    <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
+            <VBox styleClass="section-wrapper, border-separator-top, padding-top">
+                <Label styleClass="heading" text="Beam Geometry"/>
+                <HBox styleClass="field-wrapper">
+                    <Label styleClass="field-label" text="Beam width [b]"/>
+                    <PositiveIntegerField fx:id="beamWidth" styleClass="numerical-field"/>
+                    <Label styleClass="unit-label" text="mm"/>
+                </HBox>
+                <HBox styleClass="field-wrapper">
+                    <Label styleClass="field-label" text="Beam depth [h]"/>
+                    <PositiveIntegerField fx:id="beamDepth" styleClass="numerical-field"/>
+                    <Label styleClass="unit-label" text="mm"/>
                 </HBox>
             </VBox>
-        </GridPane>
+            <HBox styleClass="section-wrapper, beam-geometry-edit-buttons">
+                <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
+                <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
+            </HBox>
+        </VBox>
     </ScrollPane>
 </VBox>

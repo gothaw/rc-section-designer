@@ -25,6 +25,7 @@ public class UIText {
     public static final String INVALID_REDISTRIBUTION_RATIO = "Redistribution ratio must be between 0.7 and 1.0.";
     public static final String INVALID_SLAB_REINFORCEMENT = "Invalid slab reinforcement.";
     public static final String INVALID_SLAB_GEOMETRY = "Invalid slab geometry.";
+    public static final String INVALID_BEAM_GEOMETRY = "Invalid beam geometry.";
     public static final String INVALID_DIMENSION_LINE = "Invalid dimension line.";
     public static final String INVALID_MAX_CRACK_WIDTH = "Max crack width must be between 0.05 and 0.5.";
     public static final String INVALID_BAR_SPACING_CRACKS = "Bar spacing must not exceed 5(c + 0.5d) for cracking calculations.";
@@ -39,10 +40,12 @@ public class UIText {
     public static final String SETUP_CONCRETE_CLASS = "Please set up concrete class.";
     public static final String SETUP_AGGREGATE = "Please set up aggregate size.";
     public static final String SETUP_ANALYSIS_FORCES = "Please set up analysis forces.";
-    public static final String SETUP_GEOMETRY = "Please set up geometry";
-    public static final String SETUP_REINFORCEMENT = "Please set up reinforcement";
-    public static final String SETUP_DESIGN_PARAMETERS = "Please set up design parameters";
-    public static final String SETUP_SLAB_THICKNESS = "Please set up slab thickness";
+    public static final String SETUP_GEOMETRY = "Please set up geometry.";
+    public static final String SETUP_REINFORCEMENT = "Please set up reinforcement.";
+    public static final String SETUP_DESIGN_PARAMETERS = "Please set up design parameters.";
+    public static final String SETUP_SLAB_THICKNESS = "Please set up slab thickness.";
+    public static final String SETUP_BEAM_WIDTH = "Please set up beam width.";
+    public static final String SETUP_BEAM_DEPTH = "Please set up beam depth.";
     public static final String SETUP_YIELD_STRENGTH = "Please set up steel yield strength.";
     public static final String SETUP_PARTIAL_FACTORS = "Please set up partial factors for steel and concrete.";
     public static final String SOMETHING_WENT_WRONG = "Sorry. Something went wrong.";
