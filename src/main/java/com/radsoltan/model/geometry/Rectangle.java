@@ -1,5 +1,6 @@
 package com.radsoltan.model.geometry;
 
+import com.radsoltan.constants.UIText;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -233,7 +234,39 @@ public class Rectangle extends Section {
      */
     @Override
     public void draw() {
-        // TODO: 18/05/2020
+        GraphicsContext graphicsContext = getGraphicsContext();
+        Color fill = getFill();
+        Color stroke = getStroke();
+
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
+        }
+
+        double width = getWidth();
+        double depth = getDepth();
+        double leftEdgeX = getStartX();
+        double topEdgeY = getStartY();
+        double rightEdgeX = leftEdgeX + width;
+        double bottomEdgeY = topEdgeY + depth;
+
+        graphicsContext.setFill(fill);
+        graphicsContext.setStroke(stroke);
+
+        // Drawing Slab
+        graphicsContext.beginPath();
+        // Top Edge
+        graphicsContext.moveTo(leftEdgeX, topEdgeY);
+        graphicsContext.lineTo(rightEdgeX, topEdgeY);
+        // Right Edge
+        graphicsContext.lineTo(rightEdgeX, bottomEdgeY);
+        // Bottom Edge
+        graphicsContext.lineTo(leftEdgeX, bottomEdgeY);
+        // Left Edge
+        graphicsContext.lineTo(leftEdgeX, topEdgeY);
+        // Draw Slab and clean up
+        graphicsContext.stroke();
+        graphicsContext.fill();
+        graphicsContext.closePath();
     }
 
     /**
@@ -243,6 +276,6 @@ public class Rectangle extends Section {
      */
     @Override
     public boolean isSetupToBeDrawn() {
-        return false;
+        return !(getGraphicsContext() == null || getStroke() == null || getFill() == null);
     }
 }

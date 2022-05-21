@@ -4,17 +4,17 @@ import com.radsoltan.App;
 import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.constants.UIText;
 import com.radsoltan.model.Project;
-import com.radsoltan.model.geometry.Geometry;
-import com.radsoltan.model.geometry.Rectangle;
-import com.radsoltan.model.geometry.Section;
+import com.radsoltan.model.geometry.*;
 import com.radsoltan.util.AlertKind;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,8 +31,6 @@ public class BeamGeometrySetup extends Controller {
     @FXML
     public VBox container;
     @FXML
-    public StackPane slabImageWrapper;
-    @FXML
     public StackPane beamImageWrapper;
     @FXML
     public Canvas beamImage;
@@ -44,8 +42,8 @@ public class BeamGeometrySetup extends Controller {
     private final Project project;
     private final Geometry geometry;
 
-    private static final double BEAM_IMAGE_HORIZONTAL_RATIO = 0.6;
-    private static final double BEAM_IMAGE_VERTICAL_RATIO = 0.3;
+    private static final double BEAM_IMAGE_HORIZONTAL_RATIO = 0.2;
+    private static final double BEAM_IMAGE_VERTICAL_RATIO = 0.7;
     private static final double BEAM_IMAGE_DIMENSION_LINES_SCALE = 0.75;
 
     /**
@@ -112,9 +110,62 @@ public class BeamGeometrySetup extends Controller {
 
     /**
      * Draws a typical beam image along with dimension lines.
-     * Beam image is drawn relatively to the canvas size using the ratios defined in constants.
+     * Beam image is drawn relatively to the canvas size using ratios defined in constants.
      */
     private void draw() {
+        GraphicsContext graphicsContext = beamImage.getGraphicsContext2D();
+        double canvasWidth = beamImage.getWidth();
+        double canvasHeight = beamImage.getHeight();
+        int beamWidth = (int) (BEAM_IMAGE_HORIZONTAL_RATIO * canvasWidth);
+        int beamDepth = (int) (BEAM_IMAGE_VERTICAL_RATIO * canvasHeight);
+        double beamLeftEdgeX = 0.5 * canvasWidth - 0.5 * beamWidth;
+        double beamTopEdgeY = 0.5 * canvasHeight - 0.5 * beamDepth;
+        double beamRightEdgeX = beamLeftEdgeX + beamWidth;
+        double beamBottomEdgeY = beamTopEdgeY + beamDepth;
+
+        Rectangle rectangle = new Rectangle(
+                beamWidth,
+                beamDepth,
+                graphicsContext,
+                Color.BLACK,
+                Color.LIGHTGRAY,
+                beamLeftEdgeX,
+                beamTopEdgeY
+        );
+
+        try {
+            rectangle.draw();
+
+//            // Draw Horizontal Dimension Line
+//            HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
+//                    "1000",
+//                    Color.BLACK,
+//                    graphicsContext,
+//                    slabLeftEdgeX,
+//                    slabRightEdgeX,
+//                    slabTopEdgeY,
+//                    -DimensionLine.DEFAULT_OFFSET,
+//                    SLAB_IMAGE_DIMENSION_LINES_SCALE
+//            );
+//            horizontalDimensionLine.draw();
+//
+//            // Draw Vertical Dimension Line
+//            VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+//                    "t",
+//                    Color.BLACK,
+//                    graphicsContext,
+//                    slabTopEdgeY,
+//                    slabBottomEdgeY,
+//                    slabLeftEdgeX,
+//                    -DimensionLine.DEFAULT_OFFSET,
+//                    SLAB_IMAGE_DIMENSION_LINES_SCALE,
+//                    false
+//            );
+//            verticalDimensionLine.draw();
+        } catch (IllegalArgumentException e) {
+            // Showing warning if slab strip is instantiated using wrong constructor - no graphics context etc.
+            showAlertBox(e.getMessage(), AlertKind.WARNING);
+        }
     }
 
     /**
