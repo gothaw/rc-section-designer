@@ -11,6 +11,7 @@ import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
 import com.radsoltan.model.geometry.DimensionLine;
+import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.model.geometry.VerticalDimensionLine;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
@@ -97,6 +98,10 @@ public class Primary extends Controller {
     private static final double SLAB_IMAGE_HORIZONTAL_RATIO = 0.75;
     private static final double SLAB_IMAGE_DIMENSION_LINES_SCALE = 0.5;
     private static final int MAX_SLAB_THICKNESS_WHEN_DRAWING = 500;
+
+    private static final double BEAM_IMAGE_MAX_HORIZONTAL_RATIO = 0.5;
+    private static final double BEAM_IMAGE_MAX_VERTICAL_RATIO = 0.75;
+    private static final double BEAM_IMAGE_RATIO_REDUCTION_STEP = 0.05;
 
     /**
      * Constructor. Gets project instance.
@@ -607,7 +612,7 @@ public class Primary extends Controller {
                     drawSlabImage();
                     break;
                 case Constants.ELEMENT_TYPE_BEAM:
-
+                    drawBeamImage();
                     break;
                 default:
                     showAlertBox(UIText.INVALID_ELEMENT_TYPE, AlertKind.ERROR);
@@ -738,7 +743,86 @@ public class Primary extends Controller {
      * Draws beam image.
      */
     private void drawBeamImage() {
-        System.out.println("Drawing beam image.");
+        GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
+        double canvasWidth = elementImage.getWidth();
+        double canvasHeight = elementImage.getHeight();
+        int beamWidth = project.getGeometry().getWidth();
+        int beamDepth = project.getGeometry().getDepth();
+
+        double beamImageScale = getBeamImageScale(beamWidth, canvasWidth, beamDepth, canvasHeight);
+
+        int beamImageWidth = (int) (beamImageScale * beamWidth);
+        int beamImageHeight = (int) (beamImageScale * beamDepth);
+
+        double beamLeftEdgeX = 0.5 * canvasWidth - 0.5 * beamImageWidth;
+        double beamTopEdgeY = 0.5 * canvasHeight - 0.5 * beamImageHeight;
+
+        Rectangle rectangle = new Rectangle(
+                beamImageWidth,
+                beamImageHeight,
+                graphicsContext,
+                Color.BLACK,
+                Color.LIGHTGRAY,
+                beamLeftEdgeX,
+                beamTopEdgeY
+        );
+
+        rectangle.draw();
+
+//        // Draw Vertical Dimension Line
+//        VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+//                Integer.toString(project.getGeometry().getDepth()),
+//                Color.BLACK,
+//                graphicsContext,
+//                slabTopEdgeY,
+//                slabBottomEdgeY,
+//                slabLeftEdgeX,
+//                -DimensionLine.DEFAULT_SMALL_OFFSET,
+//                SLAB_IMAGE_DIMENSION_LINES_SCALE,
+//                true
+//        );
+//        verticalDimensionLine.draw();
+//
+//        DesignParameters designParameters = project.getDesignParameters();
+//        boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
+//
+//        if (isReinforcementSetup) {
+//            // Draw slab reinforcement
+//            drawSlabReinforcement(slabStrip, designParameters, slabImageScale);
+//        }
+    }
+
+    /**
+     * Draws beam reinforcement.
+     */
+    private void drawBeamReinforcement() {
+        System.out.println("Drawing beam reinforcement.");
+    }
+
+    private double getBeamImageScale(int beamWidth, double canvasWidth, int beamDepth, double canvasHeight) {
+        double scale;
+
+        switch (Integer.signum(beamDepth - beamWidth)) {
+            case 1:
+                double beamImageVerticalRatio = BEAM_IMAGE_MAX_VERTICAL_RATIO;
+                do {
+                    scale = beamImageVerticalRatio * canvasHeight / beamDepth;
+                    beamImageVerticalRatio = beamImageVerticalRatio - BEAM_IMAGE_RATIO_REDUCTION_STEP;
+                } while (scale * beamWidth <= BEAM_IMAGE_MAX_HORIZONTAL_RATIO);
+                break;
+            case -1:
+                double beamImageHorizontalRatio = BEAM_IMAGE_MAX_HORIZONTAL_RATIO;
+                do {
+                    scale = beamImageHorizontalRatio * canvasWidth / beamWidth;
+                    beamImageHorizontalRatio = beamImageHorizontalRatio - BEAM_IMAGE_RATIO_REDUCTION_STEP;
+                } while (scale * beamDepth <= BEAM_IMAGE_MAX_VERTICAL_RATIO);
+                break;
+            default:
+                scale = BEAM_IMAGE_MAX_HORIZONTAL_RATIO * canvasWidth / beamWidth;
+                break;
+        }
+
+        return scale;
     }
 
     /**

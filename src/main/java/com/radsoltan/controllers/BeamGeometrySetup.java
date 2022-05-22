@@ -42,9 +42,9 @@ public class BeamGeometrySetup extends Controller {
     private final Project project;
     private final Geometry geometry;
 
-    private static final double BEAM_IMAGE_HORIZONTAL_RATIO = 0.2;
-    private static final double BEAM_IMAGE_VERTICAL_RATIO = 0.7;
-    private static final double BEAM_IMAGE_DIMENSION_LINES_SCALE = 0.75;
+    private static final double BEAM_IMAGE_HORIZONTAL_RATIO = 0.15;
+    private static final double BEAM_IMAGE_VERTICAL_RATIO = 0.65;
+    private static final double BEAM_IMAGE_DIMENSION_LINES_SCALE = 0.65;
 
     /**
      * Constructor. It gets project instance and using the instance it gets the geometry.
@@ -119,7 +119,7 @@ public class BeamGeometrySetup extends Controller {
         int beamWidth = (int) (BEAM_IMAGE_HORIZONTAL_RATIO * canvasWidth);
         int beamDepth = (int) (BEAM_IMAGE_VERTICAL_RATIO * canvasHeight);
         double beamLeftEdgeX = 0.5 * canvasWidth - 0.5 * beamWidth;
-        double beamTopEdgeY = 0.5 * canvasHeight - 0.5 * beamDepth;
+        double beamTopEdgeY = 0.5 * canvasHeight - 0.5 * beamDepth - 0.5 * DimensionLine.DEFAULT_OFFSET; // Offsetting top edge to accommodate dimension line
         double beamRightEdgeX = beamLeftEdgeX + beamWidth;
         double beamBottomEdgeY = beamTopEdgeY + beamDepth;
 
@@ -136,34 +136,34 @@ public class BeamGeometrySetup extends Controller {
         try {
             rectangle.draw();
 
-//            // Draw Horizontal Dimension Line
-//            HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
-//                    "1000",
-//                    Color.BLACK,
-//                    graphicsContext,
-//                    slabLeftEdgeX,
-//                    slabRightEdgeX,
-//                    slabTopEdgeY,
-//                    -DimensionLine.DEFAULT_OFFSET,
-//                    SLAB_IMAGE_DIMENSION_LINES_SCALE
-//            );
-//            horizontalDimensionLine.draw();
-//
-//            // Draw Vertical Dimension Line
-//            VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
-//                    "t",
-//                    Color.BLACK,
-//                    graphicsContext,
-//                    slabTopEdgeY,
-//                    slabBottomEdgeY,
-//                    slabLeftEdgeX,
-//                    -DimensionLine.DEFAULT_OFFSET,
-//                    SLAB_IMAGE_DIMENSION_LINES_SCALE,
-//                    false
-//            );
-//            verticalDimensionLine.draw();
+            // Draw Horizontal Dimension Line
+            HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
+                    "b",
+                    Color.BLACK,
+                    graphicsContext,
+                    beamLeftEdgeX,
+                    beamRightEdgeX,
+                    beamBottomEdgeY,
+                    DimensionLine.DEFAULT_OFFSET,
+                    BEAM_IMAGE_DIMENSION_LINES_SCALE
+            );
+            horizontalDimensionLine.draw();
+
+            // Draw Vertical Dimension Line
+            VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+                    "h",
+                    Color.BLACK,
+                    graphicsContext,
+                    beamTopEdgeY,
+                    beamBottomEdgeY,
+                    beamLeftEdgeX,
+                    -DimensionLine.DEFAULT_OFFSET,
+                    BEAM_IMAGE_DIMENSION_LINES_SCALE,
+                    false
+            );
+            verticalDimensionLine.draw();
         } catch (IllegalArgumentException e) {
-            // Showing warning if slab strip is instantiated using wrong constructor - no graphics context etc.
+            // Showing warning if rectangle is instantiated using wrong constructor - no graphics context etc.
             showAlertBox(e.getMessage(), AlertKind.WARNING);
         }
     }
