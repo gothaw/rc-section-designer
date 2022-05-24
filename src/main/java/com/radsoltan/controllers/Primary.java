@@ -10,10 +10,7 @@ import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.ValidateBeam;
 import com.radsoltan.model.ValidateSlab;
-import com.radsoltan.model.geometry.DimensionLine;
-import com.radsoltan.model.geometry.Rectangle;
-import com.radsoltan.model.geometry.SlabStrip;
-import com.radsoltan.model.geometry.VerticalDimensionLine;
+import com.radsoltan.model.geometry.*;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.*;
@@ -755,7 +752,9 @@ public class Primary extends Controller {
         int beamImageHeight = (int) (beamImageScale * beamDepth);
 
         double beamLeftEdgeX = 0.5 * canvasWidth - 0.5 * beamImageWidth;
+        double beamRightEdgeX = beamLeftEdgeX + beamImageWidth;
         double beamTopEdgeY = 0.5 * canvasHeight - 0.5 * beamImageHeight;
+        double beamBottomEdgeY = beamTopEdgeY + beamImageHeight;
 
         Rectangle rectangle = new Rectangle(
                 beamImageWidth,
@@ -769,19 +768,33 @@ public class Primary extends Controller {
 
         rectangle.draw();
 
-//        // Draw Vertical Dimension Line
-//        VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
-//                Integer.toString(project.getGeometry().getDepth()),
-//                Color.BLACK,
-//                graphicsContext,
-//                slabTopEdgeY,
-//                slabBottomEdgeY,
-//                slabLeftEdgeX,
-//                -DimensionLine.DEFAULT_SMALL_OFFSET,
-//                SLAB_IMAGE_DIMENSION_LINES_SCALE,
-//                true
-//        );
-//        verticalDimensionLine.draw();
+        // Draw Vertical Dimension Line
+        VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+                Integer.toString(project.getGeometry().getDepth()),
+                Color.BLACK,
+                graphicsContext,
+                beamTopEdgeY,
+                beamBottomEdgeY,
+                beamLeftEdgeX,
+                -DimensionLine.DEFAULT_SMALL_OFFSET,
+                SLAB_IMAGE_DIMENSION_LINES_SCALE,
+                true
+        );
+        verticalDimensionLine.draw();
+
+        // Draw Horizontal Dimension Line
+        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
+                Integer.toString(project.getGeometry().getWidth()),
+                Color.BLACK,
+                graphicsContext,
+                beamLeftEdgeX,
+                beamRightEdgeX,
+                beamBottomEdgeY,
+                DimensionLine.DEFAULT_SMALL_OFFSET,
+                SLAB_IMAGE_DIMENSION_LINES_SCALE
+        );
+        horizontalDimensionLine.draw();
+
 //
 //        DesignParameters designParameters = project.getDesignParameters();
 //        boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
