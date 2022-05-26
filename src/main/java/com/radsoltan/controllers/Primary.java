@@ -737,7 +737,8 @@ public class Primary extends Controller {
     }
 
     /**
-     * Draws beam image.
+     * Draws beam image along with dimension lines. It also invokes method to draw beam reinforcement.
+     * Beam image is drawn in scale that is obtained from getBeamImageScale method.
      */
     private void drawBeamImage() {
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
@@ -795,14 +796,13 @@ public class Primary extends Controller {
         );
         horizontalDimensionLine.draw();
 
-//
-//        DesignParameters designParameters = project.getDesignParameters();
-//        boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
-//
-//        if (isReinforcementSetup) {
-//            // Draw slab reinforcement
-//            drawSlabReinforcement(slabStrip, designParameters, slabImageScale);
-//        }
+        DesignParameters designParameters = project.getDesignParameters();
+        boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
+
+        if (isReinforcementSetup) {
+            // Draw slab reinforcement
+            drawBeamReinforcement();
+        }
     }
 
     /**
@@ -812,6 +812,16 @@ public class Primary extends Controller {
         System.out.println("Drawing beam reinforcement.");
     }
 
+    /**
+     * Calculates beam image scale using ratios defined in constants.
+     * These are ratios of max beam image width/height to canvas width/height.
+     *
+     * @param beamWidth    beam real width in mm
+     * @param canvasWidth  canvas width
+     * @param beamDepth    beam real depth in mmm
+     * @param canvasHeight canvas height
+     * @return Beam image scale
+     */
     private double getBeamImageScale(int beamWidth, double canvasWidth, int beamDepth, double canvasHeight) {
         double scale;
 
@@ -819,14 +829,18 @@ public class Primary extends Controller {
             case 1:
                 double beamImageVerticalRatio = BEAM_IMAGE_MAX_VERTICAL_RATIO;
                 do {
+                    // wrapped in loop to check if width doesn't exceed max ratio. If that's the case retry with reduced max vertical ratio
                     scale = beamImageVerticalRatio * canvasHeight / beamDepth;
+                    // Reducing beam max vertical ratio
                     beamImageVerticalRatio = beamImageVerticalRatio - BEAM_IMAGE_RATIO_REDUCTION_STEP;
                 } while (scale * beamWidth <= BEAM_IMAGE_MAX_HORIZONTAL_RATIO);
                 break;
             case -1:
                 double beamImageHorizontalRatio = BEAM_IMAGE_MAX_HORIZONTAL_RATIO;
                 do {
+                    // wrapped in loop to check if depth doesn't exceed max ratio. If that's the case retry with reduced  max horizontal ratio
                     scale = beamImageHorizontalRatio * canvasWidth / beamWidth;
+                    // Reducing beam max horizontal ratio
                     beamImageHorizontalRatio = beamImageHorizontalRatio - BEAM_IMAGE_RATIO_REDUCTION_STEP;
                 } while (scale * beamDepth <= BEAM_IMAGE_MAX_VERTICAL_RATIO);
                 break;

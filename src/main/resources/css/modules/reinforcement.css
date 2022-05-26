@@ -1,23 +1,22 @@
-/* ========= Slab Reinforcement ========= */
-.slab-reinforcement-wrapper {
+.slab-reinforcement-wrapper, .beam-reinforcement-wrapper {
     -fx-font-size: 14px;
     -fx-padding: 10px;
     -fx-alignment: center;
 }
 
-.slab-top-reinforcement, .slab-bottom-reinforcement {
+.slab-top-reinforcement, .slab-bottom-reinforcement, .beam-top-reinforcement, .beam-bottom-reinforcement {
     -fx-pref-height: 320px;
 }
 
-.slab-reinforcement-layers {
+.slab-reinforcement-layers, .beam-reinforcement-rows {
     -fx-pref-width: 700px;
 }
 
-.slab-reinforcement-vertical-spacings {
+.slab-reinforcement-vertical-spacings, .beam-reinforcement-vertical-spacings {
     -fx-padding: 16px 0 0 0;
 }
 
-.slab-reinforcement-grid {
+.slab-reinforcement-grid, .beam-reinforcement-grid {
     -fx-hgap: 10px;
 }
 
@@ -39,7 +38,7 @@
     -fx-pref-width: 65px;
 }
 
-.edit-slab-layers-button-wrapper {
+.edit-slab-layers-button-wrapper, .edit-beam-reinforcement-button-wrapper {
     -fx-padding: 8px 0 10px 0;
     -fx-spacing: 8px;
 }

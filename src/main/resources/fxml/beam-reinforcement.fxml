@@ -31,22 +31,62 @@
         </Menu>
     </MenuBar>
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <GridPane styleClass="main-grid">
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <VBox styleClass="beam-reinforcement-wrapper">
 
+            <VBox styleClass="section-wrapper">
+                <Label styleClass="heading" text="Top Reinforcement" />
             </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="0">
 
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="0" GridPane.rowIndex="1">
-
-            </VBox>
-            <VBox styleClass="grid-cell" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <HBox>
-                    <Button styleClass="large-button" onAction="#cancel" text="Cancel"/>
-                    <Button styleClass="large-button" onAction="#applyChanges" text="OK"/>
+            <VBox styleClass="section-wrapper, beam-top-reinforcement, border-separator-top">
+                <GridPane styleClass="beam-reinforcement-grid" >
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
+                        <Label styleClass="label-small" text="Reinforcement rows:" />
+                    </VBox>
+                    <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
+                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="topReinforcementVerticalSpacingsTitle" styleClass="hidden">
+                            <Label styleClass="label-small" text="Clear spacing" />
+                            <Label styleClass="label-small" text="between rows" />
+                        </VBox>
+                    </AnchorPane>
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topReinforcementVBox" styleClass="beam-reinforcement-layers" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
+                </GridPane>
+                <HBox styleClass="edit-beam-reinforcement-button-wrapper">
+                    <Button fx:id="addTopRowButton" onAction="#addReinforcementRow" text="Add" />
+                    <Button fx:id="deleteTopRowButton" onAction="#deleteReinforcementRow" text="Delete" />
                 </HBox>
             </VBox>
-        </GridPane>
+
+            <VBox styleClass="section-wrapper">
+                <Label styleClass="heading" text="Bottom Reinforcement" />
+            </VBox>
+
+            <VBox styleClass="section-wrapper, beam-bottom-reinforcement, border-separator-top">
+                <GridPane styleClass="beam-reinforcement-grid" >
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
+                        <Label styleClass="label-small" text="Reinforcement rows:" />
+                    </VBox>
+                    <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
+                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="bottomReinforcementVerticalSpacingsTitle" styleClass="hidden">
+                            <Label styleClass="label-small" text="Clear spacing" />
+                            <Label styleClass="label-small" text="between rows" />
+                        </VBox>
+                    </AnchorPane>
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomReinforcementVBox" styleClass="beam-reinforcement-layers" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="bottomVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
+                </GridPane>
+                <HBox styleClass="edit-beam-reinforcement-button-wrapper">
+                    <Button fx:id="addBottomRowButton" onAction="#addReinforcementRow" text="Add" />
+                    <Button fx:id="deleteBottomRowButton" onAction="#deleteReinforcementRow" text="Delete" />
+                </HBox>
+            </VBox>
+
+
+            <HBox styleClass="section-wrapper, edit-buttons-wrapper">
+                <Button onAction="#cancel" styleClass="large-button" text="Cancel" />
+                <Button onAction="#applyChanges" styleClass="large-button" text="OK" />
+            </HBox>
+
+        </VBox>
     </ScrollPane>
 </VBox>
