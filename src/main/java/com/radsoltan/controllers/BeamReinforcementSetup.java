@@ -1,13 +1,29 @@
 package com.radsoltan.controllers;
 
 import com.radsoltan.App;
+import com.radsoltan.components.PositiveIntegerField;
+import com.radsoltan.constants.Constants;
+import com.radsoltan.constants.CssStyleClasses;
+import com.radsoltan.constants.UIText;
 import com.radsoltan.model.Project;
+import com.radsoltan.model.reinforcement.BeamReinforcement;
+import com.radsoltan.model.reinforcement.Reinforcement;
+import com.radsoltan.util.AlertKind;
+import com.radsoltan.util.Utility;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO: 17/07/2021 Class is not finished. See todos below for what these do at the moment.
@@ -36,32 +52,108 @@ public class BeamReinforcementSetup extends Controller {
     @FXML
     public Button deleteBottomRowButton;
 
+    private int numberOfTopRows;
+    private int numberOfBottomRows;
     private final Project project;
+    private final Reinforcement beamReinforcement;
+    private final ObservableList<Integer> diameters;
+    private final ArrayList<String> rowLabels;
 
-    // TODO: 17/07/2021 This only gets instance of the project
+    /**
+     * Constructor. It gets project instance and using the instance it gets the reinforcement.
+     * It also creates lists for reinforcement diameters.
+     */
     public BeamReinforcementSetup() {
         project = Project.getInstance();
+
+        beamReinforcement = project.getReinforcement();
+
+        // Creating list for bar diameters
+        diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
+        // List for reinforcement rows labels
+        rowLabels = Constants.ORDINAL_LABELS;
     }
 
-    // TODO: 17/07/2021 Navigation to primary controller only
+    @FXML
+    public void initialize() {
+        if (beamReinforcement == null) {
+            // If no reinforcement set up before, create one top and one bottom row
+            addReinforcementRow(topReinforcementVBox, topVerticalSpacingVBox, topReinforcementVerticalSpacingsTitle, 0);
+            addReinforcementRow(bottomReinforcementVBox, bottomVerticalSpacingVBox, bottomReinforcementVerticalSpacingsTitle, 0);
+            numberOfTopRows = 1;
+            numberOfBottomRows = 1;
+        } else if (this.beamReinforcement instanceof BeamReinforcement) {
+
+        } else {
+            // Show error if invalid reinforcement
+            showAlertBox(UIText.INVALID_BEAM_REINFORCEMENT, AlertKind.ERROR);
+        }
+        Platform.runLater(() -> container.requestFocus());
+    }
+
     public void applyChanges(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
 
-    // TODO: 17/07/2021 Navigation to primary controller only
     public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
 
-    // TODO: 17/07/2021 Needs to be implemented to validate fields
+    private void addReinforcementRow(VBox rowsWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle, int rowIndex) {
+        // Creating text labels
+        Label rowLabel = new Label(Utility.capitalize(rowLabels.get(rowIndex)) + " row:");
+        rowLabel.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_ROW_LABEL);
+        // Creating combo boxes
+        ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
+        diameterComboBox.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
+
+        // Creating buttons
+        Button addButton = new Button("Add");
+        addButton.getStyleClass().add(CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+        Button deleteButton = new Button("Delete");
+        deleteButton.getStyleClass().addAll(CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON, CssStyleClasses.HIDDEN);
+        StackPane buttonWrapper = new StackPane(addButton, deleteButton);
+        buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
+
+        // Creating reinforcement layer
+        HBox layer = new HBox(rowLabel, diameterComboBox, buttonWrapper);
+        layer.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER);
+
+        if (rowIndex > 0) {
+            // If not first row, create an input field for vertical spacing between rows
+            PositiveIntegerField verticalSpacingInputField = new PositiveIntegerField();
+            verticalSpacingInputField.getStyleClass().add(CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
+            Label unitLabel = new Label("mm");
+            HBox verticalSpacingHBox = new HBox(verticalSpacingInputField, unitLabel);
+            verticalSpacingHBox.getStyleClass().add(CssStyleClasses.SLAB_VERTICAL_SPACING_WRAPPER);
+            verticalSpacingsWrapper.getChildren().add(verticalSpacingHBox);
+        }
+
+        if (rowIndex == 1) {
+            // If second row show the title for vertical spacings column
+            verticalSpacingsTitle.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        }
+
+        // Adding reinforcement row
+        rowsWrapper.getChildren().add(layer);
+    }
+    public void deleteReinforcementRow() {
+    }
+
+    public void addRowToTopReinforcement(ActionEvent actionEvent) {
+    }
+
+    public void deleteRowFromTopReinforcement(ActionEvent actionEvent) {
+    }
+
+    public void addRowToBottomReinforcement(ActionEvent actionEvent) {
+    }
+
+    public void deleteRowFromBottomReinforcement(ActionEvent actionEvent) {
+    }
+
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
         return null;
-    }
-
-    public void addReinforcementRow(ActionEvent actionEvent) {
-    }
-
-    public void deleteReinforcementRow(ActionEvent actionEvent) {
     }
 }

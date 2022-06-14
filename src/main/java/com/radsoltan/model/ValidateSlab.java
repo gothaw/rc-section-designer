@@ -82,7 +82,7 @@ public class ValidateSlab implements Validation {
                     0.5 * spacings.get(i) - 0.5 * diameters.get(i) - 0.5 * additionalDiameters.get(i);
 
             if (clearSpacing < minSpacing) {
-                validationMessages.add(String.format("Reinforcement spacing for the %s %s layer is less than minimum required - %d mm.", Constants.LAYERS_ORDINAL_LABELS.get(i), location.toLowerCase(), minSpacing));
+                validationMessages.add(String.format("Reinforcement spacing for the %s %s layer is less than minimum required - %d mm.", Constants.ORDINAL_LABELS.get(i), location.toLowerCase(), minSpacing));
             }
         }
 
@@ -111,7 +111,7 @@ public class ValidateSlab implements Validation {
                     .orElse(0);
             if (verticalSpacings.get(i - 1) < minSpacing) {
                 validationMessages.add(String.format("Vertical spacing between %s and %s %s layer is less than minimum required - %d mm.",
-                        Constants.LAYERS_ORDINAL_LABELS.get(i - 1), Constants.LAYERS_ORDINAL_LABELS.get(i), location.toLowerCase(), minSpacing));
+                        Constants.ORDINAL_LABELS.get(i - 1), Constants.ORDINAL_LABELS.get(i), location.toLowerCase(), minSpacing));
             }
         }
         return validationMessages;

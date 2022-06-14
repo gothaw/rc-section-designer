@@ -24,6 +24,7 @@ public class UIText {
     public static final String INVALID_ELEMENT_TYPE = "Invalid element type.";
     public static final String INVALID_REDISTRIBUTION_RATIO = "Redistribution ratio must be between 0.7 and 1.0.";
     public static final String INVALID_SLAB_REINFORCEMENT = "Invalid slab reinforcement.";
+    public static final String INVALID_BEAM_REINFORCEMENT = "Invalid beam reinforcement.";
     public static final String INVALID_SLAB_GEOMETRY = "Invalid slab geometry.";
     public static final String INVALID_BEAM_GEOMETRY = "Invalid beam geometry.";
     public static final String INVALID_DIMENSION_LINE = "Invalid dimension line.";

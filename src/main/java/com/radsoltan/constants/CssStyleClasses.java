@@ -8,6 +8,8 @@ public class CssStyleClasses {
     public static final String NOT_DEFINED = "not-defined";
     public static final String ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER = "additional-slab-reinforcement-button-wrapper";
     public static final String ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON = "add-additional-slab-reinforcement";
+    public static final String BEAM_REINFORCEMENT_ROW_LABEL = "beam-row-label";
+
     public static final String DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON = "delete-additional-slab-reinforcement";
     public static final String FAIL = "fail";
     public static final String PASS = "pass";

@@ -37,5 +37,5 @@ public class Constants {
     public static final double DEFAULT_REDISTRIBUTION_RATIO = 0.85;
     public static final int NOMINAL_COVER_STEP = 5;
     public static final int MAX_NUMBER_OF_LAYERS = 6;
-    public static final ArrayList<String> LAYERS_ORDINAL_LABELS = new ArrayList<>(List.of("1st", "2nd", "3rd", "4th", "5th", "6th"));
+    public static final ArrayList<String> ORDINAL_LABELS = new ArrayList<>(List.of("1st", "2nd", "3rd", "4th", "5th", "6th"));
 }

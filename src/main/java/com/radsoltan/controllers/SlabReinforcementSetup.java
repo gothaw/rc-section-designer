@@ -89,7 +89,7 @@ public class SlabReinforcementSetup extends Controller {
         // Creating list for bar diameters
         diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
         // List for reinforcement layer labels
-        layerLabels = Constants.LAYERS_ORDINAL_LABELS;
+        layerLabels = Constants.ORDINAL_LABELS;
     }
 
     /**

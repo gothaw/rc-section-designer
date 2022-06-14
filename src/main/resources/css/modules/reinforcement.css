@@ -25,7 +25,7 @@
     -fx-spacing: 5px;
 }
 
-.slab-vertical-spacing-wrapper .text-field{
+.slab-vertical-spacing-wrapper .text-field {
     -fx-pref-width: 45px;
 }
 
@@ -34,7 +34,7 @@
     -fx-spacing: 8px;
 }
 
-.slab-layer-label {
+.slab-layer-label, .beam-row-label {
     -fx-pref-width: 65px;
 }
 

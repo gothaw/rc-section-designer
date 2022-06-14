@@ -394,8 +394,8 @@ public class SlabReinforcement extends Reinforcement {
             int additionalDiameter = additionalDiameters.get(i);
             int spacing = spacings.get(i);
             String description = (additionalDiameter == 0)
-                    ? String.format("%s layer: \u03c6%d@%d", Constants.LAYERS_ORDINAL_LABELS.get(i), diameter, spacing)
-                    : String.format("%s layer: \u03c6%d@%d + \u03c6%d@%d", Constants.LAYERS_ORDINAL_LABELS.get(i), diameter, spacing, additionalDiameter, spacing);
+                    ? String.format("%s layer: \u03c6%d@%d", Constants.ORDINAL_LABELS.get(i), diameter, spacing)
+                    : String.format("%s layer: \u03c6%d@%d + \u03c6%d@%d", Constants.ORDINAL_LABELS.get(i), diameter, spacing, additionalDiameter, spacing);
             if (i < diameters.size() - 1) {
                 description = description.concat(",  ");
             }

@@ -52,8 +52,8 @@
                     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
                 </GridPane>
                 <HBox styleClass="edit-beam-reinforcement-button-wrapper">
-                    <Button fx:id="addTopRowButton" onAction="#addReinforcementRow" text="Add" />
-                    <Button fx:id="deleteTopRowButton" onAction="#deleteReinforcementRow" text="Delete" />
+                    <Button fx:id="addTopRowButton" onAction="#addRowToTopReinforcement" text="Add" />
+                    <Button fx:id="deleteTopRowButton" onAction="#deleteRowFromTopReinforcement" text="Delete" />
                 </HBox>
             </VBox>
 
@@ -76,8 +76,8 @@
                     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="bottomVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
                 </GridPane>
                 <HBox styleClass="edit-beam-reinforcement-button-wrapper">
-                    <Button fx:id="addBottomRowButton" onAction="#addReinforcementRow" text="Add" />
-                    <Button fx:id="deleteBottomRowButton" onAction="#deleteReinforcementRow" text="Delete" />
+                    <Button fx:id="addBottomRowButton" onAction="#addRowToBottomReinforcement" text="Add" />
+                    <Button fx:id="deleteBottomRowButton" onAction="#deleteRowFromBottomReinforcement" text="Delete" />
                 </HBox>
             </VBox>
 
