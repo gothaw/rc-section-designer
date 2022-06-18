@@ -48,7 +48,7 @@
                             <Label styleClass="label-small" text="between rows" />
                         </VBox>
                     </AnchorPane>
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topReinforcementVBox" styleClass="beam-reinforcement-layers" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topReinforcementVBox" styleClass="beam-reinforcement-rows" />
                     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
                 </GridPane>
                 <HBox styleClass="edit-beam-reinforcement-button-wrapper">
@@ -72,7 +72,7 @@
                             <Label styleClass="label-small" text="between rows" />
                         </VBox>
                     </AnchorPane>
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomReinforcementVBox" styleClass="beam-reinforcement-layers" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomReinforcementVBox" styleClass="beam-reinforcement-rows" />
                     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="bottomVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
                 </GridPane>
                 <HBox styleClass="edit-beam-reinforcement-button-wrapper">

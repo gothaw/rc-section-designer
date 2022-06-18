@@ -20,16 +20,16 @@
     -fx-hgap: 10px;
 }
 
-.slab-vertical-spacing-wrapper {
+.slab-vertical-spacing-wrapper, .beam-vertical-spacing-wrapper {
     -fx-padding: 8px 0 0 0;
     -fx-spacing: 5px;
 }
 
-.slab-vertical-spacing-wrapper .text-field {
+.slab-vertical-spacing-wrapper .text-field, .beam-vertical-spacing-wrapper .text-field {
     -fx-pref-width: 45px;
 }
 
-.slab-layer {
+.slab-layer, .beam-row {
     -fx-padding: 10px 0 0 0;
     -fx-spacing: 8px;
 }

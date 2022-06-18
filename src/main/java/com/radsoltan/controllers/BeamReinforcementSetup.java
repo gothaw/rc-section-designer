@@ -121,23 +121,23 @@ public class BeamReinforcementSetup extends Controller {
 
         // Creating buttons
         Button addButton = new Button("Add");
-        addButton.getStyleClass().add(CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+        addButton.getStyleClass().add(CssStyleClasses.ADD_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON);
         Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().addAll(CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON, CssStyleClasses.HIDDEN);
+        deleteButton.getStyleClass().addAll(CssStyleClasses.DELETE_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON, CssStyleClasses.HIDDEN);
         StackPane buttonWrapper = new StackPane(addButton, deleteButton);
-        buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
+        buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_BEAM_REINFORCEMENT_BUTTON_WRAPPER);
 
         // Creating reinforcement layer
         HBox layer = new HBox(rowLabel, barNumberComboBox, rowMiddleLabel, diameterComboBox, buttonWrapper);
-        layer.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER);
+        layer.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_ROW);
 
         if (rowIndex > 0) {
             // If not first row, create an input field for vertical spacing between rows
             PositiveIntegerField verticalSpacingInputField = new PositiveIntegerField();
-            verticalSpacingInputField.getStyleClass().add(CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
+            verticalSpacingInputField.getStyleClass().add(CssStyleClasses.BEAM_VERTICAL_SPACING_FIELD);
             Label unitLabel = new Label("mm");
             HBox verticalSpacingHBox = new HBox(verticalSpacingInputField, unitLabel);
-            verticalSpacingHBox.getStyleClass().add(CssStyleClasses.SLAB_VERTICAL_SPACING_WRAPPER);
+            verticalSpacingHBox.getStyleClass().add(CssStyleClasses.BEAM_VERTICAL_SPACING_WRAPPER);
             verticalSpacingsWrapper.getChildren().add(verticalSpacingHBox);
         }
 
@@ -153,12 +153,20 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     public void addRowToTopReinforcement(ActionEvent actionEvent) {
+        if (numberOfTopRows < Constants.MAX_NUMBER_OF_LAYERS) {
+            addReinforcementRow(topReinforcementVBox, topVerticalSpacingVBox, topReinforcementVerticalSpacingsTitle, numberOfTopRows);
+            numberOfTopRows++;
+        }
     }
 
     public void deleteRowFromTopReinforcement(ActionEvent actionEvent) {
     }
 
     public void addRowToBottomReinforcement(ActionEvent actionEvent) {
+        if (numberOfBottomRows < Constants.MAX_NUMBER_OF_LAYERS) {
+            addReinforcementRow(bottomReinforcementVBox, bottomVerticalSpacingVBox, bottomReinforcementVerticalSpacingsTitle, numberOfBottomRows);
+            numberOfBottomRows++;
+        }
     }
 
     public void deleteRowFromBottomReinforcement(ActionEvent actionEvent) {
