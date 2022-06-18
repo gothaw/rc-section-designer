@@ -42,3 +42,7 @@
     -fx-padding: 8px 0 10px 0;
     -fx-spacing: 8px;
 }
+
+.beam-reinforcement-diameter-combo-box, .beam-reinforcement-bar-number-combo-box {
+    -fx-max-width: 55px;
+}

@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 // TODO: 17/07/2021 Class is not finished. See todos below for what these do at the moment.
 public class BeamReinforcementSetup extends Controller {
@@ -57,6 +58,7 @@ public class BeamReinforcementSetup extends Controller {
     private final Project project;
     private final Reinforcement beamReinforcement;
     private final ObservableList<Integer> diameters;
+    private final ObservableList<Integer> barNumbers;
     private final ArrayList<String> rowLabels;
 
     /**
@@ -68,8 +70,15 @@ public class BeamReinforcementSetup extends Controller {
 
         beamReinforcement = project.getReinforcement();
 
+        // Creating list for bar numbers
+        List<Integer> barNumberList = new ArrayList<>();
+        IntStream.iterate(1, count -> count <= Constants.BEAM_ROW_BAR_MAX_COUNT, count -> count + 1)
+                .forEach(barNumberList::add);
+        barNumbers = FXCollections.observableList(barNumberList);
+
         // Creating list for bar diameters
         diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
+
         // List for reinforcement rows labels
         rowLabels = Constants.ORDINAL_LABELS;
     }
@@ -103,9 +112,12 @@ public class BeamReinforcementSetup extends Controller {
         // Creating text labels
         Label rowLabel = new Label(Utility.capitalize(rowLabels.get(rowIndex)) + " row:");
         rowLabel.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_ROW_LABEL);
+        Label rowMiddleLabel = new Label("x");
         // Creating combo boxes
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
-        diameterComboBox.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
+        diameterComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
+        ComboBox<Integer> barNumberComboBox = new ComboBox<>(barNumbers);
+        barNumberComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
 
         // Creating buttons
         Button addButton = new Button("Add");
@@ -116,7 +128,7 @@ public class BeamReinforcementSetup extends Controller {
         buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
 
         // Creating reinforcement layer
-        HBox layer = new HBox(rowLabel, diameterComboBox, buttonWrapper);
+        HBox layer = new HBox(rowLabel, barNumberComboBox, rowMiddleLabel, diameterComboBox, buttonWrapper);
         layer.getStyleClass().add(CssStyleClasses.SLAB_REINFORCEMENT_LAYER);
 
         if (rowIndex > 0) {

@@ -27,6 +27,7 @@ public class Constants {
     public static final int SLAB_MIN_BAR_SPACING = 50;
     public static final int SLAB_MAX_BAR_SPACING = 750;
     public static final int SLAB_BAR_SPACING_STEP = 25;
+    public static final int BEAM_ROW_BAR_MAX_COUNT = 99;
     public static final int MAX_NOMINAL_COVER = 100;
     public static final int MIN_NOMINAL_COVER = 20;
     public static final double GAMMA_C_PERSISTENT_TRANSIENT = 1.5;
