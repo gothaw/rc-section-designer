@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -63,7 +64,7 @@ public class BeamReinforcementSetup extends Controller {
 
     /**
      * Constructor. It gets project instance and using the instance it gets the reinforcement.
-     * It also creates lists for reinforcement diameters.
+     * It also creates lists for reinforcement diameters and list with number of bars.
      */
     public BeamReinforcementSetup() {
         project = Project.getInstance();
@@ -108,6 +109,20 @@ public class BeamReinforcementSetup extends Controller {
         App.setRoot("primary");
     }
 
+    /**
+     * Method that adds a reinforcement row to given beam face (rowsWrapper). It adds:
+     * - combo box for number of bars
+     * - combo box for bar diameter
+     * - "Add" button that handles adding additional bars
+     * - "Delete" button that handles removing additional bars
+     * - row labels for example "3rd row:"
+     * - vertical spacing input field
+     *
+     * @param rowsWrapper             VBox that wraps reinforcement row fields. It represents beam face - top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement rows for given beam face - top/bottom
+     * @param verticalSpacingsTitle   VBox with the label for the vertical spacings column
+     * @param rowIndex                Index of the row to be added
+     */
     private void addReinforcementRow(VBox rowsWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle, int rowIndex) {
         // Creating text labels
         Label rowLabel = new Label(Utility.capitalize(rowLabels.get(rowIndex)) + " row:");
@@ -127,9 +142,9 @@ public class BeamReinforcementSetup extends Controller {
         StackPane buttonWrapper = new StackPane(addButton, deleteButton);
         buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_BEAM_REINFORCEMENT_BUTTON_WRAPPER);
 
-        // Creating reinforcement layer
-        HBox layer = new HBox(rowLabel, barNumberComboBox, rowMiddleLabel, diameterComboBox, buttonWrapper);
-        layer.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_ROW);
+        // Creating reinforcement row
+        HBox row = new HBox(rowLabel, barNumberComboBox, rowMiddleLabel, diameterComboBox, buttonWrapper);
+        row.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_ROW);
 
         if (rowIndex > 0) {
             // If not first row, create an input field for vertical spacing between rows
@@ -147,29 +162,79 @@ public class BeamReinforcementSetup extends Controller {
         }
 
         // Adding reinforcement row
-        rowsWrapper.getChildren().add(layer);
-    }
-    public void deleteReinforcementRow() {
+        rowsWrapper.getChildren().add(row);
     }
 
+    /**
+     * Method that removes the last reinforcement row from a given beam face (rowsWrapper).
+     *
+     * @param rowsWrapper             VBox that wraps reinforcement row fields. It represents beam face - top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement rows for given beam face - top/bottom
+     * @param verticalSpacingsTitle   VBox with the label for the vertical spacings column
+     */
+    private void deleteReinforcementRow(VBox rowsWrapper, VBox verticalSpacingsWrapper, VBox verticalSpacingsTitle) {
+        List<Node> rows = rowsWrapper.getChildren();
+        // Removing the last row
+        rows.remove(rows.size() - 1);
+        List<Node> verticalSpacings = verticalSpacingsWrapper.getChildren();
+        // Removing vertical spacing field
+        verticalSpacings.remove(verticalSpacings.size() - 1);
+        if (rows.size() == 1) {
+            // Hiding title for vertical spacings if only one row
+            verticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
+        }
+    }
+
+    /**
+     * It handles "Add" button click event for the top face of the beam.
+     * It adds reinforcement row top reinforcement. It invokes addReinforcementRow function.
+     *
+     * @param actionEvent Add button click event
+     */
     public void addRowToTopReinforcement(ActionEvent actionEvent) {
-        if (numberOfTopRows < Constants.MAX_NUMBER_OF_LAYERS) {
+        if (numberOfTopRows < Constants.MAX_NUMBER_OF_ROWS) {
             addReinforcementRow(topReinforcementVBox, topVerticalSpacingVBox, topReinforcementVerticalSpacingsTitle, numberOfTopRows);
             numberOfTopRows++;
         }
     }
 
+    /**
+     * It handles "Delete" button click event for the top face of the beam.
+     * It removes the bottommost reinforcement row. It invokes deleteReinforcementRow function.
+     *
+     * @param actionEvent Delete button click event
+     */
     public void deleteRowFromTopReinforcement(ActionEvent actionEvent) {
+        if (numberOfTopRows > 1) {
+            deleteReinforcementRow(topReinforcementVBox, topVerticalSpacingVBox, topReinforcementVerticalSpacingsTitle);
+            numberOfTopRows--;
+        }
     }
 
+    /**
+     * It handles "Add" button click event for the bottom face of the beam.
+     * It adds reinforcement row bottom reinforcement. It invokes addReinforcementRow function.
+     *
+     * @param actionEvent Add button click event
+     */
     public void addRowToBottomReinforcement(ActionEvent actionEvent) {
-        if (numberOfBottomRows < Constants.MAX_NUMBER_OF_LAYERS) {
+        if (numberOfBottomRows < Constants.MAX_NUMBER_OF_ROWS) {
             addReinforcementRow(bottomReinforcementVBox, bottomVerticalSpacingVBox, bottomReinforcementVerticalSpacingsTitle, numberOfBottomRows);
             numberOfBottomRows++;
         }
     }
 
+    /**
+     * It handles "Delete" button click event for the bottom face of the beam.
+     * It removes the topmost reinforcement row. It invokes deleteReinforcementRow function.
+     *
+     * @param actionEvent Delete button click event
+     */
     public void deleteRowFromBottomReinforcement(ActionEvent actionEvent) {
+        if (numberOfBottomRows > 1) {
+            deleteReinforcementRow(bottomReinforcementVBox, bottomVerticalSpacingVBox, bottomReinforcementVerticalSpacingsTitle);
+            numberOfBottomRows--;
+        }
     }
 
     @Override
