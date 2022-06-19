@@ -20,7 +20,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -59,23 +58,28 @@ public class BeamReinforcementSetup extends Controller {
     private final Project project;
     private final Reinforcement beamReinforcement;
     private final ObservableList<Integer> diameters;
-    private final ObservableList<Integer> barNumbers;
+    private final ObservableList<Integer> mainBarNumbers;
+    private final ObservableList<Integer> additionalBarNumbers;
     private final ArrayList<String> rowLabels;
 
     /**
      * Constructor. It gets project instance and using the instance it gets the reinforcement.
-     * It also creates lists for reinforcement diameters and list with number of bars.
+     * It also creates lists for reinforcement diameters and lists with number of bars.
      */
     public BeamReinforcementSetup() {
         project = Project.getInstance();
 
         beamReinforcement = project.getReinforcement();
 
-        // Creating list for bar numbers
+        // Creating lists for bar numbers
         List<Integer> barNumberList = new ArrayList<>();
-        IntStream.iterate(1, count -> count <= Constants.BEAM_ROW_BAR_MAX_COUNT, count -> count + 1)
+        IntStream.iterate(Constants.BEAM_ROW_MAIN_BAR_MIN_COUNT, count -> count <= Constants.BEAM_ROW_BAR_MAX_COUNT, count -> count + 1)
                 .forEach(barNumberList::add);
-        barNumbers = FXCollections.observableList(barNumberList);
+        mainBarNumbers = FXCollections.observableList(barNumberList);
+
+        List<Integer> additionalBarNumberList = new ArrayList<>(barNumberList);
+        additionalBarNumberList.add(0, 1);
+        additionalBarNumbers = FXCollections.observableArrayList(additionalBarNumberList);
 
         // Creating list for bar diameters
         diameters = FXCollections.observableList(Constants.BAR_DIAMETERS);
@@ -127,23 +131,26 @@ public class BeamReinforcementSetup extends Controller {
         // Creating text labels
         Label rowLabel = new Label(Utility.capitalize(rowLabels.get(rowIndex)) + " row:");
         rowLabel.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_ROW_LABEL);
-        Label rowMiddleLabel = new Label("x");
+        Label label = new Label("x");
         // Creating combo boxes
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
         diameterComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
-        ComboBox<Integer> barNumberComboBox = new ComboBox<>(barNumbers);
+        ComboBox<Integer> barNumberComboBox = new ComboBox<>(mainBarNumbers);
         barNumberComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
 
         // Creating buttons
         Button addButton = new Button("Add");
         addButton.getStyleClass().add(CssStyleClasses.ADD_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON);
+        addButton.setOnAction(this::handleAddAdditionalReinforcement);
         Button deleteButton = new Button("Delete");
         deleteButton.getStyleClass().addAll(CssStyleClasses.DELETE_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON, CssStyleClasses.HIDDEN);
-        StackPane buttonWrapper = new StackPane(addButton, deleteButton);
+        deleteButton.setOnAction(this::deleteAdditionalReinforcement);
+        deleteButton.setManaged(false);
+        HBox buttonWrapper = new HBox(addButton, deleteButton);
         buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_BEAM_REINFORCEMENT_BUTTON_WRAPPER);
 
         // Creating reinforcement row
-        HBox row = new HBox(rowLabel, barNumberComboBox, rowMiddleLabel, diameterComboBox, buttonWrapper);
+        HBox row = new HBox(rowLabel, barNumberComboBox, label, diameterComboBox, buttonWrapper);
         row.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_ROW);
 
         if (rowIndex > 0) {
@@ -184,6 +191,39 @@ public class BeamReinforcementSetup extends Controller {
             verticalSpacingsTitle.getStyleClass().add(CssStyleClasses.HIDDEN);
         }
     }
+
+    public void handleAddAdditionalReinforcement(ActionEvent actionEvent) {
+        Button addButton = (Button) actionEvent.getSource();
+        HBox hBox = (HBox) addButton.getParent();
+        Button deleteButton = (Button) hBox.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON);
+        HBox row = (HBox) hBox.getParent();
+        addAdditionalReinforcement(addButton, deleteButton, row);
+    }
+
+    public void addAdditionalReinforcement(Button addButton, Button deleteButton, HBox row) {
+        Label joiningLabel = new Label(" + ");
+        joiningLabel.getStyleClass().add(CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
+        Label label = new Label("x");
+
+        // Creating combo boxes
+        ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
+        diameterComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
+        ComboBox<Integer> barNumberComboBox = new ComboBox<>(additionalBarNumbers);
+        barNumberComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
+
+        List<Node> additionalReinforcementNodes = new ArrayList<>(List.of(joiningLabel, barNumberComboBox, label, diameterComboBox));
+        row.getChildren().addAll(row.getChildren().size() - 1, additionalReinforcementNodes);
+
+        addButton.getStyleClass().add(CssStyleClasses.HIDDEN);
+        addButton.setManaged(false);
+        deleteButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        deleteButton.setManaged(true);
+    }
+
+    public void deleteAdditionalReinforcement(ActionEvent actionEvent) {
+
+    }
+
 
     /**
      * It handles "Add" button click event for the top face of the beam.

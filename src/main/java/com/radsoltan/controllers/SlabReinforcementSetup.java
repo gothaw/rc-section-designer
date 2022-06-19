@@ -2,24 +2,24 @@ package com.radsoltan.controllers;
 
 import com.radsoltan.App;
 import com.radsoltan.components.PositiveIntegerField;
-import com.radsoltan.model.Project;
-import com.radsoltan.model.reinforcement.Reinforcement;
-import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.CssStyleClasses;
 import com.radsoltan.constants.UIText;
+import com.radsoltan.model.Project;
+import com.radsoltan.model.reinforcement.Reinforcement;
+import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.AlertKind;
 import com.radsoltan.util.Utility;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -259,7 +259,8 @@ public class SlabReinforcementSetup extends Controller {
         Button deleteButton = new Button("Delete");
         deleteButton.setOnAction(this::deleteAdditionalReinforcement);
         deleteButton.getStyleClass().addAll(CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON, CssStyleClasses.HIDDEN);
-        StackPane buttonWrapper = new StackPane(addButton, deleteButton);
+        deleteButton.setManaged(false);
+        HBox buttonWrapper = new HBox(addButton, deleteButton);
         buttonWrapper.getStyleClass().add(CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
 
         // Creating reinforcement layer
@@ -334,9 +335,9 @@ public class SlabReinforcementSetup extends Controller {
             // Initializing additional reinforcement
             if (additionalDiameters.get(layerIndex) != 0) {
                 // Getting add and delete buttons
-                StackPane stackPane = (StackPane) layer.lookup("." + CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
-                Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-                Button deleteButton = (Button) stackPane.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+                HBox hBox = (HBox) layer.lookup("." + CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
+                Button addButton = (Button) hBox.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+                Button deleteButton = (Button) hBox.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
                 // Adding additional reinforcement fields and initializing fields
                 addAdditionalReinforcement(addButton, deleteButton, layer);
                 @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
@@ -360,9 +361,9 @@ public class SlabReinforcementSetup extends Controller {
      */
     public void handleAddAdditionalReinforcement(ActionEvent actionEvent) {
         Button addButton = (Button) actionEvent.getSource();
-        StackPane stackPane = (StackPane) addButton.getParent();
-        Button deleteButton = (Button) stackPane.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-        HBox layer = (HBox) stackPane.getParent();
+        HBox hBox = (HBox) addButton.getParent();
+        Button deleteButton = (Button) hBox.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+        HBox layer = (HBox) hBox.getParent();
         addAdditionalReinforcement(addButton, deleteButton, layer);
     }
 
@@ -390,7 +391,9 @@ public class SlabReinforcementSetup extends Controller {
         layer.getChildren().addAll(layer.getChildren().size() - 1, additionalReinforcementNodes);
 
         addButton.getStyleClass().add(CssStyleClasses.HIDDEN);
+        addButton.setManaged(false);
         deleteButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        deleteButton.setManaged(true);
     }
 
     /**
@@ -413,9 +416,9 @@ public class SlabReinforcementSetup extends Controller {
     public void deleteAdditionalReinforcement(ActionEvent actionEvent) {
         // Selecting layer based on the button clicked
         Button deleteButton = (Button) actionEvent.getSource();
-        StackPane stackPane = (StackPane) deleteButton.getParent();
-        Button addButton = (Button) stackPane.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-        HBox layer = (HBox) stackPane.getParent();
+        HBox hBox = (HBox) deleteButton.getParent();
+        Button addButton = (Button) hBox.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+        HBox layer = (HBox) hBox.getParent();
 
         // Selecting nodes to be deleted
         List<Node> layerNodes = layer.getChildren();
@@ -427,7 +430,9 @@ public class SlabReinforcementSetup extends Controller {
 
         // Hiding delete button and showing add button
         deleteButton.getStyleClass().add(CssStyleClasses.HIDDEN);
+        deleteButton.setManaged(false);
         addButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        addButton.setManaged(true);
     }
 
     /**

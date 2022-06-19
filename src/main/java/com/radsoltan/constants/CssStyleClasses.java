@@ -10,6 +10,7 @@ public class CssStyleClasses {
     public static final String ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON = "add-additional-slab-reinforcement";
     public static final String ADDITIONAL_BEAM_REINFORCEMENT_BUTTON_WRAPPER = "additional-beam-reinforcement-button-wrapper";
     public static final String ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER = "additional-slab-reinforcement-button-wrapper";
+    public static final String BEAM_ADDITIONAL_REINFORCEMENT_JOINING_LABEL = "beam-additional-reinforcement-joining-label";
     public static final String BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX = "beam-reinforcement-bar-number-combo-box";
     public static final String BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX = "beam-reinforcement-diameter-combo-box";
     public static final String BEAM_REINFORCEMENT_ROW = "beam-row";

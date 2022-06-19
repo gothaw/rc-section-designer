@@ -34,6 +34,10 @@
     -fx-spacing: 8px;
 }
 
+.additional-beam-reinforcement-button-wrapper {
+    -fx-spacing: 8px;
+}
+
 .slab-layer-label, .beam-row-label {
     -fx-pref-width: 65px;
 }
