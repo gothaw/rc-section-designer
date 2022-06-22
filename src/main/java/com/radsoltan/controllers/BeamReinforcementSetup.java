@@ -78,6 +78,7 @@ public class BeamReinforcementSetup extends Controller {
         mainBarNumbers = FXCollections.observableList(barNumberList);
 
         List<Integer> additionalBarNumberList = new ArrayList<>(barNumberList);
+        // Additional rebar can start from 1
         additionalBarNumberList.add(0, 1);
         additionalBarNumbers = FXCollections.observableArrayList(additionalBarNumberList);
 
@@ -192,6 +193,12 @@ public class BeamReinforcementSetup extends Controller {
         }
     }
 
+    /**
+     * It that handles "Add" button for a reinforcement row. It adds additional reinforcement fields to the main reinforcement.
+     * It uses method addAdditionalReinforcement.
+     *
+     * @param actionEvent Add button click event
+     */
     public void handleAddAdditionalReinforcement(ActionEvent actionEvent) {
         Button addButton = (Button) actionEvent.getSource();
         HBox hBox = (HBox) addButton.getParent();
@@ -200,16 +207,28 @@ public class BeamReinforcementSetup extends Controller {
         addAdditionalReinforcement(addButton, deleteButton, row);
     }
 
+    /**
+     * It adds form fields for setting up additional reinforcement. This includes:
+     * - labels
+     * - combo box for number of additional bars
+     * - combo box for diameter of additional bars
+     * It hides add button and shows remove button for additional reinforcement
+     *
+     * @param addButton    add button that handles adding additional reinforcement
+     * @param deleteButton remove button that handles removing additional reinforcement
+     * @param row          HBox that wraps rows fields which we add the additional reinforcement to
+     */
     public void addAdditionalReinforcement(Button addButton, Button deleteButton, HBox row) {
         Label joiningLabel = new Label(" + ");
         joiningLabel.getStyleClass().add(CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
         Label label = new Label("x");
+        label.getStyleClass().add(CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_TIMES_LABEL);
 
         // Creating combo boxes
         ComboBox<Integer> diameterComboBox = new ComboBox<>(diameters);
-        diameterComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
+        diameterComboBox.getStyleClass().add(CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX);
         ComboBox<Integer> barNumberComboBox = new ComboBox<>(additionalBarNumbers);
-        barNumberComboBox.getStyleClass().add(CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
+        barNumberComboBox.getStyleClass().add(CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
 
         List<Node> additionalReinforcementNodes = new ArrayList<>(List.of(joiningLabel, barNumberComboBox, label, diameterComboBox));
         row.getChildren().addAll(row.getChildren().size() - 1, additionalReinforcementNodes);
@@ -220,10 +239,33 @@ public class BeamReinforcementSetup extends Controller {
         deleteButton.setManaged(true);
     }
 
+    /**
+     * It handles "Delete" button for a reinforcement rows. It deletes additional reinforcement
+     *
+     * @param actionEvent Delete button click event
+     */
     public void deleteAdditionalReinforcement(ActionEvent actionEvent) {
+        // Selecting row based on the button clicked
+        Button deleteButton = (Button) actionEvent.getSource();
+        HBox hBox = (HBox) deleteButton.getParent();
+        Button addButton = (Button) hBox.lookup("." + CssStyleClasses.ADD_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON);
+        HBox row = (HBox) hBox.getParent();
 
+        // Selecting nodes to be deleted
+        List<Node> rowNodes = row.getChildren();
+        Label joiningLabel = (Label) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
+        Label timesLabel = (Label) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_TIMES_LABEL);
+        @SuppressWarnings("unchecked") ComboBox<Integer> barNumberComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
+        @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX);
+
+        rowNodes.removeAll(new ArrayList<>(List.of(joiningLabel, barNumberComboBox, timesLabel, diameterComboBox)));
+
+        // Hiding delete button and showing add button
+        deleteButton.getStyleClass().add(CssStyleClasses.HIDDEN);
+        deleteButton.setManaged(false);
+        addButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
+        addButton.setManaged(true);
     }
-
 
     /**
      * It handles "Add" button click event for the top face of the beam.
