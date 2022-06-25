@@ -6,57 +6,57 @@ import java.util.stream.IntStream;
 
 public class BeamReinforcement extends Reinforcement {
 
-    private final List<List<Integer>> topReinforcement;
-    private List<Integer> topReinforcementVerticalSpacing;
-    private final List<List<Integer>> bottomReinforcement;
-    private List<Integer> bottomReinforcementVerticalSpacing;
+    private final List<List<Integer>> topDiameters;
+    private List<Integer> topVerticalSpacings;
+    private final List<List<Integer>> bottomDiameters;
+    private List<Integer> bottomVerticalSpacings;
     private final ShearLinks shearLinks;
     private int numberOfBarsInSlab;
     private boolean isReinforcementInSlabSymmetrical;
 
-    public BeamReinforcement(List<List<Integer>> topReinforcement,
-            List<Integer> topReinforcementVerticalSpacing,
-            List<List<Integer>> bottomReinforcement,
-            List<Integer> bottomReinforcementVerticalSpacing,
+    public BeamReinforcement(List<List<Integer>> topDiameters,
+            List<Integer> topVerticalSpacings,
+            List<List<Integer>> bottomDiameters,
+            List<Integer> bottomVerticalSpacings,
             ShearLinks shearLinks,
             int numberOfBarsInSlab,
             boolean isReinforcementInSlabSymmetrical) {
 
-        this.topReinforcement = topReinforcement;
-        this.topReinforcementVerticalSpacing = topReinforcementVerticalSpacing;
-        this.bottomReinforcement = bottomReinforcement;
-        this.bottomReinforcementVerticalSpacing = bottomReinforcementVerticalSpacing;
+        this.topDiameters = topDiameters;
+        this.topVerticalSpacings = topVerticalSpacings;
+        this.bottomDiameters = bottomDiameters;
+        this.bottomVerticalSpacings = bottomVerticalSpacings;
         this.shearLinks = shearLinks;
         this.numberOfBarsInSlab = numberOfBarsInSlab;
         this.isReinforcementInSlabSymmetrical = isReinforcementInSlabSymmetrical;
     }
 
-    public BeamReinforcement(List<List<Integer>> topReinforcement,
-                             List<Integer> topReinforcementVerticalSpacing,
-                             List<List<Integer>> bottomReinforcement,
-                             List<Integer> bottomReinforcementVerticalSpacing,
+    public BeamReinforcement(List<List<Integer>> topDiameters,
+                             List<Integer> topVerticalSpacings,
+                             List<List<Integer>> bottomDiameters,
+                             List<Integer> bottomVerticalSpacings,
                              ShearLinks shearLinks) {
-        this(topReinforcement, topReinforcementVerticalSpacing, bottomReinforcement, bottomReinforcementVerticalSpacing, shearLinks, 0, false);
+        this(topDiameters, topVerticalSpacings, bottomDiameters, bottomVerticalSpacings, shearLinks, 0, false);
     }
 
     public BeamReinforcement(List<Integer> topReinforcementRow, List<Integer> bottomReinforcementRow, ShearLinks shearLinks) {
 
-        List<List<Integer>> topReinforcement = new ArrayList<>();
-        topReinforcement.add(new ArrayList<>());
-        topReinforcement.get(0).addAll(topReinforcementRow);
-        this.topReinforcement = topReinforcement;
+        List<List<Integer>> topDiameters = new ArrayList<>();
+        topDiameters.add(new ArrayList<>());
+        topDiameters.get(0).addAll(topReinforcementRow);
+        this.topDiameters = topDiameters;
 
-        List<List<Integer>> bottomReinforcement = new ArrayList<>();
-        bottomReinforcement.add(new ArrayList<>());
-        bottomReinforcement.get(0).addAll(bottomReinforcementRow);
-        this.bottomReinforcement = bottomReinforcement;
+        List<List<Integer>> bottomDiameters = new ArrayList<>();
+        bottomDiameters.add(new ArrayList<>());
+        bottomDiameters.get(0).addAll(bottomReinforcementRow);
+        this.bottomDiameters = bottomDiameters;
 
         this.shearLinks = shearLinks;
     }
 
     @Override
     public double getTotalAreaOfTopReinforcement() {
-        return getAreaOfReinforcementBars(topReinforcement).stream()
+        return getAreaOfReinforcementBars(topDiameters).stream()
                 .flatMap(Collection::stream)
                 .mapToDouble(Double::doubleValue)
                 .sum();
@@ -64,8 +64,8 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public double getCentroidOfTopReinforcement(int nominalCoverTop) {
-        List<List<Double>> areaOfTopBars = getAreaOfReinforcementBars(topReinforcement);
-        List<List<Double>> firstMomentOfAreaForTopBars = getFirstMomentOfAreaForReinforcementBars(areaOfTopBars, topReinforcement, topReinforcementVerticalSpacing, nominalCoverTop, true);
+        List<List<Double>> areaOfTopBars = getAreaOfReinforcementBars(topDiameters);
+        List<List<Double>> firstMomentOfAreaForTopBars = getFirstMomentOfAreaForReinforcementBars(areaOfTopBars, topDiameters, topVerticalSpacings, nominalCoverTop, true);
 
         double sumOfAreas = getTotalAreaOfTopReinforcement();
         double sumOfFirstMomentsOfArea = firstMomentOfAreaForTopBars.stream()
@@ -78,7 +78,7 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public double getTotalAreaOfBottomReinforcement() {
-        return getAreaOfReinforcementBars(bottomReinforcement).stream()
+        return getAreaOfReinforcementBars(bottomDiameters).stream()
                 .flatMap(Collection::stream)
                 .mapToDouble(Double::doubleValue)
                 .sum();
@@ -86,8 +86,8 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public double getCentroidOfBottomReinforcement(int nominalCoverBottom) {
-        List<List<Double>> areaOfBottomBars = getAreaOfReinforcementBars(bottomReinforcement);
-        List<List<Double>> firstMomentOfAreaForBottomBars = getFirstMomentOfAreaForReinforcementBars(areaOfBottomBars, bottomReinforcement, bottomReinforcementVerticalSpacing, nominalCoverBottom, false);
+        List<List<Double>> areaOfBottomBars = getAreaOfReinforcementBars(bottomDiameters);
+        List<List<Double>> firstMomentOfAreaForBottomBars = getFirstMomentOfAreaForReinforcementBars(areaOfBottomBars, bottomDiameters, bottomVerticalSpacings, nominalCoverBottom, false);
 
         double sumOfAreas = getTotalAreaOfBottomReinforcement();
         double sumOfFirstMomentsOfArea = firstMomentOfAreaForBottomBars.stream()
@@ -187,19 +187,19 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     public List<List<Integer>> getTopReinforcement() {
-        return topReinforcement;
+        return topDiameters;
     }
 
     public List<Integer> getTopReinforcementVerticalSpacing() {
-        return topReinforcementVerticalSpacing;
+        return topVerticalSpacings;
     }
 
     public List<List<Integer>> getBottomReinforcement() {
-        return bottomReinforcement;
+        return bottomDiameters;
     }
 
     public List<Integer> getBottomReinforcementVerticalSpacing() {
-        return bottomReinforcementVerticalSpacing;
+        return bottomVerticalSpacings;
     }
 
     public ShearLinks getShearLinks() {
