@@ -4,8 +4,22 @@
     -fx-alignment: center;
 }
 
-.slab-top-reinforcement, .slab-bottom-reinforcement, .beam-top-reinforcement, .beam-bottom-reinforcement {
+.slab-top-reinforcement, .slab-bottom-reinforcement {
     -fx-pref-height: 320px;
+}
+
+.beam-top-reinforcement, .beam-bottom-reinforcement {
+    -fx-pref-height: 260px;
+}
+
+.beam-shear-links {
+    -fx-pref-height: 70px;
+}
+
+.beam-shear-links-inner {
+    -fx-padding: 10px 0 0 0;
+    -fx-spacing: 20px;
+
 }
 
 .slab-reinforcement-layers, .beam-reinforcement-rows {

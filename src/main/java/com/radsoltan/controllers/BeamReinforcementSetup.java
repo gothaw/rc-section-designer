@@ -52,6 +52,10 @@ public class BeamReinforcementSetup extends Controller {
     public Button addBottomRowButton;
     @FXML
     public Button deleteBottomRowButton;
+    @FXML
+    public ComboBox<Integer> shearLinkDiameter;
+    @FXML
+    public ComboBox<Integer> shearLinkLegs;
 
     private int numberOfTopRows;
     private int numberOfBottomRows;
@@ -60,6 +64,8 @@ public class BeamReinforcementSetup extends Controller {
     private final ObservableList<Integer> diameters;
     private final ObservableList<Integer> mainBarNumbers;
     private final ObservableList<Integer> additionalBarNumbers;
+    private final ObservableList<Integer> shearLinkDiametersList;
+    private final ObservableList<Integer> shearLinkLegsList;
     private final ArrayList<String> rowLabels;
 
     /**
@@ -87,10 +93,18 @@ public class BeamReinforcementSetup extends Controller {
 
         // List for reinforcement rows labels
         rowLabels = Constants.ORDINAL_LABELS;
+
+        // Lists for shear link diameters and legs
+        shearLinkDiametersList = FXCollections.observableList(Constants.BAR_DIAMETERS);
+        shearLinkLegsList = FXCollections.observableList(Constants.SHEAR_LEGS);
     }
 
     @FXML
     public void initialize() {
+        // Filling drop down lists for shear links
+        shearLinkDiameter.getItems().addAll(shearLinkDiametersList);
+        shearLinkLegs.getItems().addAll(shearLinkLegsList);
+
         if (beamReinforcement == null) {
             // If no reinforcement set up before, create one top and one bottom row
             addReinforcementRow(topReinforcementVBox, topVerticalSpacingVBox, topReinforcementVerticalSpacingsTitle, 0);

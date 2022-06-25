@@ -6,13 +6,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import com.radsoltan.components.PositiveIntegerField?>
 <VBox fx:id="container" styleClass="container" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.radsoltan.controllers.BeamReinforcementSetup">
     <MenuBar>
         <Menu>
             <graphic>
-                <Label styleClass="menu-label" text="File" />
+                <Label styleClass="menu-label" text="File"/>
             </graphic>
             <MenuItem text="New" onAction="#onNewMenuItemClickedHandler"/>
             <MenuItem text="Open" onAction="#onOpenMenuItemClickedHandler"/>
@@ -26,7 +27,7 @@
         </Menu>
         <Menu>
             <graphic>
-                <Label styleClass="menu-label" text="About" onMouseClicked="#onAboutMenuItemClickedHandler" />
+                <Label styleClass="menu-label" text="About" onMouseClicked="#onAboutMenuItemClickedHandler"/>
             </graphic>
         </Menu>
     </MenuBar>
@@ -34,57 +35,77 @@
         <VBox styleClass="beam-reinforcement-wrapper">
 
             <VBox styleClass="section-wrapper">
-                <Label styleClass="heading" text="Top Reinforcement" />
+                <Label styleClass="heading" text="Top Reinforcement"/>
             </VBox>
 
             <VBox styleClass="section-wrapper, beam-top-reinforcement, border-separator-top">
-                <GridPane styleClass="beam-reinforcement-grid" >
-                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
-                        <Label styleClass="label-small" text="Reinforcement rows:" />
+                <GridPane styleClass="beam-reinforcement-grid">
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
+                          styleClass="alignment-center-left, padding-top">
+                        <Label styleClass="label-small" text="Reinforcement rows:"/>
                     </VBox>
                     <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
-                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="topReinforcementVerticalSpacingsTitle" styleClass="hidden">
-                            <Label styleClass="label-small" text="Clear spacing" />
-                            <Label styleClass="label-small" text="between rows" />
+                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"
+                              fx:id="topReinforcementVerticalSpacingsTitle" styleClass="hidden">
+                            <Label styleClass="label-small" text="Clear spacing"/>
+                            <Label styleClass="label-small" text="between rows"/>
                         </VBox>
                     </AnchorPane>
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topReinforcementVBox" styleClass="beam-reinforcement-rows" />
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="topReinforcementVBox"
+                          styleClass="beam-reinforcement-rows"/>
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="topVerticalSpacingVBox"
+                          styleClass="beam-reinforcement-vertical-spacings"/>
                 </GridPane>
                 <HBox styleClass="edit-beam-reinforcement-button-wrapper">
-                    <Button fx:id="addTopRowButton" onAction="#addRowToTopReinforcement" text="Add" />
-                    <Button fx:id="deleteTopRowButton" onAction="#deleteRowFromTopReinforcement" text="Delete" />
+                    <Button fx:id="addTopRowButton" onAction="#addRowToTopReinforcement" text="Add"/>
+                    <Button fx:id="deleteTopRowButton" onAction="#deleteRowFromTopReinforcement" text="Delete"/>
                 </HBox>
             </VBox>
 
             <VBox styleClass="section-wrapper">
-                <Label styleClass="heading" text="Bottom Reinforcement" />
+                <Label styleClass="heading" text="Bottom Reinforcement"/>
             </VBox>
 
             <VBox styleClass="section-wrapper, beam-bottom-reinforcement, border-separator-top">
-                <GridPane styleClass="beam-reinforcement-grid" >
-                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="alignment-center-left, padding-top">
-                        <Label styleClass="label-small" text="Reinforcement rows:" />
+                <GridPane styleClass="beam-reinforcement-grid">
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
+                          styleClass="alignment-center-left, padding-top">
+                        <Label styleClass="label-small" text="Reinforcement rows:"/>
                     </VBox>
                     <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="padding-top">
-                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" fx:id="bottomReinforcementVerticalSpacingsTitle" styleClass="hidden">
-                            <Label styleClass="label-small" text="Clear spacing" />
-                            <Label styleClass="label-small" text="between rows" />
+                        <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"
+                              fx:id="bottomReinforcementVerticalSpacingsTitle" styleClass="hidden">
+                            <Label styleClass="label-small" text="Clear spacing"/>
+                            <Label styleClass="label-small" text="between rows"/>
                         </VBox>
                     </AnchorPane>
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomReinforcementVBox" styleClass="beam-reinforcement-rows" />
-                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="bottomVerticalSpacingVBox" styleClass="beam-reinforcement-vertical-spacings" />
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="bottomReinforcementVBox"
+                          styleClass="beam-reinforcement-rows"/>
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="bottomVerticalSpacingVBox"
+                          styleClass="beam-reinforcement-vertical-spacings"/>
                 </GridPane>
                 <HBox styleClass="edit-beam-reinforcement-button-wrapper">
-                    <Button fx:id="addBottomRowButton" onAction="#addRowToBottomReinforcement" text="Add" />
-                    <Button fx:id="deleteBottomRowButton" onAction="#deleteRowFromBottomReinforcement" text="Delete" />
+                    <Button fx:id="addBottomRowButton" onAction="#addRowToBottomReinforcement" text="Add"/>
+                    <Button fx:id="deleteBottomRowButton" onAction="#deleteRowFromBottomReinforcement" text="Delete"/>
                 </HBox>
             </VBox>
 
+            <VBox styleClass="section-wrapper">
+                <Label styleClass="heading" text="Shear Links"/>
+            </VBox>
+
+            <VBox styleClass="section-wrapper, beam-shear-links, border-separator-top">
+                <HBox styleClass="beam-shear-links-inner">
+                    <Label text="Diameter:"/>
+                    <ComboBox fx:id="shearLinkDiameter" />
+                    <Label text="Legs:" />
+                    <ComboBox fx:id="shearLinkLegs" />
+                </HBox>
+            </VBox>
 
             <HBox styleClass="section-wrapper, edit-buttons-wrapper">
-                <Button onAction="#cancel" styleClass="large-button" text="Cancel" />
-                <Button onAction="#applyChanges" styleClass="large-button" text="OK" />
+                <Button onAction="#cancel" styleClass="large-button" text="Cancel"/>
+                <Button onAction="#applyChanges" styleClass="large-button" text="OK"/>
             </HBox>
 
         </VBox>
