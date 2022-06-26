@@ -58,7 +58,7 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     * Method used to get a list of rows, each row is list that stores area (in mm2) of each bar in that row.
+     * Method is used to calculate a list of lists that stores areas of each reinforcement bar.
      *
      * @param diameters list of reinforcement rows, each row is a list with bar diameters in mm
      * @return List of reinforcement rows, each row is list that stores area (in mm2) of each bar in that row
@@ -111,10 +111,9 @@ public class BeamReinforcement extends Reinforcement {
      * - 2nd row: 3 bars in total, all of them are 125 mm from the beam's edge
      * - 3rd row: 2 bars in total, all of them are 185 mm from the beam's edge
      *
-     * @param diameters list of reinforcement rows, each row is a list with bar diameters in mm
-     * @param clearVerticalSpacings    clear vertical spacings between rows in mm
-     * @param nominalCover nominal cover for given beam's edge
-     *
+     * @param diameters             list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param clearVerticalSpacings clear vertical spacings between rows in mm
+     * @param nominalCover          nominal cover for given beam's edge in mm
      * @return List of reinforcement rows, each row is list that stores distances from centre of each bar to the beam's edge
      */
     private List<List<Double>> getDistanceFromCentreOfEachBarToEdge(List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, int nominalCover) {
@@ -161,17 +160,18 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
+     * Method is used to calculate a list of lists that stores first moment of area for each reinforcement bar.
+     * First moment of areas are calculated against the closest beam edge.
      *
-     * @param areasOfReinforcementBars
-     * @param diameters
-     * @param verticalBarSpacing
-     * @param nominalCover
-     * @param isTopReinforcement
-     * @return
+     * @param areasOfReinforcementBars list of reinforcement rows, each row is a list that stores area of each bar in mm2
+     * @param diameters                list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param clearVerticalSpacings    clear vertical spacings between rows in mm
+     * @param nominalCover             nominal cover for given beam's edge in mm
+     * @return List of reinforcement rows, each row is list that stores first moment of area (in mm3) of each bar in that row
      */
-    public List<List<Double>> getFirstMomentOfAreaForReinforcementBars(List<List<Double>> areasOfReinforcementBars, List<List<Integer>> diameters, List<Integer> verticalBarSpacing, int nominalCover, boolean isTopReinforcement) {
+    public List<List<Double>> getFirstMomentOfAreaForReinforcementBars(List<List<Double>> areasOfReinforcementBars, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, int nominalCover) {
 
-        List<List<Double>> distanceFromCentreOfEachBarToEdge = getDistanceFromCentreOfEachBarToEdge(diameters, verticalBarSpacing, nominalCover);
+        List<List<Double>> distanceFromCentreOfEachBarToEdge = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, nominalCover);
 
         return IntStream
                 .range(0, distanceFromCentreOfEachBarToEdge.size())
@@ -183,13 +183,15 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
+     * Calculates centroid of top reinforcement in mm.
+     *
      * @param nominalCoverTop nominal cover for the top face of the element in mm
-     * @return
+     * @return Centroid of top reinforcement in mm
      */
     @Override
     public double getCentroidOfTopReinforcement(int nominalCoverTop) {
         List<List<Double>> areaOfTopBars = getAreaOfReinforcementBars(topDiameters);
-        List<List<Double>> firstMomentOfAreaForTopBars = getFirstMomentOfAreaForReinforcementBars(areaOfTopBars, topDiameters, topVerticalSpacings, nominalCoverTop, true);
+        List<List<Double>> firstMomentOfAreaForTopBars = getFirstMomentOfAreaForReinforcementBars(areaOfTopBars, topDiameters, topVerticalSpacings, nominalCoverTop);
 
         double sumOfAreas = getTotalAreaOfTopReinforcement();
         double sumOfFirstMomentsOfArea = firstMomentOfAreaForTopBars.stream()
@@ -201,14 +203,15 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
+     * Calculates centroid of bottom reinforcement in mm.
      *
-     * @param nominalCoverBottom nominal cover fore the bottom face of the element in mm
-     * @return
+     * @param nominalCoverBottom nominal cover for the bottom face of the element in mm
+     * @return Centroid of bottom reinforcement in mm
      */
     @Override
     public double getCentroidOfBottomReinforcement(int nominalCoverBottom) {
         List<List<Double>> areaOfBottomBars = getAreaOfReinforcementBars(bottomDiameters);
-        List<List<Double>> firstMomentOfAreaForBottomBars = getFirstMomentOfAreaForReinforcementBars(areaOfBottomBars, bottomDiameters, bottomVerticalSpacings, nominalCoverBottom, false);
+        List<List<Double>> firstMomentOfAreaForBottomBars = getFirstMomentOfAreaForReinforcementBars(areaOfBottomBars, bottomDiameters, bottomVerticalSpacings, nominalCoverBottom);
 
         double sumOfAreas = getTotalAreaOfBottomReinforcement();
         double sumOfFirstMomentsOfArea = firstMomentOfAreaForBottomBars.stream()
@@ -221,38 +224,65 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public int getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
+        // TODO: 26/06/2022
         return 0;
     }
 
     @Override
     public int getMaxBarDiameterForTensileReinforcement(double SlsMoment) {
+        // TODO: 26/06/2022
         return 0;
+    }
+
+    /**
+     * Getter for the top bar diameters.
+     *
+     * @return Top diameters
+     */
+    public List<List<Integer>> getTopDiameters() {
+        return topDiameters;
+    }
+
+    /**
+     * Getter for the top clear vertical spacings between rows.
+     *
+     * @return Top clear vertical spacings between rows
+     */
+    public List<Integer> getTopVerticalSpacings() {
+        return topVerticalSpacings;
+    }
+
+    /**
+     * Getter for the bottom bar diameters.
+     *
+     * @return Bottom diameters
+     */
+    public List<List<Integer>> getBottomDiameters() {
+        return bottomDiameters;
+    }
+
+    /**
+     * Getter for the bottom clear vertical spacings between rows.
+     *
+     * @return Bottom clear vertical spacings between rows
+     */
+    public List<Integer> getBottomVerticalSpacings() {
+        return bottomVerticalSpacings;
+    }
+
+    /**
+     * Getter for shear links.
+     *
+     * @return Shear links object
+     */
+    public ShearLinks getShearLinks() {
+        return shearLinks;
     }
 
     @Override
     public String getDescription() {
         // TODO: 02/08/2020
         return null;
-    }
-
-    public List<List<Integer>> getTopReinforcement() {
-        return topDiameters;
-    }
-
-    public List<Integer> getTopReinforcementVerticalSpacing() {
-        return topVerticalSpacings;
-    }
-
-    public List<List<Integer>> getBottomReinforcement() {
-        return bottomDiameters;
-    }
-
-    public List<Integer> getBottomReinforcementVerticalSpacing() {
-        return bottomVerticalSpacings;
-    }
-
-    public ShearLinks getShearLinks() {
-        return shearLinks;
     }
 
     @Override
@@ -262,6 +292,7 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public boolean isSetupToBeDrawn() {
+        // TODO: 26/06/2022
         return false;
     }
 }
