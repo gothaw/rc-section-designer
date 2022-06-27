@@ -247,8 +247,11 @@ public class BeamReinforcementSetup extends Controller {
         List<Node> additionalReinforcementNodes = new ArrayList<>(List.of(joiningLabel, barNumberComboBox, label, diameterComboBox));
         row.getChildren().addAll(row.getChildren().size() - 1, additionalReinforcementNodes);
 
-        addButton.getStyleClass().add(CssStyleClasses.HIDDEN);
-        addButton.setManaged(false);
+        if (deleteButton.isManaged()) {
+            // Hiding add button if second additional reinforcement is added
+            addButton.getStyleClass().add(CssStyleClasses.HIDDEN);
+            addButton.setManaged(false);
+        }
         deleteButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
         deleteButton.setManaged(true);
     }
@@ -274,9 +277,11 @@ public class BeamReinforcementSetup extends Controller {
 
         rowNodes.removeAll(new ArrayList<>(List.of(joiningLabel, barNumberComboBox, timesLabel, diameterComboBox)));
 
-        // Hiding delete button and showing add button
-        deleteButton.getStyleClass().add(CssStyleClasses.HIDDEN);
-        deleteButton.setManaged(false);
+        if (addButton.isManaged()) {
+            // Hiding delete button if second additional reinforcement is added
+            deleteButton.getStyleClass().add(CssStyleClasses.HIDDEN);
+            deleteButton.setManaged(false);
+        }
         addButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
         addButton.setManaged(true);
     }
