@@ -96,10 +96,14 @@
 
             <VBox styleClass="section-wrapper, beam-shear-links, border-separator-top">
                 <HBox styleClass="beam-shear-links-inner">
-                    <Label text="Diameter:"/>
+                    <Label text="Diameter [mm]:"/>
                     <ComboBox fx:id="shearLinkDiameter" />
+                    <Label text="Spacing [mm]:" />
+                    <PositiveIntegerField fx:id="shearLinksSpacing" styleClass="numerical-field-small" />
                     <Label text="Legs:" />
                     <ComboBox fx:id="shearLinkLegs" />
+                    <Label text="Yield Strength [MPa]:" />
+                    <PositiveIntegerField fx:id="shearLinkYieldStrength" styleClass="numerical-field-small" />
                 </HBox>
             </VBox>
 

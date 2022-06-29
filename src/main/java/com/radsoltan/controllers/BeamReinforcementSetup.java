@@ -8,6 +8,7 @@ import com.radsoltan.constants.UIText;
 import com.radsoltan.model.Project;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.Reinforcement;
+import com.radsoltan.model.reinforcement.ShearLinks;
 import com.radsoltan.util.AlertKind;
 import com.radsoltan.util.Utility;
 import javafx.application.Platform;
@@ -56,6 +57,7 @@ public class BeamReinforcementSetup extends Controller {
     public ComboBox<Integer> shearLinkDiameter;
     @FXML
     public ComboBox<Integer> shearLinkLegs;
+    public PositiveIntegerField shearLinksSpacing;
 
     private int numberOfTopRows;
     private int numberOfBottomRows;
@@ -75,7 +77,15 @@ public class BeamReinforcementSetup extends Controller {
     public BeamReinforcementSetup() {
         project = Project.getInstance();
 
-        beamReinforcement = project.getReinforcement();
+//        beamReinforcement = project.getReinforcement();
+
+        beamReinforcement = new BeamReinforcement(
+                List.of(List.of(25, 10, 8, 10, 25), List.of(25, 8, 25), List.of(20, 20), List.of(10, 10)),
+                List.of(50, 40, 50),
+                List.of(List.of(16, 8, 8, 8, 16), List.of(16, 8, 16), List.of(12, 12)),
+                List.of(40, 40),
+                new ShearLinks(500, 8, 200, 3)
+        );
 
         // Creating lists for bar numbers
         List<Integer> barNumberList = new ArrayList<>();
@@ -112,7 +122,23 @@ public class BeamReinforcementSetup extends Controller {
             numberOfTopRows = 1;
             numberOfBottomRows = 1;
         } else if (this.beamReinforcement instanceof BeamReinforcement) {
+            BeamReinforcement beamReinforcement = (BeamReinforcement) this.beamReinforcement;
+            numberOfTopRows = beamReinforcement.getTopDiameters().size();
+            numberOfBottomRows = beamReinforcement.getTopDiameters().size();
 
+            List<List<Integer>> topDiameters = beamReinforcement.getTopDiameters();
+            List<Integer> topVerticalSpacings = beamReinforcement.getTopVerticalSpacings();
+            List<List<Integer>> bottomDiameters = beamReinforcement.getBottomDiameters();
+            List<Integer> bottomVerticalSpacings = beamReinforcement.getBottomVerticalSpacings();
+            ShearLinks shearLinks = beamReinforcement.getShearLinks();
+
+            // Initializing top reinforcement
+
+            // Initializing bottom reinforcement
+
+            // Initializing shear links
+            shearLinkDiameter.setValue(shearLinks.getDiameter());
+            shearLinkLegs.setValue(shearLinks.getLegs());
         } else {
             // Show error if invalid reinforcement
             showAlertBox(UIText.INVALID_BEAM_REINFORCEMENT, AlertKind.ERROR);
@@ -284,6 +310,10 @@ public class BeamReinforcementSetup extends Controller {
         }
         addButton.getStyleClass().remove(CssStyleClasses.HIDDEN);
         addButton.setManaged(true);
+    }
+
+    private void initializeReinforcementRowFields(List<List<Integer>> diameters, List<Integer> clearVerticalSpacings) {
+
     }
 
     /**
