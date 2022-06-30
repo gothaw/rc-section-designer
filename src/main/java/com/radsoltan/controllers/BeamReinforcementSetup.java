@@ -25,7 +25,9 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 // TODO: 17/07/2021 Class is not finished. See todos below for what these do at the moment.
@@ -57,7 +59,10 @@ public class BeamReinforcementSetup extends Controller {
     public ComboBox<Integer> shearLinkDiameter;
     @FXML
     public ComboBox<Integer> shearLinkLegs;
+    @FXML
     public PositiveIntegerField shearLinksSpacing;
+    @FXML
+    public PositiveIntegerField shearLinkYieldStrength;
 
     private int numberOfTopRows;
     private int numberOfBottomRows;
@@ -80,9 +85,9 @@ public class BeamReinforcementSetup extends Controller {
 //        beamReinforcement = project.getReinforcement();
 
         beamReinforcement = new BeamReinforcement(
-                List.of(List.of(25, 10, 8, 10, 25), List.of(25, 8, 25), List.of(20, 20), List.of(10, 10)),
+                List.of(List.of(32, 10, 12, 10, 32), List.of(25, 8, 25), List.of(20, 20), List.of(10, 10)),
                 List.of(50, 40, 50),
-                List.of(List.of(16, 8, 8, 8, 16), List.of(16, 8, 16), List.of(12, 12)),
+                List.of(List.of(16, 8, 8, 8, 16), List.of(10, 8, 10), List.of(12, 12)),
                 List.of(40, 40),
                 new ShearLinks(500, 8, 200, 3)
         );
@@ -124,7 +129,7 @@ public class BeamReinforcementSetup extends Controller {
         } else if (this.beamReinforcement instanceof BeamReinforcement) {
             BeamReinforcement beamReinforcement = (BeamReinforcement) this.beamReinforcement;
             numberOfTopRows = beamReinforcement.getTopDiameters().size();
-            numberOfBottomRows = beamReinforcement.getTopDiameters().size();
+            numberOfBottomRows = beamReinforcement.getBottomDiameters().size();
 
             List<List<Integer>> topDiameters = beamReinforcement.getTopDiameters();
             List<Integer> topVerticalSpacings = beamReinforcement.getTopVerticalSpacings();
@@ -133,12 +138,22 @@ public class BeamReinforcementSetup extends Controller {
             ShearLinks shearLinks = beamReinforcement.getShearLinks();
 
             // Initializing top reinforcement
+            IntStream.range(0, numberOfTopRows).forEach(i -> {
+                addReinforcementRow(topReinforcementVBox, topVerticalSpacingVBox, topReinforcementVerticalSpacingsTitle, i);
+                initializeReinforcementRowFields(topReinforcementVBox, topVerticalSpacingVBox, i, topDiameters, topVerticalSpacings);
+            });
 
             // Initializing bottom reinforcement
+            IntStream.range(0, numberOfBottomRows).forEach(i -> {
+                addReinforcementRow(bottomReinforcementVBox, bottomVerticalSpacingVBox, bottomReinforcementVerticalSpacingsTitle, i);
+                initializeReinforcementRowFields(bottomReinforcementVBox, bottomVerticalSpacingVBox, i, bottomDiameters, bottomVerticalSpacings);
+            });
 
             // Initializing shear links
             shearLinkDiameter.setValue(shearLinks.getDiameter());
             shearLinkLegs.setValue(shearLinks.getLegs());
+            shearLinksSpacing.setText(Integer.toString(shearLinks.getSpacing()));
+            shearLinkYieldStrength.setText(Integer.toString(shearLinks.getYieldStrength()));
         } else {
             // Show error if invalid reinforcement
             showAlertBox(UIText.INVALID_BEAM_REINFORCEMENT, AlertKind.ERROR);
@@ -312,7 +327,53 @@ public class BeamReinforcementSetup extends Controller {
         addButton.setManaged(true);
     }
 
-    private void initializeReinforcementRowFields(List<List<Integer>> diameters, List<Integer> clearVerticalSpacings) {
+    private void initializeReinforcementRowFields(VBox rowsWrapper, VBox verticalSpacingsWrapper, int rowIndex, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings) {
+        List<Node> rows = rowsWrapper.getChildren();
+        if (rowIndex < rows.size()) {
+            // Selecting a row with given index
+            HBox row = (HBox) rows.get(rowIndex);
+
+            List<Integer> barsInRow = diameters.get(rowIndex);
+            List<Integer> distinctBars = barsInRow.stream().distinct().collect(Collectors.toList());
+
+            IntStream.range(0, distinctBars.size()).forEach(i -> {
+                int barDiameter = distinctBars.get(i);
+                int numberOfBars = Collections.frequency(barsInRow, barDiameter);
+                if (i == 0) {
+                    // Initializing primary rebar
+                    @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
+                    @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
+                    diameterComboBox.setValue(barDiameter);
+                    numberOfBarsComboBox.setValue(numberOfBars);
+                } else {
+                    // Initializing additional rebar
+                }
+            });
+
+            // Initializing vertical spacings
+            if (rowIndex > 0) {
+                List<Node> verticalSpacingsFields = verticalSpacingsWrapper.getChildren();
+                HBox verticalSpacingHBox = (HBox) verticalSpacingsFields.get(rowIndex - 1);
+                PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.BEAM_VERTICAL_SPACING_FIELD);
+                verticalSpacingField.setText(Integer.toString(clearVerticalSpacings.get(rowIndex - 1)));
+            }
+
+
+
+
+//            // Initializing additional reinforcement
+//            if (additionalDiameters.get(layerIndex) != 0) {
+//                // Getting add and delete buttons
+//                HBox hBox = (HBox) layer.lookup("." + CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
+//                Button addButton = (Button) hBox.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+//                Button deleteButton = (Button) hBox.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
+//                // Adding additional reinforcement fields and initializing fields
+//                addAdditionalReinforcement(addButton, deleteButton, layer);
+//                @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
+//                additionalDiameterComboBox.setValue(additionalDiameters.get(layerIndex));
+//            }
+        }
+
 
     }
 
