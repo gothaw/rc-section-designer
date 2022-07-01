@@ -24,13 +24,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-// TODO: 17/07/2021 Class is not finished. See todos below for what these do at the moment.
+/**
+ *
+ */
 public class BeamReinforcementSetup extends Controller {
 
     @FXML
@@ -114,6 +114,9 @@ public class BeamReinforcementSetup extends Controller {
         shearLinkLegsList = FXCollections.observableList(Constants.SHEAR_LEGS);
     }
 
+    /**
+     *
+     */
     @FXML
     public void initialize() {
         // Filling drop down lists for shear links
@@ -327,6 +330,14 @@ public class BeamReinforcementSetup extends Controller {
         addButton.setManaged(true);
     }
 
+    /**
+     *
+     * @param rowsWrapper
+     * @param verticalSpacingsWrapper
+     * @param rowIndex
+     * @param diameters
+     * @param clearVerticalSpacings
+     */
     private void initializeReinforcementRowFields(VBox rowsWrapper, VBox verticalSpacingsWrapper, int rowIndex, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings) {
         List<Node> rows = rowsWrapper.getChildren();
         if (rowIndex < rows.size()) {
@@ -341,12 +352,25 @@ public class BeamReinforcementSetup extends Controller {
                 int numberOfBars = Collections.frequency(barsInRow, barDiameter);
                 if (i == 0) {
                     // Initializing primary rebar
-                    @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
                     @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
-                    diameterComboBox.setValue(barDiameter);
+                    @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
                     numberOfBarsComboBox.setValue(numberOfBars);
+                    diameterComboBox.setValue(barDiameter);
                 } else {
                     // Initializing additional rebar
+                    HBox hBox = (HBox) row.lookup("." + CssStyleClasses.ADDITIONAL_BEAM_REINFORCEMENT_BUTTON_WRAPPER);
+                    Button addButton = (Button) hBox.lookup("." + CssStyleClasses.ADD_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON);
+                    Button deleteButton = (Button) hBox.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_BEAM_REINFORCEMENT_BUTTON);
+                    // Adding additional reinforcement fields and initializing fields
+                    addAdditionalReinforcement(addButton, deleteButton, row);
+                    List<Node> numberOfBarsComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX));
+                    List<Node> diameterComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX));
+
+                    @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) numberOfBarsComboBoxes.get(i - 1);
+                    @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) diameterComboBoxes.get(i - 1);
+
+                    numberOfBarsComboBox.setValue(numberOfBars);
+                    diameterComboBox.setValue(barDiameter);
                 }
             });
 
@@ -357,24 +381,7 @@ public class BeamReinforcementSetup extends Controller {
                 PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.BEAM_VERTICAL_SPACING_FIELD);
                 verticalSpacingField.setText(Integer.toString(clearVerticalSpacings.get(rowIndex - 1)));
             }
-
-
-
-
-//            // Initializing additional reinforcement
-//            if (additionalDiameters.get(layerIndex) != 0) {
-//                // Getting add and delete buttons
-//                HBox hBox = (HBox) layer.lookup("." + CssStyleClasses.ADDITIONAL_SLAB_REINFORCEMENT_BUTTON_WRAPPER);
-//                Button addButton = (Button) hBox.lookup("." + CssStyleClasses.ADD_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-//                Button deleteButton = (Button) hBox.lookup("." + CssStyleClasses.DELETE_ADDITIONAL_SLAB_REINFORCEMENT_BUTTON);
-//                // Adding additional reinforcement fields and initializing fields
-//                addAdditionalReinforcement(addButton, deleteButton, layer);
-//                @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_ADDITIONAL_REINFORCEMENT_DIAMETER);
-//                additionalDiameterComboBox.setValue(additionalDiameters.get(layerIndex));
-//            }
         }
-
-
     }
 
     /**
