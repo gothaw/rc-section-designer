@@ -11,6 +11,7 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
 import com.radsoltan.util.AlertKind;
 import com.radsoltan.util.Utility;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -115,7 +116,8 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
-     *
+     * Initialize method that is run after calling the constructor. If no beam reinforcement was set up it creates one empty bottom row and one empty top row.
+     * If beam reinforcement is found in project instance, it creates required number of reinforcement rows and initializes the fields.
      */
     @FXML
     public void initialize() {
@@ -164,10 +166,21 @@ public class BeamReinforcementSetup extends Controller {
         Platform.runLater(() -> container.requestFocus());
     }
 
+    /**
+     *
+     * @param actionEvent
+     * @throws IOException
+     */
     public void applyChanges(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
 
+    /**
+     * Method that handles cancel button click. It redirects to primary controller by using setRoot method.
+     *
+     * @param actionEvent Cancel button click event.
+     * @throws IOException Exception for failed or interrupted I/O operation.
+     */
     public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
@@ -331,12 +344,14 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
+     * Method that initializes a reinforcement layer fields with provided data.
+     * It requires creating the combo boxes and input fields beforehand.
      *
-     * @param rowsWrapper
-     * @param verticalSpacingsWrapper
-     * @param rowIndex
-     * @param diameters
-     * @param clearVerticalSpacings
+     * @param rowsWrapper             VBox that wraps reinforcement row fields. It represents beam face - top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement rows for given beam face - top/bottom
+     * @param rowIndex                index of the layer to be initialized
+     * @param diameters               list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param clearVerticalSpacings   clear vertical spacings between rows in mm
      */
     private void initializeReinforcementRowFields(VBox rowsWrapper, VBox verticalSpacingsWrapper, int rowIndex, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings) {
         List<Node> rows = rowsWrapper.getChildren();
@@ -351,7 +366,7 @@ public class BeamReinforcementSetup extends Controller {
                 int barDiameter = distinctBars.get(i);
                 int numberOfBars = Collections.frequency(barsInRow, barDiameter);
                 if (i == 0) {
-                    // Initializing primary rebar
+                    // Initializing primary rebar, distinct bars with index 0 are primary bars
                     @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
                     @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
                     numberOfBarsComboBox.setValue(numberOfBars);
@@ -436,6 +451,10 @@ public class BeamReinforcementSetup extends Controller {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
         return null;
