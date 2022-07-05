@@ -167,12 +167,13 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
-     *
      * @param actionEvent
      * @throws IOException
      */
     public void applyChanges(ActionEvent actionEvent) throws IOException {
-        App.setRoot("primary");
+        List<String> validationMessages = getValidationMessagesForEmptyFields();
+
+        System.out.println(validationMessages);
     }
 
     /**
@@ -451,12 +452,67 @@ public class BeamReinforcementSetup extends Controller {
         }
     }
 
+
+    private List<String> getValidationMessagesIfRowFieldsAreEmpty(VBox rowsWrapper, VBox verticalSpacingsWrapper, int rowIndex, String rowsLocation) {
+        List<String> validationMessages = new ArrayList<>();
+
+        String rowLocation = rowsLocation.toLowerCase();
+        // Selecting layer fields
+        HBox row = (HBox) rowsWrapper.getChildren().get(rowIndex);
+        @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
+        @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
+
+        List<Node> numberOfAdditionalBarsComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX));
+        List<Node> additionalDiameterComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX));
+
+        // Checking if number of primary bars is set up
+        if (numberOfBarsComboBox.getValue() == null) {
+            validationMessages.add(String.format("Please select number of bars for %s %s row", rowLabels.get(rowIndex), rowLocation));
+        }
+        // Checking if primary diameter is set up
+        if (diameterComboBox.getValue() == null) {
+            validationMessages.add(String.format("Please select bar diameter for %s %s row.", rowLabels.get(rowIndex), rowLocation));
+        }
+        // Checking additional reinforcement
+        numberOfAdditionalBarsComboBoxes.forEach(node -> {
+            @SuppressWarnings("unchecked") ComboBox<Integer> comboBox = (ComboBox<Integer>) node;
+            if (comboBox.getValue() == null) {
+                validationMessages.add(String.format("Please select number of additional bars for %s %s row", rowLabels.get(rowIndex), rowLocation));
+            }
+        });
+        additionalDiameterComboBoxes.forEach(node -> {
+            @SuppressWarnings("unchecked") ComboBox<Integer> comboBox = (ComboBox<Integer>) node;
+            if (comboBox.getValue() == null) {
+                validationMessages.add(String.format("Please select diameter of additional bars for %s %s row", rowLabels.get(rowIndex), rowLocation));
+            }
+        });
+        // Checking if vertical spacing is set up between this and previous layer
+        if (rowIndex > 0) {
+            HBox verticalSpacingHBox = (HBox) verticalSpacingsWrapper.getChildren().get(rowIndex - 1);
+            PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.BEAM_VERTICAL_SPACING_FIELD);
+            if (verticalSpacingField.getText().equals("")) {
+                validationMessages.add(String.format("Please enter vertical spacing between %s and %s %s row.", rowLabels.get(rowIndex - 1), rowLabels.get(rowIndex), rowLocation));
+            }
+        }
+
+        return validationMessages;
+    }
+
     /**
+     * Method is used to check if layer fields are set up - not empty.
+     * It also checks if vertical spacing between considered layer and a previous layer is set up - if applicable.
      *
-     * @return
+     * @return List of validation messages
      */
     @Override
     protected List<String> getValidationMessagesForEmptyFields() {
-        return null;
+        List<String> validationMessages = new ArrayList<>();
+        for (int i = 0; i < numberOfTopRows; i++) {
+            validationMessages.addAll(getValidationMessagesIfRowFieldsAreEmpty(topReinforcementVBox, topVerticalSpacingVBox, i, "top"));
+        }
+        for (int j = 0; j < numberOfBottomRows; j++) {
+            validationMessages.addAll(getValidationMessagesIfRowFieldsAreEmpty(bottomReinforcementVBox, bottomVerticalSpacingVBox, j, "bottom"));
+        }
+        return validationMessages;
     }
 }
