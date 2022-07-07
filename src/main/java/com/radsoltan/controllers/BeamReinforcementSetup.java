@@ -328,10 +328,17 @@ public class BeamReinforcementSetup extends Controller {
 
         // Selecting nodes to be deleted
         List<Node> rowNodes = row.getChildren();
-        Label joiningLabel = (Label) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_JOINING_LABEL);
-        Label timesLabel = (Label) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_TIMES_LABEL);
-        @SuppressWarnings("unchecked") ComboBox<Integer> barNumberComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
-        @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX);
+
+        List<Node> joiningLabelsList = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_JOINING_LABEL));
+        List<Node> timesLabelsList = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_TIMES_LABEL));
+        List<Node> barNumberComboBoxesList = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX));
+        List<Node> diameterComboBoxesList = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX));
+
+        // Selecting last elements
+        Label joiningLabel = (Label) joiningLabelsList.get(joiningLabelsList.size() - 1);
+        Label timesLabel = (Label) timesLabelsList.get(timesLabelsList.size() - 1);
+        @SuppressWarnings("unchecked") ComboBox<Integer> barNumberComboBox = (ComboBox<Integer>) barNumberComboBoxesList.get(barNumberComboBoxesList.size() - 1);
+        @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) diameterComboBoxesList.get(diameterComboBoxesList.size() - 1);
 
         rowNodes.removeAll(new ArrayList<>(List.of(joiningLabel, barNumberComboBox, timesLabel, diameterComboBox)));
 
