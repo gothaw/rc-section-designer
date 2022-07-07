@@ -135,7 +135,7 @@ public class SlabReinforcementSetup extends Controller {
 
     /**
      * Method that handles ok button click. It checks if there are no empty fields in the form.
-     * If all fields are filled with reinforcement data, it gets the data from the form fields and create a slab reinforcement object.
+     * If all fields are filled with reinforcement data, it gets the data from the form fields and creates a slab reinforcement object.
      * It saves the reinforcement to project instance and redirects to primary view.
      *
      * @param actionEvent Ok button click

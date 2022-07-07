@@ -11,7 +11,6 @@ import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
 import com.radsoltan.util.AlertKind;
 import com.radsoltan.util.Utility;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,12 +24,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- *
+ * Controller for the view that sets up beam reinforcement.
+ * <p>
+ * Some key notes with regards to how the beam reinforcement is set up:
+ * - The app allows for setting up reinforcement for both top and bottom rows
+ * - In addition to bending reinforcement, the controller allows for specifying shear links properties
+ * - For each slab face (top/bottom), it is possible to specify up to 5 rows
+ * - When specifying multiple rows, it is required to provide a clear spacing between rows
+ * - For each layer it is possible to specify additional reinforcement by pressing 'Add' button. Each row can have up to 2 additional sets of reinforcement
+ * - Only rectangular beam section is supported
  */
 public class BeamReinforcementSetup extends Controller {
 
@@ -167,13 +176,23 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
-     * @param actionEvent
-     * @throws IOException
+     * Method that handles ok button click. It checks if there are no empty fields in the form.
+     * If all fields are filled with reinforcement data, it gets the data from the form fields and creates a beam reinforcement object.
+     * It saves the reinforcement to project instance and redirects to primary view.
+     *
+     * @param actionEvent Ok button click
+     * @throws IOException Exception for failed or interrupted I/O operation
      */
     public void applyChanges(ActionEvent actionEvent) throws IOException {
-        List<String> validationMessages = getValidationMessagesForEmptyFields();
+        List<String> validationMessagesForEmptyFields = getValidationMessagesForEmptyFields();
 
-        System.out.println(validationMessages);
+        if (validationMessagesForEmptyFields.isEmpty()) {
+            // Get reinforcement properties from the form fields
+            System.out.println("All good");
+
+        } else {
+            showAlertBox(validationMessagesForEmptyFields.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
+        }
     }
 
     /**
@@ -315,7 +334,7 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
-     * It handles "Delete" button for a reinforcement rows. It deletes additional reinforcement
+     * It handles "Delete" button for a reinforcement rows. It deletes additional reinforcement fields that were added most recently.
      *
      * @param actionEvent Delete button click event
      */
@@ -352,12 +371,12 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
-     * Method that initializes a reinforcement layer fields with provided data.
+     * Method that initializes a reinforcement row fields with provided data.
      * It requires creating the combo boxes and input fields beforehand.
      *
      * @param rowsWrapper             VBox that wraps reinforcement row fields. It represents beam face - top or bottom
      * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement rows for given beam face - top/bottom
-     * @param rowIndex                index of the layer to be initialized
+     * @param rowIndex                index of the row to be initialized
      * @param diameters               list of reinforcement rows, each row is a list with bar diameters in mm
      * @param clearVerticalSpacings   clear vertical spacings between rows in mm
      */
@@ -459,12 +478,21 @@ public class BeamReinforcementSetup extends Controller {
         }
     }
 
-
+    /**
+     * Method is used to check if row fields are set up - not empty.
+     * It also checks if vertical spacing between a considered row and a previous row is set up - if applicable.
+     *
+     * @param rowsWrapper             VBox that wraps reinforcement row fields. It represents beam face - top or bottom
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement rows for given beam face - top/bottom
+     * @param rowIndex                Index of the row to be considered
+     * @param rowsLocation            text that describes which row is being checked - top or bottom
+     * @return List of validation messages
+     */
     private List<String> getValidationMessagesIfRowFieldsAreEmpty(VBox rowsWrapper, VBox verticalSpacingsWrapper, int rowIndex, String rowsLocation) {
         List<String> validationMessages = new ArrayList<>();
 
         String rowLocation = rowsLocation.toLowerCase();
-        // Selecting layer fields
+        // Selecting row fields
         HBox row = (HBox) rowsWrapper.getChildren().get(rowIndex);
         @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
         @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
@@ -493,7 +521,7 @@ public class BeamReinforcementSetup extends Controller {
                 validationMessages.add(String.format("Please select diameter of additional bars for %s %s row", rowLabels.get(rowIndex), rowLocation));
             }
         });
-        // Checking if vertical spacing is set up between this and previous layer
+        // Checking if vertical spacing is set up between this and previous row
         if (rowIndex > 0) {
             HBox verticalSpacingHBox = (HBox) verticalSpacingsWrapper.getChildren().get(rowIndex - 1);
             PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.BEAM_VERTICAL_SPACING_FIELD);
@@ -506,8 +534,32 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
-     * Method is used to check if layer fields are set up - not empty.
-     * It also checks if vertical spacing between considered layer and a previous layer is set up - if applicable.
+     * Method checks if shear link for fields are set up. If some of the fields is empty it adds a validation message to the list.
+     *
+     * @return List of validation messages
+     */
+    private List<String> getValidationMessagesIfShearLinksNotSetUp() {
+        List<String> validationMessages = new ArrayList<>();
+
+        if (shearLinkDiameter.getValue() == null) {
+            validationMessages.add("Please set up shear links diameter.");
+        }
+        if (shearLinksSpacing.getText().isEmpty()) {
+            validationMessages.add("Please set up shear links spacing.");
+        }
+        if (shearLinkLegs.getValue() == null) {
+            validationMessages.add("Please set up number of shear links legs.");
+        }
+        if (shearLinkYieldStrength.getText().isEmpty()) {
+            validationMessages.add("Please set up shear links yields strength.");
+        }
+
+        return validationMessages;
+    }
+
+    /**
+     * Method loops through all rows for the top and bottom face and checks if the form fields are set up - not empty.
+     * It also checks if all vertical spacings fields are filled in. It uses getValidationMessagesIfRowFieldsAreEmpty method.
      *
      * @return List of validation messages
      */
@@ -520,6 +572,9 @@ public class BeamReinforcementSetup extends Controller {
         for (int j = 0; j < numberOfBottomRows; j++) {
             validationMessages.addAll(getValidationMessagesIfRowFieldsAreEmpty(bottomReinforcementVBox, bottomVerticalSpacingVBox, j, "bottom"));
         }
+
+        validationMessages.addAll(getValidationMessagesIfShearLinksNotSetUp());
+
         return validationMessages;
     }
 }
