@@ -188,11 +188,76 @@ public class BeamReinforcementSetup extends Controller {
 
         if (validationMessagesForEmptyFields.isEmpty()) {
             // Get reinforcement properties from the form fields
-            System.out.println("All good");
 
+            List<List<Integer>> topDiameters = getDiametersFromRowFields(topReinforcementVBox, numberOfTopRows);
+            List<List<Integer>> bottomDiameters = getDiametersFromRowFields(bottomReinforcementVBox, numberOfBottomRows);
+            List<Integer> topVerticalSpacings = getClearVerticalSpacingsFromRowFields(topVerticalSpacingVBox);
+            List<Integer> bottomVerticalSpacings = getClearVerticalSpacingsFromRowFields(bottomVerticalSpacingVBox);
+
+            ShearLinks shearLinks = getShearLinksFromFields();
+
+            Reinforcement beamReinforcement = new BeamReinforcement(
+                    topDiameters,
+                    topVerticalSpacings,
+                    bottomDiameters,
+                    bottomVerticalSpacings,
+                    shearLinks
+            );
+
+            project.setReinforcement(beamReinforcement);
+            project.resetResults();
+
+            App.setRoot("primary");
         } else {
             showAlertBox(validationMessagesForEmptyFields.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
         }
+    }
+
+    /**
+     *
+     *
+     * @param bottomReinforcementVBox VBox that wraps reinforcement row fields. It represents beam face - top or bottom
+     * @param numberOfRows            Number of rows for given beam face
+     * @return Two dimensional list which stores bar diameters
+     */
+    private List<List<Integer>> getDiametersFromRowFields(VBox bottomReinforcementVBox, int numberOfRows) {
+        List<List<Integer>> diameters = new ArrayList<>();
+
+        diameters.add(new ArrayList<>());
+
+        return diameters;
+    }
+
+    /**
+     * It creates list of clear vertical spacings for given slab face. It takes values from form fields.
+     *
+     * @param verticalSpacingsWrapper VBox that wraps vertical spacing for reinforcement rows for given beam face - top/bottom
+     * @return List that stores clear vertical spacings between rows
+     */
+    private List<Integer> getClearVerticalSpacingsFromRowFields(VBox verticalSpacingsWrapper) {
+        List<Integer> clearVerticalSpacings = new ArrayList<>();
+
+        verticalSpacingsWrapper.lookupAll("." + CssStyleClasses.BEAM_VERTICAL_SPACING_FIELD).forEach(node -> {
+            PositiveIntegerField spacingField = (PositiveIntegerField) node;
+
+            clearVerticalSpacings.add(Integer.parseInt(spacingField.getText()));
+        });
+
+        return clearVerticalSpacings;
+    }
+
+    /**
+     * It gets properties of a shear links object from form fields.
+     *
+     * @return Shear links object
+     */
+    private ShearLinks getShearLinksFromFields() {
+        return new ShearLinks(
+                Integer.parseInt(shearLinkYieldStrength.getText()),
+                shearLinkDiameter.getValue(),
+                Integer.parseInt(shearLinksSpacing.getText()),
+                shearLinkLegs.getValue()
+        );
     }
 
     /**
@@ -204,6 +269,7 @@ public class BeamReinforcementSetup extends Controller {
     public void cancel(ActionEvent actionEvent) throws IOException {
         App.setRoot("primary");
     }
+
 
     /**
      * Method that adds a reinforcement row to given beam face (rowsWrapper). It adds:
