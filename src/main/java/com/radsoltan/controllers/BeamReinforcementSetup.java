@@ -94,11 +94,19 @@ public class BeamReinforcementSetup extends Controller {
 
 //        beamReinforcement = project.getReinforcement();
 
+//        beamReinforcement = new BeamReinforcement(
+//                List.of(List.of(32, 10, 12, 10, 32), List.of(25, 8, 25), List.of(20, 20), List.of(10, 10)),
+//                List.of(50, 40, 50),
+//                List.of(List.of(16, 8, 8, 8, 16), List.of(10, 8, 10), List.of(12, 12)),
+//                List.of(40, 40),
+//                new ShearLinks(500, 8, 200, 3)
+//        );
+
         beamReinforcement = new BeamReinforcement(
-                List.of(List.of(32, 10, 12, 10, 32), List.of(25, 8, 25), List.of(20, 20), List.of(10, 10)),
-                List.of(50, 40, 50),
-                List.of(List.of(16, 8, 8, 8, 16), List.of(10, 8, 10), List.of(12, 12)),
-                List.of(40, 40),
+                List.of(List.of(32, 10, 10, 32), List.of(25, 25)),
+                List.of(20),
+                List.of(List.of(16, 8, 8, 16)),
+                List.of(),
                 new ShearLinks(500, 8, 200, 3)
         );
 
@@ -196,34 +204,169 @@ public class BeamReinforcementSetup extends Controller {
 
             ShearLinks shearLinks = getShearLinksFromFields();
 
-            Reinforcement beamReinforcement = new BeamReinforcement(
-                    topDiameters,
-                    topVerticalSpacings,
-                    bottomDiameters,
-                    bottomVerticalSpacings,
-                    shearLinks
-            );
+            System.out.println(topDiameters);
 
-            project.setReinforcement(beamReinforcement);
-            project.resetResults();
+//            Reinforcement beamReinforcement = new BeamReinforcement(
+//                    topDiameters,
+//                    topVerticalSpacings,
+//                    bottomDiameters,
+//                    bottomVerticalSpacings,
+//                    shearLinks
+//            );
 
-            App.setRoot("primary");
+//            project.setReinforcement(beamReinforcement);
+//            project.resetResults();
+
+//            App.setRoot("primary");
         } else {
             showAlertBox(validationMessagesForEmptyFields.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
         }
     }
 
     /**
-     *
-     *
-     * @param bottomReinforcementVBox VBox that wraps reinforcement row fields. It represents beam face - top or bottom
-     * @param numberOfRows            Number of rows for given beam face
+     * @param rowsWrapper  VBox that wraps reinforcement row fields. It represents beam face - top or bottom
+     * @param numberOfRows Number of rows for given beam face
      * @return Two dimensional list which stores bar diameters
      */
-    private List<List<Integer>> getDiametersFromRowFields(VBox bottomReinforcementVBox, int numberOfRows) {
+    private List<List<Integer>> getDiametersFromRowFields(VBox rowsWrapper, int numberOfRows) {
+        // TODO: 09/07/2022 Refactor
         List<List<Integer>> diameters = new ArrayList<>();
 
-        diameters.add(new ArrayList<>());
+        IntStream.range(0, numberOfRows).forEach(i -> {
+            // Looping through each reinforcement row inside rowsWrapper
+            HBox row = (HBox) rowsWrapper.getChildren().get(i);
+
+            @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
+            @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
+
+            List<Node> numberOfAdditionalBarsComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX));
+            List<Node> additionalDiameterComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX));
+
+            int numberOfMainBars = numberOfBarsComboBox.getValue();
+            int mainDiameter = diameterComboBox.getValue();
+
+            List<Integer> diametersInRow = new ArrayList<>(Collections.nCopies(numberOfMainBars, mainDiameter));
+
+            if (numberOfMainBars % 2 == 0) {
+                // If number of main bars even
+
+                int additionalDiameterFields = additionalDiameterComboBoxes.size();
+
+                IntStream.range(0, additionalDiameterFields).forEach(j -> {
+
+                    @SuppressWarnings("unchecked") ComboBox<Integer> numberOfAdditionalBarsComboBox = (ComboBox<Integer>) numberOfAdditionalBarsComboBoxes.get(j);
+                    @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) additionalDiameterComboBoxes.get(j);
+
+                    int numberOfAdditionalBars = numberOfAdditionalBarsComboBox.getValue();
+                    int additionalDiameter = additionalDiameterComboBox.getValue();
+
+                    if (numberOfAdditionalBarsComboBox.getValue() % 2 == 0) {
+                        // Even number of additional bars
+
+                        List<Integer> mainDiametersIndexList = Utility.indexOfMultiple(diametersInRow, mainDiameter);
+                        boolean isStart = true;
+                        int indexFromStart = 0;
+                        int indexFromEnd = 1;
+                        int resettingIndex = mainDiametersIndexList.get((int) (mainDiametersIndexList.size() * 0.5));
+
+                        for (int k = 0; k < numberOfAdditionalBars; k++) {
+                            if (indexFromStart == resettingIndex || indexFromEnd == resettingIndex) {
+                                indexFromStart = 0;
+                                indexFromEnd = 1;
+                                isStart = true;
+                            }
+                            if (isStart) {
+                                diametersInRow.add(mainDiametersIndexList.get(indexFromStart + 1), additionalDiameter);
+                                indexFromStart++;
+                                isStart = false;
+                            } else {
+                                diametersInRow.add(mainDiametersIndexList.get(mainDiametersIndexList.size() - indexFromEnd), additionalDiameter);
+                                indexFromEnd++;
+                                isStart = true;
+                            }
+                            mainDiametersIndexList = Utility.indexOfMultiple(diametersInRow, mainDiameter);
+                        }
+
+                    } else {
+                        // Odd number of additional bars
+                        List<Integer> mainDiametersIndexList = Utility.indexOfMultiple(diametersInRow, mainDiameter);
+                        boolean isStart = true;
+                        int indexFromStart = 0;
+                        int indexFromEnd = 1;
+                        int resettingIndex = mainDiametersIndexList.get((int) (mainDiametersIndexList.size() * 0.5));
+
+                        diametersInRow.add(resettingIndex, additionalDiameter); // odd number logic
+
+                        for (int k = 0; k < numberOfAdditionalBars - 1; k++) { // subtracting one, odd number logic
+                            if (indexFromStart == resettingIndex || indexFromEnd == resettingIndex) {
+                                indexFromStart = 0;
+                                indexFromEnd = 1;
+                                isStart = true;
+                            }
+                            if (isStart) {
+                                diametersInRow.add(mainDiametersIndexList.get(indexFromStart + 1), additionalDiameter);
+                                indexFromStart++;
+                                isStart = false;
+                            } else {
+                                diametersInRow.add(mainDiametersIndexList.get(mainDiametersIndexList.size() - indexFromEnd), additionalDiameter);
+                                indexFromEnd++;
+                                isStart = true;
+                            }
+                            mainDiametersIndexList = Utility.indexOfMultiple(diametersInRow, mainDiameter);
+                        }
+                    }
+                });
+
+
+            } else {
+                // If number of main bars odd
+
+                int additionalDiameterFields = additionalDiameterComboBoxes.size();
+
+                IntStream.range(0, additionalDiameterFields).forEach(j -> {
+
+                    @SuppressWarnings("unchecked") ComboBox<Integer> numberOfAdditionalBarsComboBox = (ComboBox<Integer>) numberOfAdditionalBarsComboBoxes.get(j);
+                    @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) additionalDiameterComboBoxes.get(j);
+
+                    int numberOfAdditionalBars = numberOfAdditionalBarsComboBox.getValue();
+                    int additionalDiameter = additionalDiameterComboBox.getValue();
+
+                    if (numberOfAdditionalBarsComboBox.getValue() % 2 == 0) {
+                        // Even number of additional bars
+
+                        List<Integer> mainDiametersIndexList = Utility.indexOfMultiple(diametersInRow, mainDiameter);
+                        boolean isStart = true;
+                        int indexFromStart = 0;
+                        int indexFromEnd = 1;
+                        int resettingIndex = mainDiametersIndexList.get((int) (mainDiametersIndexList.size() * 0.5) + 1);
+
+                        for (int k = 0; k < numberOfAdditionalBars; k++) {
+                            if (indexFromStart == resettingIndex || indexFromEnd == resettingIndex) {
+                                indexFromStart = 0;
+                                indexFromEnd = 1;
+                                isStart = true;
+                            }
+                            if (isStart) {
+                                diametersInRow.add(mainDiametersIndexList.get(indexFromStart + 1), additionalDiameter);
+                                indexFromStart++;
+                                isStart = false;
+                            } else {
+                                diametersInRow.add(mainDiametersIndexList.get(mainDiametersIndexList.size() - indexFromEnd), additionalDiameter);
+                                indexFromEnd++;
+                                isStart = true;
+                            }
+                            mainDiametersIndexList = Utility.indexOfMultiple(diametersInRow, mainDiameter);
+                        }
+
+                    } else {
+                        // Odd number of additional bars
+
+                    }
+                });
+            }
+
+            diameters.add(diametersInRow);
+        });
 
         return diameters;
     }

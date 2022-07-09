@@ -192,8 +192,8 @@ public class SlabReinforcementSetup extends Controller {
         List<Integer> spacings = new ArrayList<>();
         List<Integer> verticalSpacings = new ArrayList<>();
 
-        for (int i = 0; i < numberOfLayers; i++) {
-            // Looping through each reinforcement layer inside layerWrapper
+        IntStream.range(0, numberOfLayers).forEach(i -> {
+            // Looping through each reinforcement layer inside layersWrapper
             HBox layer = (HBox) layersWrapper.getChildren().get(i);
             // Selecting form fields - combo boxes
             @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) layer.lookup("." + CssStyleClasses.SLAB_REINFORCEMENT_DIAMETER_COMBO_BOX);
@@ -213,7 +213,7 @@ public class SlabReinforcementSetup extends Controller {
                 PositiveIntegerField verticalSpacingField = (PositiveIntegerField) verticalSpacingHBox.lookup("." + CssStyleClasses.SLAB_VERTICAL_SPACING_FIELD);
                 verticalSpacings.add(Integer.parseInt(verticalSpacingField.getText()));
             }
-        }
+        });
 
         return new HashMap<>(
                 Map.of(
