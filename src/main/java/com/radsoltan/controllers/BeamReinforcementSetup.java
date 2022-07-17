@@ -94,14 +94,6 @@ public class BeamReinforcementSetup extends Controller {
 
 //        beamReinforcement = project.getReinforcement();
 
-//        beamReinforcement = new BeamReinforcement(
-//                List.of(List.of(32, 10, 12, 10, 32), List.of(25, 8, 25), List.of(20, 20), List.of(10, 10)),
-//                List.of(50, 40, 50),
-//                List.of(List.of(16, 8, 8, 8, 16), List.of(10, 8, 10), List.of(12, 12)),
-//                List.of(40, 40),
-//                new ShearLinks(500, 8, 200, 3)
-//        );
-
         beamReinforcement = new BeamReinforcement(
                 List.of(List.of(32, 10, 10, 32), List.of(25, 25)),
                 List.of(20),
@@ -224,6 +216,9 @@ public class BeamReinforcementSetup extends Controller {
     }
 
     /**
+     * Method gets values of diameters and number of bars from form fields and save them to a two dimensional list.
+     * The reinforcement is assumed to be symmetrical unless there are some odd bars which are place in the middle of the list.
+     *
      * @param rowsWrapper  VBox that wraps reinforcement row fields. It represents beam face - top or bottom
      * @param numberOfRows Number of rows for given beam face
      * @return Two dimensional list which stores bar diameters
@@ -235,26 +230,29 @@ public class BeamReinforcementSetup extends Controller {
             // Looping through each reinforcement row inside rowsWrapper
             HBox row = (HBox) rowsWrapper.getChildren().get(i);
 
+            // Selecting row fields
             @SuppressWarnings("unchecked") ComboBox<Integer> numberOfBarsComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_BAR_NUMBER_COMBO_BOX);
             @SuppressWarnings("unchecked") ComboBox<Integer> diameterComboBox = (ComboBox<Integer>) row.lookup("." + CssStyleClasses.BEAM_REINFORCEMENT_DIAMETER_COMBO_BOX);
-
             List<Node> numberOfAdditionalBarsComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_BAR_NUMBER_COMBO_BOX));
             List<Node> additionalDiameterComboBoxes = new ArrayList<>(row.lookupAll("." + CssStyleClasses.BEAM_ADDITIONAL_REINFORCEMENT_DIAMETER_COMBO_BOX));
 
             int numberOfMainBars = numberOfBarsComboBox.getValue();
             int mainDiameter = diameterComboBox.getValue();
 
-            List<Integer> halfRow = new ArrayList<>(Collections.nCopies((int) (numberOfMainBars * 0.5), mainDiameter));
+            // Creating a half row of main bars (rounded down)
+            int numberOfMainBarsInHalf = (int) (numberOfMainBars * 0.5);
+            List<Integer> halfRow = new ArrayList<>(Collections.nCopies(numberOfMainBarsInHalf, mainDiameter));
 
-            // Used in odd bars logic:
+            // Used in odd bars logic
             List<Integer> oddAdditionalBars = new ArrayList<>();
             boolean isOddMainBar = numberOfMainBars % 2 != 0;
 
             int insertIndex = 0;
 
             for (int j = 0; j < additionalDiameterComboBoxes.size(); j++) {
-                // Looping through additional reinforcement types
+                // Looping through additional reinforcement
 
+                // Selecting additional reinforcement data
                 @SuppressWarnings("unchecked") ComboBox<Integer> numberOfAdditionalBarsComboBox = (ComboBox<Integer>) numberOfAdditionalBarsComboBoxes.get(j);
                 @SuppressWarnings("unchecked") ComboBox<Integer> additionalDiameterComboBox = (ComboBox<Integer>) additionalDiameterComboBoxes.get(j);
                 int numberOfAdditionalBars = numberOfAdditionalBarsComboBox.getValue();
@@ -262,11 +260,10 @@ public class BeamReinforcementSetup extends Controller {
 
                 List<Integer> mainDiametersIndexList = Utility.indexOfMultiple(halfRow, mainDiameter);
 
-                int numberOfMainBarsInHalf = (int) (numberOfMainBars * 0.5);
                 int numberOfAdditionalBarsInHalf = (int) (numberOfAdditionalBars * 0.5);
 
                 for (int k = 0; k < numberOfAdditionalBarsInHalf; k++) {
-
+                    // Adding additional bars
                     halfRow.add(mainDiametersIndexList.get(insertIndex) + 1, additionalDiameter);
                     insertIndex++;
 
@@ -282,8 +279,8 @@ public class BeamReinforcementSetup extends Controller {
                 }
             }
 
+            // Creating full row
             List<Integer> diametersInRow = new ArrayList<>(halfRow);
-
             int size = diametersInRow.size();
             diametersInRow.addAll(diametersInRow.subList(0, size));
             Collections.reverse(diametersInRow.subList(size, size * 2));
