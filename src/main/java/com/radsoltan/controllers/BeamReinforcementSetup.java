@@ -92,15 +92,7 @@ public class BeamReinforcementSetup extends Controller {
     public BeamReinforcementSetup() {
         project = Project.getInstance();
 
-//        beamReinforcement = project.getReinforcement();
-
-        beamReinforcement = new BeamReinforcement(
-                List.of(List.of(32, 10, 10, 32), List.of(25, 25)),
-                List.of(20),
-                List.of(List.of(16, 8, 8, 16)),
-                List.of(),
-                new ShearLinks(500, 8, 200, 3)
-        );
+        beamReinforcement = project.getReinforcement();
 
         // Creating lists for bar numbers
         List<Integer> barNumberList = new ArrayList<>();
@@ -196,20 +188,18 @@ public class BeamReinforcementSetup extends Controller {
 
             ShearLinks shearLinks = getShearLinksFromFields();
 
-            System.out.println(topDiameters);
+            Reinforcement beamReinforcement = new BeamReinforcement(
+                    topDiameters,
+                    topVerticalSpacings,
+                    bottomDiameters,
+                    bottomVerticalSpacings,
+                    shearLinks
+            );
 
-//            Reinforcement beamReinforcement = new BeamReinforcement(
-//                    topDiameters,
-//                    topVerticalSpacings,
-//                    bottomDiameters,
-//                    bottomVerticalSpacings,
-//                    shearLinks
-//            );
+            project.setReinforcement(beamReinforcement);
+            project.resetResults();
 
-//            project.setReinforcement(beamReinforcement);
-//            project.resetResults();
-
-//            App.setRoot("primary");
+            App.setRoot("primary");
         } else {
             showAlertBox(validationMessagesForEmptyFields.get(0), AlertKind.INFO, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
         }
