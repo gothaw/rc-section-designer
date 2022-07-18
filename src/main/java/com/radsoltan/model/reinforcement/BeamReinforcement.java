@@ -1,5 +1,7 @@
 package com.radsoltan.model.reinforcement;
 
+import com.radsoltan.constants.Constants;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -279,10 +281,50 @@ public class BeamReinforcement extends Reinforcement {
         return shearLinks;
     }
 
+    /**
+     * Gets general reinforcement description
+     *
+     * @return reinforcement description
+     */
     @Override
     public String getDescription() {
-        // TODO: 02/08/2020
-        return null;
+        String descriptionTopLayers = "Top rows:\n" + getDescriptionForReinforcementRows(topDiameters);
+        String descriptionBottomLayers = "Bottom rows:\n" + getDescriptionForReinforcementRows(bottomDiameters);
+        String descriptionShearLinks = String.format("Shear links:\n%d x \u03c6%d@%d mm", shearLinks.getLegs(), shearLinks.getDiameter(), shearLinks.getSpacing());
+        return descriptionTopLayers + "\n" + descriptionBottomLayers + "\n" + descriptionShearLinks;
+    }
+
+    /**
+     * Gets description for reinforcement rows for given beam face.
+     *
+     * @param diameters list of reinforcement rows, each row is a list with bar diameters in mm
+     * @return reinforcement description for selected beam face
+     */
+    private String getDescriptionForReinforcementRows(List<List<Integer>> diameters) {
+        String rowsDescription = "";
+
+        for (int i = 0; i < diameters.size(); i++) {
+            List<Integer> diametersInRow = diameters.get(i);
+            List<Integer> distinctBars = diametersInRow.stream()
+                    .distinct()
+                    .collect(Collectors.toList());
+            List<Integer> numberOfDistinctBars = distinctBars.stream()
+                    .map(diameter -> Collections.frequency(diametersInRow, diameter))
+                    .collect(Collectors.toList());
+
+            String description = String.format("%s row:", Constants.ORDINAL_LABELS.get(i));
+
+            for (int j = 0; j < distinctBars.size(); j++) {
+                description = description.concat(String.format(" %d\u03c6%d", numberOfDistinctBars.get(j), distinctBars.get(j)));
+            }
+
+            if (i < diameters.size() - 1) {
+                description = description.concat(",  ");
+            }
+            rowsDescription = rowsDescription.concat(description);
+        }
+
+        return rowsDescription;
     }
 
     @Override
