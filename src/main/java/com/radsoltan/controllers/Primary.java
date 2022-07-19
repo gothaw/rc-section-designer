@@ -744,57 +744,66 @@ public class Primary extends Controller {
         GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
         double canvasWidth = elementImage.getWidth();
         double canvasHeight = elementImage.getHeight();
-        int beamWidth = project.getGeometry().getWidth();
-        int beamDepth = project.getGeometry().getDepth();
 
-        double beamImageScale = getBeamImageScale(beamWidth, canvasWidth, beamDepth, canvasHeight);
+        Section section = project.getGeometry().getSection();
 
-        int beamImageWidth = (int) (beamImageScale * beamWidth);
-        int beamImageHeight = (int) (beamImageScale * beamDepth);
+        if (section instanceof Rectangle) {
+            int beamWidth = section.getWidth();
+            int beamDepth = section.getDepth();
 
-        double beamLeftEdgeX = 0.5 * canvasWidth - 0.5 * beamImageWidth;
-        double beamRightEdgeX = beamLeftEdgeX + beamImageWidth;
-        double beamTopEdgeY = 0.5 * canvasHeight - 0.5 * beamImageHeight;
-        double beamBottomEdgeY = beamTopEdgeY + beamImageHeight;
+            double beamImageScale = getBeamImageScale(beamWidth, canvasWidth, beamDepth, canvasHeight);
 
-        Rectangle rectangle = new Rectangle(
-                beamImageWidth,
-                beamImageHeight,
-                graphicsContext,
-                Color.BLACK,
-                Color.LIGHTGRAY,
-                beamLeftEdgeX,
-                beamTopEdgeY
-        );
+            int beamImageWidth = (int) (beamImageScale * beamWidth);
+            int beamImageHeight = (int) (beamImageScale * beamDepth);
 
-        rectangle.draw();
+            double beamLeftEdgeX = 0.5 * canvasWidth - 0.5 * beamImageWidth;
+            double beamRightEdgeX = beamLeftEdgeX + beamImageWidth;
+            double beamTopEdgeY = 0.5 * canvasHeight - 0.5 * beamImageHeight;
+            double beamBottomEdgeY = beamTopEdgeY + beamImageHeight;
 
-        // Draw Vertical Dimension Line
-        VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
-                Integer.toString(project.getGeometry().getDepth()),
-                Color.BLACK,
-                graphicsContext,
-                beamTopEdgeY,
-                beamBottomEdgeY,
-                beamLeftEdgeX,
-                -DimensionLine.DEFAULT_SMALL_OFFSET,
-                SLAB_IMAGE_DIMENSION_LINES_SCALE,
-                true
-        );
-        verticalDimensionLine.draw();
+            Rectangle rectangle = new Rectangle(
+                    beamImageWidth,
+                    beamImageHeight,
+                    graphicsContext,
+                    Color.BLACK,
+                    Color.LIGHTGRAY,
+                    beamLeftEdgeX,
+                    beamTopEdgeY
+            );
 
-        // Draw Horizontal Dimension Line
-        HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
-                Integer.toString(project.getGeometry().getWidth()),
-                Color.BLACK,
-                graphicsContext,
-                beamLeftEdgeX,
-                beamRightEdgeX,
-                beamBottomEdgeY,
-                DimensionLine.DEFAULT_SMALL_OFFSET,
-                SLAB_IMAGE_DIMENSION_LINES_SCALE
-        );
-        horizontalDimensionLine.draw();
+            rectangle.draw();
+
+            // Draw Vertical Dimension Line
+            VerticalDimensionLine verticalDimensionLine = new VerticalDimensionLine(
+                    Integer.toString(project.getGeometry().getDepth()),
+                    Color.BLACK,
+                    graphicsContext,
+                    beamTopEdgeY,
+                    beamBottomEdgeY,
+                    beamLeftEdgeX,
+                    -DimensionLine.DEFAULT_SMALL_OFFSET,
+                    SLAB_IMAGE_DIMENSION_LINES_SCALE,
+                    true
+            );
+            verticalDimensionLine.draw();
+
+            // Draw Horizontal Dimension Line
+            HorizontalDimensionLine horizontalDimensionLine = new HorizontalDimensionLine(
+                    Integer.toString(project.getGeometry().getWidth()),
+                    Color.BLACK,
+                    graphicsContext,
+                    beamLeftEdgeX,
+                    beamRightEdgeX,
+                    beamBottomEdgeY,
+                    DimensionLine.DEFAULT_SMALL_OFFSET,
+                    SLAB_IMAGE_DIMENSION_LINES_SCALE
+            );
+            horizontalDimensionLine.draw();
+        } else {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
+        }
+
+
 
         DesignParameters designParameters = project.getDesignParameters();
         boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
@@ -806,10 +815,10 @@ public class Primary extends Controller {
     }
 
     /**
-     * Draws beam reinforcement.
+     * Draws beam reinforcement and shear links.
      */
     private void drawBeamReinforcement() {
-        System.out.println("Drawing beam reinforcement.");
+        System.out.println("Drawing beam reinforcement and shear links.");
     }
 
     /**

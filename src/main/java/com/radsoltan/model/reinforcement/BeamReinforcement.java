@@ -1,6 +1,12 @@
 package com.radsoltan.model.reinforcement;
 
 import com.radsoltan.constants.Constants;
+import com.radsoltan.constants.UIText;
+import com.radsoltan.model.DesignParameters;
+import com.radsoltan.model.geometry.Rectangle;
+import com.radsoltan.model.geometry.Section;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,6 +23,11 @@ public class BeamReinforcement extends Reinforcement {
     private final List<List<Integer>> bottomDiameters;
     private final List<Integer> bottomVerticalSpacings;
     private final ShearLinks shearLinks;
+    private final DesignParameters designParameters;
+    private final Section section;
+    private final GraphicsContext graphicsContext;
+    private final Color colour;
+    private final double beamImageScale;
 
     /**
      * Constructor. Used in structural calculations.
@@ -52,11 +63,46 @@ public class BeamReinforcement extends Reinforcement {
                              List<Integer> bottomVerticalSpacings,
                              ShearLinks shearLinks) {
 
+        this(topDiameters, topVerticalSpacings, bottomDiameters, bottomVerticalSpacings, shearLinks, null, null, null, null, 0);
+    }
+
+
+    /**
+     * Constructor. Used in structural calculations.
+     * In addition, it takes arguments that allow for drawing the beam reinforcement on graphics context.
+     *
+     * @param topDiameters           contains top bar diameters in mm
+     * @param topVerticalSpacings    clear vertical spacings between top rows in mm
+     * @param bottomDiameters        contains bottom bar diameters in mm
+     * @param bottomVerticalSpacings clear vertical spacings between bottom rows in mm
+     * @param shearLinks             shear links object
+     * @param designParameters       DesignParameters object
+     * @param section                beam section
+     * @param graphicsContext        graphics context to draw beam on
+     * @param colour                 colour to draw the reinforcement with
+     * @param beamImageScale         beam image scale
+     */
+    public BeamReinforcement(List<List<Integer>> topDiameters,
+                             List<Integer> topVerticalSpacings,
+                             List<List<Integer>> bottomDiameters,
+                             List<Integer> bottomVerticalSpacings,
+                             ShearLinks shearLinks,
+                             DesignParameters designParameters,
+                             Section section,
+                             GraphicsContext graphicsContext,
+                             Color colour,
+                             double beamImageScale) {
+
         this.topDiameters = topDiameters;
         this.topVerticalSpacings = topVerticalSpacings;
         this.bottomDiameters = bottomDiameters;
         this.bottomVerticalSpacings = bottomVerticalSpacings;
         this.shearLinks = shearLinks;
+        this.designParameters = designParameters;
+        this.section = section;
+        this.graphicsContext = graphicsContext;
+        this.colour = colour;
+        this.beamImageScale = beamImageScale;
     }
 
     /**
@@ -329,12 +375,24 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public void draw() {
-        // TODO: 18/05/2020
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+        if (section instanceof Rectangle) {
+            System.out.println("Drawing beam reinforcement");
+        } else {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
+        }
     }
 
+
+    /**
+     * Checks if reinforcement can be drawn and all necessary fields are set up.
+     *
+     * @return true if reinforcement can be drawn
+     */
     @Override
     public boolean isSetupToBeDrawn() {
-        // TODO: 26/06/2022
-        return false;
+        return !(designParameters == null || section == null || graphicsContext == null || colour == null || beamImageScale == 0);
     }
 }
