@@ -95,7 +95,7 @@ public class SlabReinforcement extends Reinforcement {
      * @param slabStrip                 SlabStrip object - created using constructor that allows for drawing the slab strip
      * @param graphicsContext           graphics context to draw slab on
      * @param colour                    colour to draw the reinforcement with
-     * @param slabImageScale            slab image scale
+     * @param slabImageScale            slab image scale that slabStrip is drawn with
      */
     public SlabReinforcement(List<Integer> topDiameters,
                              List<Integer> additionalTopDiameters,

@@ -80,7 +80,7 @@ public class BeamReinforcement extends Reinforcement {
      * @param section                beam section
      * @param graphicsContext        graphics context to draw beam on
      * @param colour                 colour to draw the reinforcement with
-     * @param beamImageScale         beam image scale
+     * @param beamImageScale         beam image scale that section is drawn with
      */
     public BeamReinforcement(List<List<Integer>> topDiameters,
                              List<Integer> topVerticalSpacings,
@@ -198,7 +198,7 @@ public class BeamReinforcement extends Reinforcement {
         List<List<Double>> distanceForBarsInSubsequentRows = IntStream.range(1, diameters.size())
                 .mapToObj(i -> IntStream
                         .range(0, diameters.get(i).size())
-                        .mapToObj(distance -> distancesForSubsequentRows.get(i))
+                        .mapToObj(distance -> distancesForSubsequentRows.get(i - 1))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
 
@@ -334,10 +334,10 @@ public class BeamReinforcement extends Reinforcement {
      */
     @Override
     public String getDescription() {
-        String descriptionTopLayers = "Top rows:\n" + getDescriptionForReinforcementRows(topDiameters);
-        String descriptionBottomLayers = "Bottom rows:\n" + getDescriptionForReinforcementRows(bottomDiameters);
+        String descriptionTopRows = "Top rows:\n" + getDescriptionForReinforcementRows(topDiameters);
+        String descriptionBottomRows = "Bottom rows:\n" + getDescriptionForReinforcementRows(bottomDiameters);
         String descriptionShearLinks = String.format("Shear links:\n%d x \u03c6%d@%d mm", shearLinks.getLegs(), shearLinks.getDiameter(), shearLinks.getSpacing());
-        return descriptionTopLayers + "\n" + descriptionBottomLayers + "\n" + descriptionShearLinks;
+        return descriptionTopRows + "\n" + descriptionBottomRows + "\n" + descriptionShearLinks;
     }
 
     /**
@@ -373,13 +373,119 @@ public class BeamReinforcement extends Reinforcement {
         return rowsDescription;
     }
 
+    /**
+     *
+     * @param diameters
+     * @param clearVerticalSpacings
+     * @param beamEdgeY
+     * @param beamFace
+     * @return
+     */
+    private List<List<Double>> getYCoordinateForReinforcement(List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, double beamEdgeY, String beamFace) {
+        List<List<Double>> reinforcementY;
+
+        switch (beamFace) {
+            case Constants.BEAM_TOP_FACE:
+                reinforcementY = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, designParameters.getNominalCoverTop())
+                        .stream()
+                        .map(row -> row
+                                .stream()
+                                .map(distance -> distance = beamEdgeY + distance * beamImageScale)
+                                .collect(Collectors.toList()))
+                        .collect(Collectors.toList());
+
+                break;
+            case Constants.BEAM_BOTTOM_FACE:
+                reinforcementY = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, designParameters.getNominalCoverBottom())
+                        .stream()
+                        .map(row -> row
+                                .stream()
+                                .map(distance -> distance = beamEdgeY - distance * beamImageScale)
+                                .collect(Collectors.toList()))
+                        .collect(Collectors.toList());
+                break;
+            default:
+                throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+
+        return reinforcementY;
+    }
+
+    /**
+     *
+     * @param diameters
+     * @param realWidth
+     * @param beamLeftEdgeX
+     * @return
+     */
+    private List<List<Double>> getXCoordinateForReinforcement(List<List<Integer>> diameters, double realWidth, double beamLeftEdgeX) {
+        List<List<Double>> reinforcementX;
+        int nominalCover = designParameters.getNominalCoverSides();
+        int shearLinkDiameter = shearLinks.getDiameter();
+
+        // Available width to accommodate main reinforcement
+        double availableWidth = realWidth - 2 * shearLinkDiameter - 2 * nominalCover;
+
+        reinforcementX = diameters
+                .stream()
+                .map(row -> {
+                    int numberOfBars = row.size();
+                    int totalSumOfDiameters = row.stream().reduce(Integer::sum).orElse(0);
+
+                    // clear spacing between main bars
+                    double clearSpacing = (availableWidth - totalSumOfDiameters) / (numberOfBars - 1);
+
+                    return IntStream.range(0, row.size()).mapToObj(i -> {
+                        int sumOfDiameters = row.stream().limit(i).reduce(Integer::sum).orElse(0);
+                        double sumOfSpacings = clearSpacing * i;
+
+                        return beamLeftEdgeX + (nominalCover + shearLinkDiameter + sumOfSpacings + sumOfDiameters) * beamImageScale;
+                    }).collect(Collectors.toList());
+                }).collect(Collectors.toList());
+
+        return reinforcementX;
+    }
+
+    /**
+     *
+     * @param realWidth
+     * @param beamLeftEdgeX
+     * @param beamEdgeY
+     * @param diameters
+     * @param clearVerticalSpacings
+     * @param beamFace
+     */
+    public void drawReinforcementRows(double realWidth, double beamLeftEdgeX, double beamEdgeY, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, String beamFace) {
+        System.out.println(getXCoordinateForReinforcement(diameters, realWidth, beamLeftEdgeX));
+        System.out.println(getYCoordinateForReinforcement(diameters, clearVerticalSpacings, beamEdgeY, beamFace));
+    }
+
+    /**
+     *
+     */
     @Override
     public void draw() {
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
         }
         if (section instanceof Rectangle) {
-            System.out.println("Drawing beam reinforcement");
+
+            graphicsContext.beginPath();
+            graphicsContext.setFill(colour);
+            Rectangle rectangle = (Rectangle) section;
+
+            double widthInScale = section.getWidth();
+            double realWidth = widthInScale / beamImageScale;
+            double beamLeftEdgeX = rectangle.getStartX();
+            double beamTopEdgeY = rectangle.getStartY();
+            double beamBottomEdgeY = beamTopEdgeY + rectangle.getDepth();
+
+            // Drawing main reinforcement
+
+            drawReinforcementRows(realWidth, beamLeftEdgeX, beamTopEdgeY, topDiameters, topVerticalSpacings, Constants.BEAM_TOP_FACE);
+            drawReinforcementRows(realWidth, beamLeftEdgeX, beamBottomEdgeY, bottomDiameters, bottomVerticalSpacings, Constants.BEAM_BOTTOM_FACE);
+
+            graphicsContext.closePath();
         } else {
             throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
         }

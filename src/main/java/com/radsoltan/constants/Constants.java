@@ -9,6 +9,8 @@ import java.util.List;
 public class Constants {
     public static final String ELEMENT_TYPE_BEAM = "beam";
     public static final String ELEMENT_TYPE_SLAB = "slab";
+    public static final String BEAM_TOP_FACE = "beam top face";
+    public static final String BEAM_BOTTOM_FACE = "beam bottom face";
     public static final String SLAB_TOP_FACE = "slab top face";
     public static final String SLAB_BOTTOM_FACE = "slab bottom face";
     public static final String PROJECT_FILE = "Project file";

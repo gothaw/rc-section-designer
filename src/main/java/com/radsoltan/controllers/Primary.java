@@ -799,26 +799,44 @@ public class Primary extends Controller {
                     SLAB_IMAGE_DIMENSION_LINES_SCALE
             );
             horizontalDimensionLine.draw();
+
+            DesignParameters designParameters = project.getDesignParameters();
+            boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
+
+            if (isReinforcementSetup) {
+                // Draw beam reinforcement
+                drawBeamReinforcement(rectangle, designParameters, beamImageScale);
+            }
         } else {
             throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
-        }
-
-
-
-        DesignParameters designParameters = project.getDesignParameters();
-        boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
-
-        if (isReinforcementSetup) {
-            // Draw slab reinforcement
-            drawBeamReinforcement();
         }
     }
 
     /**
      * Draws beam reinforcement and shear links.
      */
-    private void drawBeamReinforcement() {
-        System.out.println("Drawing beam reinforcement and shear links.");
+    private void drawBeamReinforcement(Section section, DesignParameters designParameters, double beamImageScale) {
+        if (section instanceof Rectangle) {
+            BeamReinforcement beamReinforcement = (BeamReinforcement) project.getReinforcement();
+            GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
+
+            BeamReinforcement beamReinforcementToDraw = new BeamReinforcement(
+                    beamReinforcement.getTopDiameters(),
+                    beamReinforcement.getTopVerticalSpacings(),
+                    beamReinforcement.getBottomDiameters(),
+                    beamReinforcement.getBottomVerticalSpacings(),
+                    beamReinforcement.getShearLinks(),
+                    designParameters,
+                    section,
+                    graphicsContext,
+                    Color.BLACK,
+                    beamImageScale
+            );
+
+            beamReinforcementToDraw.draw();
+        } else {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
+        }
     }
 
     /**
