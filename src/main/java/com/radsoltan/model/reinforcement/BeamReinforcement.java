@@ -374,7 +374,6 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     *
      * @param diameters
      * @param clearVerticalSpacings
      * @param beamEdgeY
@@ -412,7 +411,6 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     *
      * @param diameters
      * @param realWidth
      * @param beamLeftEdgeX
@@ -447,7 +445,6 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     *
      * @param realWidth
      * @param beamLeftEdgeX
      * @param beamEdgeY
@@ -455,9 +452,28 @@ public class BeamReinforcement extends Reinforcement {
      * @param clearVerticalSpacings
      * @param beamFace
      */
-    public void drawReinforcementRows(double realWidth, double beamLeftEdgeX, double beamEdgeY, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, String beamFace) {
-        System.out.println(getXCoordinateForReinforcement(diameters, realWidth, beamLeftEdgeX));
-        System.out.println(getYCoordinateForReinforcement(diameters, clearVerticalSpacings, beamEdgeY, beamFace));
+    private void drawReinforcementRows(double realWidth, double beamLeftEdgeX, double beamEdgeY, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, String beamFace) {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+        graphicsContext.beginPath();
+
+        List<List<Double>> coordinatesX = getXCoordinateForReinforcement(diameters, realWidth, beamLeftEdgeX);
+        List<List<Double>> coordinatesY = getYCoordinateForReinforcement(diameters, clearVerticalSpacings, beamEdgeY, beamFace);
+
+        IntStream
+                .range(0, diameters.size())
+                .forEach(i -> {
+                    List<Double> rowX = coordinatesX.get(i);
+                    List<Double> rowY = coordinatesY.get(i);
+                    List<Integer> rowDiameters = diameters.get(i);
+
+                    IntStream
+                            .range(0, rowDiameters.size())
+                            .forEach(j -> graphicsContext.fillOval(rowX.get(j), rowY.get(j), rowDiameters.get(j) * beamImageScale, rowDiameters.get(j) * beamImageScale));
+                });
+
+        graphicsContext.closePath();
     }
 
     /**
