@@ -77,7 +77,7 @@ public class BeamReinforcement extends Reinforcement {
      * @param bottomVerticalSpacings clear vertical spacings between bottom rows in mm
      * @param shearLinks             shear links object
      * @param designParameters       DesignParameters object
-     * @param section                beam section
+     * @param section                beam section in scale that is to be drawn
      * @param graphicsContext        graphics context to draw beam on
      * @param colour                 colour to draw the reinforcement with
      * @param beamImageScale         beam image scale that section is drawn with

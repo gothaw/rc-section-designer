@@ -7,6 +7,7 @@ import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.Section;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineJoin;
 
 import java.io.Serializable;
 
@@ -48,7 +49,7 @@ public class ShearLinks implements Drawable, Serializable {
      * @param spacing          shear links spacing in mm
      * @param legs             number of legs
      * @param designParameters DesignParameters object
-     * @param section          beam section
+     * @param section          beam section in scale that is to be drawn
      * @param graphicsContext  graphics context to draw beam on
      * @param colour           colour to draw the reinforcement with
      * @param beamImageScale   beam image scale that section is drawn with
@@ -127,7 +128,30 @@ public class ShearLinks implements Drawable, Serializable {
             throw new IllegalArgumentException(UIText.INVALID_SHEAR_LINKS);
         }
         if (section instanceof Rectangle) {
-            System.out.println("Drawing shear links");
+            graphicsContext.beginPath();
+            graphicsContext.setStroke(colour);
+            graphicsContext.setLineWidth(diameter * beamImageScale);
+            graphicsContext.setLineJoin(StrokeLineJoin.ROUND);
+
+            Rectangle rectangle = (Rectangle) section;
+
+            double beamLeftEdgeX = rectangle.getStartX();
+            double beamRightEdgeX = beamLeftEdgeX + rectangle.getWidth();
+            double beamTopEdgeY = rectangle.getStartY();
+            double beamBottomEdgeY = beamTopEdgeY + rectangle.getDepth();
+            double nominalCoverTopScaled = designParameters.getNominalCoverTop() * beamImageScale;
+            double nominalCoverSidesScaled = designParameters.getNominalCoverSides() * beamImageScale;
+            double nominalCoverBottomScaled = designParameters.getNominalCoverBottom() * beamImageScale;
+            double diameterInScale = diameter * beamImageScale;
+
+            graphicsContext.moveTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale, beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale);
+            graphicsContext.lineTo(beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale, beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale);
+            graphicsContext.lineTo(beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale, beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale);
+            graphicsContext.lineTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale, beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale);
+            graphicsContext.lineTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale, beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale);
+
+            graphicsContext.stroke();
+            graphicsContext.closePath();
         }
     }
 
