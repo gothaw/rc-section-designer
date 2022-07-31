@@ -7,7 +7,6 @@ import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.Section;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeLineJoin;
 
 import java.io.Serializable;
 
@@ -131,7 +130,6 @@ public class ShearLinks implements Drawable, Serializable {
             graphicsContext.beginPath();
             graphicsContext.setStroke(colour);
             graphicsContext.setLineWidth(diameter * beamImageScale);
-            graphicsContext.setLineJoin(StrokeLineJoin.ROUND);
 
             Rectangle rectangle = (Rectangle) section;
 
@@ -143,13 +141,59 @@ public class ShearLinks implements Drawable, Serializable {
             double nominalCoverSidesScaled = designParameters.getNominalCoverSides() * beamImageScale;
             double nominalCoverBottomScaled = designParameters.getNominalCoverBottom() * beamImageScale;
             double diameterInScale = diameter * beamImageScale;
+            double archRadius = 1.5 * diameterInScale;
 
-            graphicsContext.moveTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale, beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale);
-            graphicsContext.lineTo(beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale, beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale);
-            graphicsContext.lineTo(beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale, beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale);
-            graphicsContext.lineTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale, beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale);
-            graphicsContext.lineTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale, beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale);
-
+            // Top line
+            graphicsContext.moveTo(
+                    beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale + archRadius,
+                    beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale
+            );
+            graphicsContext.lineTo(
+                    beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale - archRadius,
+                    beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale
+            );
+            // Top right arch
+            graphicsContext.arc(
+                    beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale - archRadius,
+                    beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale + archRadius,
+                    archRadius,
+                    archRadius,
+                    90,
+                    -90
+            );
+            // Right edge
+            graphicsContext.lineTo(beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale, beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale - archRadius);
+            // Bottom right arch
+            graphicsContext.arc(
+                    beamRightEdgeX - nominalCoverSidesScaled - 0.5 * diameterInScale - archRadius,
+                    beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale - archRadius,
+                    archRadius,
+                    archRadius,
+                    0,
+                    -90
+            );
+            // Bottom edge
+            graphicsContext.lineTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale + archRadius, beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale);
+            // Bottom left arch
+            graphicsContext.arc(
+                    beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale + archRadius,
+                    beamBottomEdgeY - nominalCoverBottomScaled - 0.5 * diameterInScale - archRadius,
+                    archRadius,
+                    archRadius,
+                    270,
+                    -90
+            );
+            // Left edge
+            graphicsContext.lineTo(beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale, beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale + archRadius);
+            // Top left arch
+            graphicsContext.arc(
+                    beamLeftEdgeX + nominalCoverSidesScaled + 0.5 * diameterInScale + archRadius,
+                    beamTopEdgeY + nominalCoverTopScaled + 0.5 * diameterInScale + archRadius,
+                    archRadius,
+                    archRadius,
+                    180,
+                    -90
+            );
             graphicsContext.stroke();
             graphicsContext.closePath();
         }
