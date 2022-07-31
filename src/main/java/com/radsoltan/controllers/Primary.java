@@ -843,7 +843,20 @@ public class Primary extends Controller {
                     beamImageScale
             );
 
+            ShearLinks shearLinksToDraw = new ShearLinks(
+                    shearLinks.getYieldStrength(),
+                    shearLinks.getDiameter(),
+                    shearLinks.getSpacing(),
+                    shearLinks.getLegs(),
+                    designParameters,
+                    section,
+                    graphicsContext,
+                    Color.BLACK,
+                    beamImageScale
+            );
+
             beamReinforcementToDraw.draw();
+            shearLinksToDraw.draw();
         } else {
             throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
         }
@@ -866,7 +879,7 @@ public class Primary extends Controller {
             case 1:
                 double beamImageVerticalRatio = BEAM_IMAGE_MAX_VERTICAL_RATIO;
                 do {
-                    // wrapped in loop to check if width doesn't exceed max ratio. If that's the case retry with reduced max vertical ratio
+                    // Wrapped in loop to check if width doesn't exceed max ratio. If that's the case retry with reduced max vertical ratio
                     scale = beamImageVerticalRatio * canvasHeight / beamDepth;
                     // Reducing beam max vertical ratio
                     beamImageVerticalRatio = beamImageVerticalRatio - BEAM_IMAGE_RATIO_REDUCTION_STEP;
@@ -875,7 +888,7 @@ public class Primary extends Controller {
             case -1:
                 double beamImageHorizontalRatio = BEAM_IMAGE_MAX_HORIZONTAL_RATIO;
                 do {
-                    // wrapped in loop to check if depth doesn't exceed max ratio. If that's the case retry with reduced  max horizontal ratio
+                    // Wrapped in loop to check if depth doesn't exceed max ratio. If that's the case retry with reduced max horizontal ratio
                     scale = beamImageHorizontalRatio * canvasWidth / beamWidth;
                     // Reducing beam max horizontal ratio
                     beamImageHorizontalRatio = beamImageHorizontalRatio - BEAM_IMAGE_RATIO_REDUCTION_STEP;
