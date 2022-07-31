@@ -813,7 +813,7 @@ public class Primary extends Controller {
             boolean isReinforcementSetup = project.getReinforcement() != null && designParameters != null;
 
             if (isReinforcementSetup) {
-                // Draw beam reinforcement
+                // Draw beam reinforcement and shear links
                 drawBeamReinforcement(rectangle, designParameters, beamImageScale);
             }
         } else {
@@ -827,6 +827,7 @@ public class Primary extends Controller {
     private void drawBeamReinforcement(Section section, DesignParameters designParameters, double beamImageScale) {
         if (section instanceof Rectangle) {
             BeamReinforcement beamReinforcement = (BeamReinforcement) project.getReinforcement();
+            ShearLinks shearLinks = beamReinforcement.getShearLinks();
             GraphicsContext graphicsContext = elementImage.getGraphicsContext2D();
 
             BeamReinforcement beamReinforcementToDraw = new BeamReinforcement(
@@ -834,7 +835,7 @@ public class Primary extends Controller {
                     beamReinforcement.getTopVerticalSpacings(),
                     beamReinforcement.getBottomDiameters(),
                     beamReinforcement.getBottomVerticalSpacings(),
-                    beamReinforcement.getShearLinks(),
+                    shearLinks,
                     designParameters,
                     section,
                     graphicsContext,

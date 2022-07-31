@@ -374,16 +374,19 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     * @param diameters
-     * @param clearVerticalSpacings
-     * @param beamEdgeY
-     * @param beamFace
-     * @return
+     * Gets Y coordinates of top edge of each reinforcement bar. It uses getDistanceFromCentreOfEachBarToEdge method.
+     *
+     * @param diameters             list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param clearVerticalSpacings clear vertical spacings between rows in mm
+     * @param beamEdgeY             beam edge top or bottom Y coordinate
+     * @param beamFace              beam face (top or bottom)
+     * @return Two dimensional list with Y coordinates
      */
     private List<List<Double>> getYCoordinateForReinforcement(List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, double beamEdgeY, String beamFace) {
         List<List<Double>> distanceFromCentreToEdge;
         double distanceSign; // distances from bar centre to edge must be subtracted from beam edge coordinate if bottom face
 
+        // Calculating distance from centre of bar to edge
         switch (beamFace) {
             case Constants.BEAM_TOP_FACE:
                 distanceFromCentreToEdge = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, designParameters.getNominalCoverTop());
@@ -397,10 +400,9 @@ public class BeamReinforcement extends Reinforcement {
                 throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
         }
 
-
         return IntStream.range(0, diameters.size()).mapToObj(i -> {
             List<Integer> diametersInRow = diameters.get(i);
-            List<Double> distancesToEdgeInRow =  distanceFromCentreToEdge.get(i);
+            List<Double> distancesToEdgeInRow = distanceFromCentreToEdge.get(i);
 
             return IntStream.range(0, diameters.get(i).size()).mapToObj(j ->
                     beamEdgeY + (distanceSign * distancesToEdgeInRow.get(j) - diametersInRow.get(j) * 0.5) * beamImageScale
@@ -409,10 +411,12 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     * @param diameters
-     * @param realWidth
-     * @param beamLeftEdgeX
-     * @return
+     * Gets X coordinates of left edge of each reinforcement bar.
+     *
+     * @param diameters     list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param realWidth     beam real width in mm
+     * @param beamLeftEdgeX beam left edge X coordinate
+     * @return Two dimensional list with X coordinates
      */
     private List<List<Double>> getXCoordinateForReinforcement(List<List<Integer>> diameters, double realWidth, double beamLeftEdgeX) {
         List<List<Double>> reinforcementX;
@@ -443,12 +447,15 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     * @param realWidth
-     * @param beamLeftEdgeX
-     * @param beamEdgeY
-     * @param diameters
-     * @param clearVerticalSpacings
-     * @param beamFace
+     * Draws reinforcement rows for given beam face. It gets X and Y coordinates of top left edge of each reinforcement bar.
+     * It uses these coordinates to draw rebar using fillOval on graphics context.
+     *
+     * @param realWidth             beam real width in mmm
+     * @param beamLeftEdgeX         beam left edge X coordinate
+     * @param beamEdgeY             beam edge top or bottom Y coordinate
+     * @param diameters             list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param clearVerticalSpacings clear vertical spacings between rows in mm
+     * @param beamFace              beam face (top or bottom)
      */
     private void drawReinforcementRows(double realWidth, double beamLeftEdgeX, double beamEdgeY, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, String beamFace) {
         if (!isSetupToBeDrawn()) {
@@ -456,18 +463,18 @@ public class BeamReinforcement extends Reinforcement {
         }
         graphicsContext.beginPath();
 
+        // Getting X and Y coordinates of top left edge of each reinforcement bar
         List<List<Double>> coordinatesX = getXCoordinateForReinforcement(diameters, realWidth, beamLeftEdgeX);
         List<List<Double>> coordinatesY = getYCoordinateForReinforcement(diameters, clearVerticalSpacings, beamEdgeY, beamFace);
 
-        IntStream
-                .range(0, diameters.size())
+        IntStream.range(0, diameters.size())
                 .forEach(i -> {
                     List<Double> rowX = coordinatesX.get(i);
                     List<Double> rowY = coordinatesY.get(i);
                     List<Integer> rowDiameters = diameters.get(i);
 
-                    IntStream
-                            .range(0, rowDiameters.size())
+                    // Drawing rebar
+                    IntStream.range(0, rowDiameters.size())
                             .forEach(j -> graphicsContext.fillOval(rowX.get(j), rowY.get(j), rowDiameters.get(j) * beamImageScale, rowDiameters.get(j) * beamImageScale));
                 });
 
@@ -475,7 +482,7 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     *
+     * Draws main beam reinforcement. It uses drawReinforcementRows method.
      */
     @Override
     public void draw() {
@@ -495,7 +502,6 @@ public class BeamReinforcement extends Reinforcement {
             double beamBottomEdgeY = beamTopEdgeY + rectangle.getDepth();
 
             // Drawing main reinforcement
-
             drawReinforcementRows(realWidth, beamLeftEdgeX, beamTopEdgeY, topDiameters, topVerticalSpacings, Constants.BEAM_TOP_FACE);
             drawReinforcementRows(realWidth, beamLeftEdgeX, beamBottomEdgeY, bottomDiameters, bottomVerticalSpacings, Constants.BEAM_BOTTOM_FACE);
 
