@@ -381,33 +381,31 @@ public class BeamReinforcement extends Reinforcement {
      * @return
      */
     private List<List<Double>> getYCoordinateForReinforcement(List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, double beamEdgeY, String beamFace) {
-        List<List<Double>> reinforcementY;
+        List<List<Double>> distanceFromCentreToEdge;
+        double distanceSign; // distances from bar centre to edge must be subtracted from beam edge coordinate if bottom face
 
         switch (beamFace) {
             case Constants.BEAM_TOP_FACE:
-                reinforcementY = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, designParameters.getNominalCoverTop())
-                        .stream()
-                        .map(row -> row
-                                .stream()
-                                .map(distance -> distance = beamEdgeY + distance * beamImageScale)
-                                .collect(Collectors.toList()))
-                        .collect(Collectors.toList());
-
+                distanceFromCentreToEdge = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, designParameters.getNominalCoverTop());
+                distanceSign = 1;
                 break;
             case Constants.BEAM_BOTTOM_FACE:
-                reinforcementY = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, designParameters.getNominalCoverBottom())
-                        .stream()
-                        .map(row -> row
-                                .stream()
-                                .map(distance -> distance = beamEdgeY - distance * beamImageScale)
-                                .collect(Collectors.toList()))
-                        .collect(Collectors.toList());
+                distanceFromCentreToEdge = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, designParameters.getNominalCoverBottom());
+                distanceSign = -1;
                 break;
             default:
                 throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
         }
 
-        return reinforcementY;
+
+        return IntStream.range(0, diameters.size()).mapToObj(i -> {
+            List<Integer> diametersInRow = diameters.get(i);
+            List<Double> distancesToEdgeInRow =  distanceFromCentreToEdge.get(i);
+
+            return IntStream.range(0, diameters.get(i).size()).mapToObj(j ->
+                    beamEdgeY + (distanceSign * distancesToEdgeInRow.get(j) - diametersInRow.get(j) * 0.5) * beamImageScale
+            ).collect(Collectors.toList());
+        }).collect(Collectors.toList());
     }
 
     /**

@@ -6,12 +6,10 @@ import com.radsoltan.components.PositiveIntegerField;
 import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.CssStyleClasses;
 import com.radsoltan.constants.UIText;
-import com.radsoltan.model.DesignParameters;
-import com.radsoltan.model.Project;
-import com.radsoltan.model.ValidateBeam;
-import com.radsoltan.model.ValidateSlab;
+import com.radsoltan.model.*;
 import com.radsoltan.model.geometry.*;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
+import com.radsoltan.model.reinforcement.ShearLinks;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.util.*;
 import javafx.application.Platform;
@@ -140,16 +138,27 @@ public class Primary extends Controller {
         }
         // Setting geometry, reinforcement and design parameters sections
         if (project.getGeometry() == null) {
+            project.setElementType("beam"); // Hardcoded
+            project.setGeometry(new Geometry(new Rectangle(300, 600))); // Hardcoded
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         } else {
             geometryText.setText(project.getGeometry().getDescription());
         }
         if (project.getReinforcement() == null) {
+            project.setReinforcement(new BeamReinforcement(
+                    List.of(List.of(20, 20, 20, 20)),
+                    List.of(),
+                    List.of(List.of(20, 20, 20, 20)),
+                    List.of(),
+                    new ShearLinks(500, 8, 300, 2)
+            )); // Hardcoded
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         } else {
             reinforcementText.setText(project.getReinforcement().getDescription());
         }
         if (project.getDesignParameters() == null) {
+            project.setDesignParameters(new DesignParameters(30, 25, 30, 500, 20, 1.4, 1.15, 0.85, true, false, 0.3)); // Hardcoded
+            project.setConcrete(Concrete.C40_50); // Hardcoded
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         // Drawing main image
