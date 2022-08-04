@@ -119,6 +119,20 @@ public class ShearLinks implements Drawable, Serializable {
     }
 
     /**
+     *
+     */
+    private void drawShearLinksDescription() {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+        graphicsContext.beginPath();
+
+
+
+        graphicsContext.closePath();
+    }
+
+    /**
      * Draws shear links.
      */
     @Override

@@ -7,6 +7,8 @@ import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.Section;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +30,9 @@ public class BeamReinforcement extends Reinforcement {
     private final GraphicsContext graphicsContext;
     private final Color colour;
     private final double beamImageScale;
+    // Constants used in drawing slab reinforcement
+    public static final int DEFAULT_TEXT_SIZE = 10;
+    public static final int DEFAULT_TEXT_OFFSET = 5;
 
     /**
      * Constructor. Used in structural calculations.
@@ -334,8 +339,8 @@ public class BeamReinforcement extends Reinforcement {
      */
     @Override
     public String getDescription() {
-        String descriptionTopRows = "Top rows:\n" + getDescriptionForReinforcementRows(topDiameters);
-        String descriptionBottomRows = "Bottom rows:\n" + getDescriptionForReinforcementRows(bottomDiameters);
+        String descriptionTopRows = "Top rows:\n" + getDescriptionForReinforcementRows(topDiameters, true);
+        String descriptionBottomRows = "Bottom rows:\n" + getDescriptionForReinforcementRows(bottomDiameters, true);
         String descriptionShearLinks = String.format("Shear links:\n%d x \u03c6%d@%d mm", shearLinks.getLegs(), shearLinks.getDiameter(), shearLinks.getSpacing());
         return descriptionTopRows + "\n" + descriptionBottomRows + "\n" + descriptionShearLinks;
     }
@@ -344,9 +349,10 @@ public class BeamReinforcement extends Reinforcement {
      * Gets description for reinforcement rows for given beam face.
      *
      * @param diameters list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param shouldIncludeRowLabel determines whether or not include row label
      * @return reinforcement description for selected beam face
      */
-    private String getDescriptionForReinforcementRows(List<List<Integer>> diameters) {
+    private String getDescriptionForReinforcementRows(List<List<Integer>> diameters, boolean shouldIncludeRowLabel) {
         String rowsDescription = "";
 
         for (int i = 0; i < diameters.size(); i++) {
@@ -358,7 +364,9 @@ public class BeamReinforcement extends Reinforcement {
                     .map(diameter -> Collections.frequency(diametersInRow, diameter))
                     .collect(Collectors.toList());
 
-            String description = String.format("%s row:", Constants.ORDINAL_LABELS.get(i));
+            String description = shouldIncludeRowLabel
+                    ? String.format("%s row:", Constants.ORDINAL_LABELS.get(i))
+                    : "";
 
             for (int j = 0; j < distinctBars.size(); j++) {
                 description = description.concat(String.format(" %d\u03c6%d", numberOfDistinctBars.get(j), distinctBars.get(j)));
@@ -371,6 +379,45 @@ public class BeamReinforcement extends Reinforcement {
         }
 
         return rowsDescription;
+    }
+
+    /**
+     *
+     */
+    private void drawReinforcementDescription(double beamRightEdge, double beamTopEdgeY, double beamBottomEdgeY) {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+        graphicsContext.beginPath();
+
+        String descriptionTopLayers = getDescriptionForReinforcementRows(topDiameters, false);
+        String descriptionBottomLayers = getDescriptionForReinforcementRows(bottomDiameters, false);
+
+        List<String> descriptionTopLayersList = Arrays.asList(descriptionTopLayers.replaceAll(",  ", ",").replaceAll(" ", "+").split(","));
+        List<String> descriptionBottomLayersList = Arrays.asList(descriptionBottomLayers.replaceAll(",  ", ",").replaceAll(" ", "+").split(","));
+
+        List<List<Double>> distanceFromCentreToEdge1 = getDistanceFromCentreOfEachBarToEdge(topDiameters, topVerticalSpacings, designParameters.getNominalCoverTop());
+        List<List<Double>> distanceFromCentreToEdge2 = getDistanceFromCentreOfEachBarToEdge(bottomDiameters, bottomVerticalSpacings, designParameters.getNominalCoverBottom());
+
+        List<Double> averageDistance1 = distanceFromCentreToEdge1.stream().map(row -> row.stream().mapToDouble(x -> x * beamImageScale).average().orElse(0)).collect(Collectors.toList());
+        List<Double> averageDistance2 = distanceFromCentreToEdge2.stream().map(row -> row.stream().mapToDouble(x -> x * beamImageScale).average().orElse(0)).collect(Collectors.toList());
+
+        Font font = new Font(Reinforcement.DEFAULT_TEXT_FONT, BeamReinforcement.DEFAULT_TEXT_SIZE);
+
+        graphicsContext.setFont(font);
+        graphicsContext.setTextAlign(TextAlignment.LEFT);
+
+        IntStream.range(0, descriptionTopLayersList.size()).forEach(i -> {
+            String description = descriptionTopLayersList.get(i).substring(1);
+            graphicsContext.fillText(description, beamRightEdge + BeamReinforcement.DEFAULT_TEXT_OFFSET, beamTopEdgeY + averageDistance1.get(i));
+        });
+
+        IntStream.range(0, descriptionBottomLayersList.size()).forEach(i -> {
+            String description = descriptionTopLayersList.get(i).substring(1);
+            graphicsContext.fillText(description, beamRightEdge + BeamReinforcement.DEFAULT_TEXT_OFFSET, beamBottomEdgeY - averageDistance2.get(i));
+        });
+
+        graphicsContext.closePath();
     }
 
     /**
@@ -498,12 +545,16 @@ public class BeamReinforcement extends Reinforcement {
             double widthInScale = section.getWidth();
             double realWidth = widthInScale / beamImageScale;
             double beamLeftEdgeX = rectangle.getStartX();
+            double beamRightEdge = beamLeftEdgeX + section.getWidth();
             double beamTopEdgeY = rectangle.getStartY();
             double beamBottomEdgeY = beamTopEdgeY + rectangle.getDepth();
 
             // Drawing main reinforcement
             drawReinforcementRows(realWidth, beamLeftEdgeX, beamTopEdgeY, topDiameters, topVerticalSpacings, Constants.BEAM_TOP_FACE);
             drawReinforcementRows(realWidth, beamLeftEdgeX, beamBottomEdgeY, bottomDiameters, bottomVerticalSpacings, Constants.BEAM_BOTTOM_FACE);
+
+            // Drawing main reinforcement description
+            drawReinforcementDescription(beamRightEdge, beamTopEdgeY, beamBottomEdgeY);
 
             graphicsContext.closePath();
         } else {
