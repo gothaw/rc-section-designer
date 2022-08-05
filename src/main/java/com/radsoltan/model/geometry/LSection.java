@@ -3,6 +3,8 @@ package com.radsoltan.model.geometry;
 /**
  * Class used to represent L shaped section with asymmetrical flange at the top.
  * It inherits from T section.
+ *
+ * Note: This is WIP section not used currently in the app.
  */
 public class LSection extends TSection {
 
@@ -32,7 +34,5 @@ public class LSection extends TSection {
      * Draws section on canvas.
      */
     @Override
-    public void draw() {
-        // TODO: 17/07/2021 This should draw the section
-    }
+    public void draw() {}
 }

@@ -277,13 +277,13 @@ public class BeamReinforcement extends Reinforcement {
 
     @Override
     public int getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
-        // TODO: 26/06/2022
+        // TODO: 26/06/2022 Use this in SLS cracking calcs
         return 0;
     }
 
     @Override
     public int getMaxBarDiameterForTensileReinforcement(double SlsMoment) {
-        // TODO: 26/06/2022
+        // TODO: 26/06/2022 Use this in SLS cracking calcs
         return 0;
     }
 

@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 
 /**
  * Class used to represent T shaped section with symmetrical flange at the top.
+ *
+ * Note: This is WIP section not used currently in the app.
  */
 public class TSection extends Section implements Flanged {
 
@@ -292,9 +294,7 @@ public class TSection extends Section implements Flanged {
      * Draws section on canvas.
      */
     @Override
-    public void draw() {
-        // TODO: 18/05/2020
-    }
+    public void draw() {}
 
     /**
      * Method checks if T Section has been setup correctly and can be drawn.
