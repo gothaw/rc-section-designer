@@ -7,6 +7,8 @@ import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.Section;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 import java.io.Serializable;
 
@@ -24,6 +26,10 @@ public class ShearLinks implements Drawable, Serializable {
     private final GraphicsContext graphicsContext;
     private final Color colour;
     private final double beamImageScale;
+    // Constants used in drawing shear links
+    public static final int DEFAULT_TEXT_SIZE = 10;
+    public static final int DEFAULT_TEXT_OFFSET = 5;
+    public static final String DEFAULT_TEXT_FONT = "Source Sans Pro";
 
     private static final long serialVersionUID = 1L;
 
@@ -119,21 +125,40 @@ public class ShearLinks implements Drawable, Serializable {
     }
 
     /**
-     * // TODO: 05/08/2022 Add method
+     * Gets shear links description.
+     *
+     * @param shouldIncludeLabel determines whether or not include links label
+     * @return shear links description
      */
-    private void drawShearLinksDescription() {
+    public String getShearLinksDescription(boolean shouldIncludeLabel) {
+        String label = shouldIncludeLabel ? "Shear links:\n" : "";
+
+        return String.format("%s%d x \u03c6%d@%d mm", label, legs, diameter, spacing);
+    }
+
+    /**
+     * Draws shear links description to the right of the beam image in the middle of the height.
+     */
+    private void drawShearLinksDescription(double beamRightEdgeX, double beamTopEdgeY, double beamBottomEdgeY) {
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
         }
         graphicsContext.beginPath();
 
+        String description = getShearLinksDescription(false);
 
+        Font font = new Font(ShearLinks.DEFAULT_TEXT_FONT, ShearLinks.DEFAULT_TEXT_SIZE);
+
+        graphicsContext.setFont(font);
+        graphicsContext.setTextAlign(TextAlignment.LEFT);
+
+        graphicsContext.fillText(description, beamRightEdgeX + ShearLinks.DEFAULT_TEXT_OFFSET, 0.5 * (beamTopEdgeY + beamBottomEdgeY));
 
         graphicsContext.closePath();
     }
 
     /**
-     * Draws shear links.
+     * Draws shear links and shear links description.
      */
     @Override
     public void draw() {
@@ -209,6 +234,10 @@ public class ShearLinks implements Drawable, Serializable {
                     -90
             );
             graphicsContext.stroke();
+
+            // Drawing shear links description
+            drawShearLinksDescription(beamRightEdgeX, beamTopEdgeY, beamBottomEdgeY);
+
             graphicsContext.closePath();
         }
     }

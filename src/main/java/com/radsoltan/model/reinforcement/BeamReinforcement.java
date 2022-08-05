@@ -341,7 +341,7 @@ public class BeamReinforcement extends Reinforcement {
     public String getDescription() {
         String descriptionTopRows = "Top rows:\n" + getDescriptionForReinforcementRows(topDiameters, true);
         String descriptionBottomRows = "Bottom rows:\n" + getDescriptionForReinforcementRows(bottomDiameters, true);
-        String descriptionShearLinks = String.format("Shear links:\n%d x \u03c6%d@%d mm", shearLinks.getLegs(), shearLinks.getDiameter(), shearLinks.getSpacing());
+        String descriptionShearLinks = shearLinks.getShearLinksDescription(true);
         return descriptionTopRows + "\n" + descriptionBottomRows + "\n" + descriptionShearLinks;
     }
 
@@ -559,7 +559,7 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     * Draws main beam reinforcement. It uses drawReinforcementRows method.
+     * Draws main beam reinforcement and main reinforcement description. It uses drawReinforcementRows method.
      */
     @Override
     public void draw() {
