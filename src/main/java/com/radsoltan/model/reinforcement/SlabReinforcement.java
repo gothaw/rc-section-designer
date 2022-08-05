@@ -511,6 +511,9 @@ public class SlabReinforcement extends Reinforcement {
      */
     private void drawMainReinforcementLayers(double realWidth, double slabLeftEdgeX, double slabEdgeY, List<Double> reinforcementY, List<Integer> diameters, List<Integer> spacings, String slabFace) {
         if (!slabFace.equals(Constants.SLAB_BOTTOM_FACE) && !slabFace.equals(Constants.SLAB_TOP_FACE)) {
+            throw new IllegalArgumentException(UIText.INVALID_SLAB_FACE);
+        }
+        if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_SLAB_REINFORCEMENT);
         }
 

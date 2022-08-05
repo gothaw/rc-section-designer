@@ -30,7 +30,7 @@ public class BeamReinforcement extends Reinforcement {
     private final GraphicsContext graphicsContext;
     private final Color colour;
     private final double beamImageScale;
-    // Constants used in drawing slab reinforcement
+    // Constants used in drawing beam reinforcement
     public static final int DEFAULT_TEXT_SIZE = 10;
     public static final int DEFAULT_TEXT_OFFSET = 5;
 
@@ -382,42 +382,72 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
+     * Draws reinforcement description for given beam face top or bottom.
+     * Reinforcement description is placed to the right of the beam image and at similar level as reinforcement rows.
+     * It uses getDescriptionForReinforcementRows method to get distance from each bar to the edge.
+     * It then calculates the average distance in scale for each row. Description labels are places at these distances.
      *
+     * @param diameters list of reinforcement rows, each row is a list with bar diameters in mm
+     * @param clearVerticalSpacings clear vertical spacings between rows in mm
+     * @param nominalCover nominal cover in mm
+     * @param font font that the description should be drawn with
+     * @param beamRightEdgeX X coordinate of the right edge of the beam
+     * @param beamEdgeY Y coordinate of the edge top/bottom
+     * @param beamFace beam face top or bottom
      */
-    private void drawReinforcementDescription(double beamRightEdge, double beamTopEdgeY, double beamBottomEdgeY) {
+    private void drawReinforcementDescriptionForReinforcementRows(List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, int nominalCover, Font font, double beamRightEdgeX, double beamEdgeY, String beamFace) {
+        if (!beamFace.equals(Constants.BEAM_BOTTOM_FACE) && !beamFace.equals(Constants.BEAM_TOP_FACE)) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_FACE);
+        }
         if (!isSetupToBeDrawn()) {
             throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
         }
         graphicsContext.beginPath();
 
-        String descriptionTopLayers = getDescriptionForReinforcementRows(topDiameters, false);
-        String descriptionBottomLayers = getDescriptionForReinforcementRows(bottomDiameters, false);
+        String description = getDescriptionForReinforcementRows(diameters, false);
 
-        List<String> descriptionTopLayersList = Arrays.asList(descriptionTopLayers.replaceAll(",  ", ",").replaceAll(" ", "+").split(","));
-        List<String> descriptionBottomLayersList = Arrays.asList(descriptionBottomLayers.replaceAll(",  ", ",").replaceAll(" ", "+").split(","));
+        List<String> descriptionList = Arrays.asList(description.replaceAll(",  ", ",").replaceAll(" ", "+").split(","));
 
-        List<List<Double>> distanceFromCentreToEdge1 = getDistanceFromCentreOfEachBarToEdge(topDiameters, topVerticalSpacings, designParameters.getNominalCoverTop());
-        List<List<Double>> distanceFromCentreToEdge2 = getDistanceFromCentreOfEachBarToEdge(bottomDiameters, bottomVerticalSpacings, designParameters.getNominalCoverBottom());
+        List<List<Double>> distanceFromCentreToEdge = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, nominalCover);
 
-        List<Double> averageDistance1 = distanceFromCentreToEdge1.stream().map(row -> row.stream().mapToDouble(x -> x * beamImageScale).average().orElse(0)).collect(Collectors.toList());
-        List<Double> averageDistance2 = distanceFromCentreToEdge2.stream().map(row -> row.stream().mapToDouble(x -> x * beamImageScale).average().orElse(0)).collect(Collectors.toList());
-
-        Font font = new Font(Reinforcement.DEFAULT_TEXT_FONT, BeamReinforcement.DEFAULT_TEXT_SIZE);
+        // Average distances from centre of each row to beam edge
+        List<Double> averageDistanceInScale = distanceFromCentreToEdge
+                .stream()
+                .map(row -> row
+                        .stream()
+                        .mapToDouble(x -> x * beamImageScale)
+                        .average()
+                        .orElse(0)
+                ).collect(Collectors.toList());
 
         graphicsContext.setFont(font);
         graphicsContext.setTextAlign(TextAlignment.LEFT);
 
-        IntStream.range(0, descriptionTopLayersList.size()).forEach(i -> {
-            String description = descriptionTopLayersList.get(i).substring(1);
-            graphicsContext.fillText(description, beamRightEdge + BeamReinforcement.DEFAULT_TEXT_OFFSET, beamTopEdgeY + averageDistance1.get(i));
-        });
+        // Drawing description for each row of given beam face
+        IntStream.range(0, descriptionList.size()).forEach(i -> {
+            String rowDescription = descriptionList.get(i).substring(1); // Removing first character (space that was replaced to +)
+            double coordinateY = beamFace.equals(Constants.BEAM_TOP_FACE)
+                    ? beamEdgeY + averageDistanceInScale.get(i)
+                    : beamEdgeY - averageDistanceInScale.get(i);
 
-        IntStream.range(0, descriptionBottomLayersList.size()).forEach(i -> {
-            String description = descriptionTopLayersList.get(i).substring(1);
-            graphicsContext.fillText(description, beamRightEdge + BeamReinforcement.DEFAULT_TEXT_OFFSET, beamBottomEdgeY - averageDistance2.get(i));
+            graphicsContext.fillText(rowDescription, beamRightEdgeX + BeamReinforcement.DEFAULT_TEXT_OFFSET, coordinateY);
         });
 
         graphicsContext.closePath();
+    }
+
+    /**
+     * Draws reinforcement description for top and bottom face.
+     */
+    private void drawReinforcementDescription(double beamRightEdge, double beamTopEdgeY, double beamBottomEdgeY) {
+        if (!isSetupToBeDrawn()) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+
+        Font font = new Font(Reinforcement.DEFAULT_TEXT_FONT, BeamReinforcement.DEFAULT_TEXT_SIZE);
+
+        drawReinforcementDescriptionForReinforcementRows(topDiameters, topVerticalSpacings, designParameters.getNominalCoverTop(), font, beamRightEdge, beamTopEdgeY, Constants.BEAM_TOP_FACE);
+        drawReinforcementDescriptionForReinforcementRows(bottomDiameters, bottomVerticalSpacings, designParameters.getNominalCoverBottom(), font, beamRightEdge, beamBottomEdgeY, Constants.BEAM_BOTTOM_FACE);
     }
 
     /**
@@ -444,7 +474,7 @@ public class BeamReinforcement extends Reinforcement {
                 distanceSign = -1;
                 break;
             default:
-                throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+                throw new IllegalArgumentException(UIText.INVALID_BEAM_FACE);
         }
 
         return IntStream.range(0, diameters.size()).mapToObj(i -> {

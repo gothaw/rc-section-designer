@@ -25,6 +25,7 @@ public class UIText {
     public static final String INVALID_REDISTRIBUTION_RATIO = "Redistribution ratio must be between 0.7 and 1.0.";
     public static final String INVALID_SLAB_REINFORCEMENT = "Invalid slab reinforcement.";
     public static final String INVALID_BEAM_REINFORCEMENT = "Invalid beam reinforcement.";
+    public static final String INVALID_BEAM_FACE = "Invalid beam face.";
     public static final String INVALID_SLAB_GEOMETRY = "Invalid slab geometry.";
     public static final String INVALID_BEAM_GEOMETRY = "Invalid beam geometry.";
     public static final String INVALID_DIMENSION_LINE = "Invalid dimension line.";
@@ -32,6 +33,7 @@ public class UIText {
     public static final String INVALID_BAR_SPACING_CRACKS = "Bar spacing must not exceed 5(c + 0.5d) for cracking calculations.";
     public static final String INVALID_BENDING_CAPACITY = "Flexure calculations required to run cracking check.";
     public static final String INVALID_SHEAR_LINKS = "Invalid shear links";
+    public static final String INVALID_SLAB_FACE = "Invalid slab face.";
     public static final String PASS = "Pass";
     public static final String REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE = "Compressive force greater than the capacity. Redesign section.";
     public static final String REDESIGN_SECTION_DUE_TO_HIGH_SHEAR = "Shear force greater than compressive strut capacity. Redesign section.";
