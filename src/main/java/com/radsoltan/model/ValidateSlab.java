@@ -26,7 +26,7 @@ public class ValidateSlab implements Validation {
      */
     public ValidateSlab(int slabThickness, SlabReinforcement slabReinforcement, DesignParameters designParameters) {
         this.validationMessages = new ArrayList<>();
-        setValidateMessagesForSlabReinforcementHorizontalAndVerticalSpacings(slabReinforcement, designParameters);
+        setValidationMessagesForSpacings(slabReinforcement, designParameters);
         setValidateMessagesForSlabThickness(slabThickness, slabReinforcement, designParameters);
     }
 
@@ -38,7 +38,7 @@ public class ValidateSlab implements Validation {
      * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
      * @param designParameters  design parameters used in project defined in DesignParameters object
      */
-    private void setValidateMessagesForSlabReinforcementHorizontalAndVerticalSpacings(SlabReinforcement slabReinforcement, DesignParameters designParameters) {
+    private void setValidationMessagesForSpacings(SlabReinforcement slabReinforcement, DesignParameters designParameters) {
         List<Integer> topDiameters = slabReinforcement.getTopDiameters();
         List<Integer> additionalTopDiameters = slabReinforcement.getAdditionalTopDiameters();
         List<Integer> topSpacings = slabReinforcement.getTopSpacings();
@@ -49,10 +49,10 @@ public class ValidateSlab implements Validation {
         List<Integer> bottomVerticalSpacings = slabReinforcement.getBottomVerticalSpacings();
         int aggregateSize = designParameters.getAggregateSize();
 
-        validationMessages.addAll(getValidationMessagesForSlabReinforcementHorizontalSpacings("top", topDiameters, additionalTopDiameters, topSpacings, aggregateSize));
-        validationMessages.addAll(getValidationMessagesForSlabReinforcementHorizontalSpacings("bottom", bottomDiameters, additionalBottomDiameters, bottomSpacings, aggregateSize));
-        validationMessages.addAll(getValidateMessagesForSlabReinforcementVerticalSpacings("top", topDiameters, additionalTopDiameters, topVerticalSpacings, aggregateSize));
-        validationMessages.addAll(getValidateMessagesForSlabReinforcementVerticalSpacings("bottom", bottomDiameters, additionalBottomDiameters, bottomVerticalSpacings, aggregateSize));
+        validationMessages.addAll(getValidationMessagesForHorizontalSpacings(Constants.SLAB_TOP_FACE, topDiameters, additionalTopDiameters, topSpacings, aggregateSize));
+        validationMessages.addAll(getValidationMessagesForHorizontalSpacings(Constants.SLAB_BOTTOM_FACE, bottomDiameters, additionalBottomDiameters, bottomSpacings, aggregateSize));
+        validationMessages.addAll(getValidateMessagesForVerticalSpacings(Constants.SLAB_TOP_FACE, topDiameters, additionalTopDiameters, topVerticalSpacings, aggregateSize));
+        validationMessages.addAll(getValidateMessagesForVerticalSpacings(Constants.SLAB_BOTTOM_FACE, bottomDiameters, additionalBottomDiameters, bottomVerticalSpacings, aggregateSize));
     }
 
     /**
@@ -61,16 +61,20 @@ public class ValidateSlab implements Validation {
      * The minimum spacing is maximum of 20 mm, aggregate size + 5mm or bar diameter.
      * If spacing is less than minimum spacing a String message is added to the list that is returned.
      *
-     * @param location            layer location "top" or "bottom"
+     * @param face                slab face top or bottom
      * @param diameters           main bar diameters in subsequent layers as a list
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
      * @param spacings            spacings between main bar centers in subsequent layers as a list
      * @param aggregateSize       aggregate size in mm
      * @return List of validation messages for horizontal spacing
      */
-    private List<String> getValidationMessagesForSlabReinforcementHorizontalSpacings(String location, List<Integer> diameters, List<Integer> additionalDiameters,
-                                                                                     List<Integer> spacings, int aggregateSize) {
+    private List<String> getValidationMessagesForHorizontalSpacings(String face,
+                                                                    List<Integer> diameters,
+                                                                    List<Integer> additionalDiameters,
+                                                                    List<Integer> spacings,
+                                                                    int aggregateSize) {
         List<String> validationMessages = new ArrayList<>();
+        String location = face.equals(Constants.SLAB_TOP_FACE) ? "top" : "bottom";
 
         for (int i = 0; i < diameters.size(); i++) {
             int minSpacing = IntStream.of(20, aggregateSize + 5, diameters.get(i), additionalDiameters.get(i))
@@ -95,16 +99,21 @@ public class ValidateSlab implements Validation {
      * The minimum spacing is maximum of 20 mm, aggregate size + 5mm or bar diameter.
      * If spacing is less than minimum spacing a String message is added to the list that is returned.
      *
-     * @param location            layer location "top" or "bottom"
+     * @param face                slab face top or bottom
      * @param diameters           main bar diameters in subsequent layers as a list
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
      * @param verticalSpacings    clear vertical spacing between layers
      * @param aggregateSize       aggregate size in mm
      * @return List of validation messages for vertical spacing
      */
-    private List<String> getValidateMessagesForSlabReinforcementVerticalSpacings(String location, List<Integer> diameters, List<Integer> additionalDiameters,
-                                                                                 List<Integer> verticalSpacings, int aggregateSize) {
+    private List<String> getValidateMessagesForVerticalSpacings(String face,
+                                                                List<Integer> diameters,
+                                                                List<Integer> additionalDiameters,
+                                                                List<Integer> verticalSpacings,
+                                                                int aggregateSize) {
         List<String> validationMessages = new ArrayList<>();
+        String location = face.equals(Constants.SLAB_TOP_FACE) ? "top" : "bottom";
+
         for (int i = 1; i < diameters.size(); i++) {
             int minSpacing = IntStream.of(20, aggregateSize + 5, diameters.get(i - 1), diameters.get(i), additionalDiameters.get(i - 1), additionalDiameters.get(i))
                     .max()
@@ -141,20 +150,26 @@ public class ValidateSlab implements Validation {
         additionalDiameters.addAll(additionalTopDiameters);
         additionalDiameters.addAll(additionalBottomDiameters);
 
-        List<Integer> reinforcementZonesHeights = IntStream.range(0, diameters.size())
+        List<Integer> reinforcementZonesHeights = IntStream
+                .range(0, diameters.size())
                 .mapToObj(i -> Math.max(diameters.get(i), additionalDiameters.get(i)))
                 .collect(Collectors.toList());
 
-        int sumOfReinforcementZoneHeights = reinforcementZonesHeights.stream().reduce(Integer::sum).orElse(0);
+        int sumOfReinforcementZoneHeights = reinforcementZonesHeights
+                .stream()
+                .reduce(Integer::sum)
+                .orElse(0);
 
         int sumOfClearSpacings = clearSpacings.stream()
                 .reduce(Integer::sum)
                 .orElse(0);
 
-        int minimumSpacingBetweenTopAndBottomLayers = IntStream.of(20, designParameters.getAggregateSize() + 5,
-                topDiameters.get(topDiameters.size() - 1), additionalTopDiameters.get(additionalTopDiameters.size() - 1),
-                bottomDiameters.get(bottomDiameters.size() - 1), additionalBottomDiameters.get(additionalBottomDiameters.size() - 1))
-                .max().orElse(0);
+        int minimumSpacingBetweenTopAndBottomLayers = IntStream.of(
+                20, designParameters.getAggregateSize() + 5,
+                topDiameters.get(topDiameters.size() - 1),
+                additionalTopDiameters.get(additionalTopDiameters.size() - 1),
+                bottomDiameters.get(bottomDiameters.size() - 1),
+                additionalBottomDiameters.get(additionalBottomDiameters.size() - 1)).max().orElse(0);
 
         int minimumSlabThickness = designParameters.getNominalCoverBottom() + sumOfReinforcementZoneHeights + sumOfClearSpacings + minimumSpacingBetweenTopAndBottomLayers + designParameters.getNominalCoverTop();
 
