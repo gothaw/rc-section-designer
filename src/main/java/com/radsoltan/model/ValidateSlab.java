@@ -32,7 +32,7 @@ public class ValidateSlab implements Validation {
 
     /**
      * Method that sets validation messages for horizontal bar spacings and vertical bar spacings between layers.
-     * It invokes getValidationMessagesForSlabReinforcementHorizontalSpacings and getValidateMessagesForSlabReinforcementVerticalSpacings on top and bottom reinforcement layers.
+     * It invokes getValidationMessagesForHorizontalSpacings and getValidationMessagesForVerticalSpacings on top and bottom reinforcement layers.
      * It adds all validation messages to the validationMessages field.
      *
      * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
@@ -70,7 +70,7 @@ public class ValidateSlab implements Validation {
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
      * @param spacings            spacings between main bar centers in subsequent layers as a list
      * @param aggregateSize       aggregate size in mm
-     * @return List of validation messages for horizontal spacing
+     * @return List of validation messages for horizontal spacings
      */
     private List<String> getValidationMessagesForHorizontalSpacings(String face,
                                                                     List<Integer> diameters,
@@ -108,7 +108,7 @@ public class ValidateSlab implements Validation {
      * @param additionalDiameters additional bar diameters in subsequent layers as a list
      * @param verticalSpacings    clear vertical spacing between layers
      * @param aggregateSize       aggregate size in mm
-     * @return List of validation messages for vertical spacing
+     * @return List of validation messages for vertical spacings
      */
     private List<String> getValidateMessagesForVerticalSpacings(String face,
                                                                 List<Integer> diameters,
@@ -136,8 +136,8 @@ public class ValidateSlab implements Validation {
      * If slab is not thick enough, a message is added to the validationMessages field to inform the user.
      *
      * @param slabThickness     slab thickness in mm as an integer
-     * @param slabReinforcement slab reinforcement defined using SlabReinforcement object
-     * @param designParameters  design parameters used in project defined in DesignParameters object
+     * @param slabReinforcement slab reinforcement defined using SlabReinforcement class
+     * @param designParameters  design parameters used in project defined in DesignParameters class
      */
     private void setValidateMessagesForSlabThickness(int slabThickness, SlabReinforcement slabReinforcement, DesignParameters designParameters) {
         List<Integer> clearSpacings = new ArrayList<>();

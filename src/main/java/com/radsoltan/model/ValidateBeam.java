@@ -16,22 +16,30 @@ import java.util.stream.IntStream;
  */
 public class ValidateBeam implements Validation {
 
-    private List<String> validationMessages;
+    private final List<String> validationMessages;
 
     /**
-     * @param geometry
-     * @param beamReinforcement
-     * @param designParameters
+     * Constructor. It invokes method to validate both horizontal and vertical bar spacings and method to validate beam depth.
+     * These methods add messages to the validationMessages list if some of the spacings or beam geometry is invalid.
+     *
+     * @param geometry beam geometry object
+     * @param beamReinforcement beam reinforcement object
+     * @param designParameters design parameters object
      */
     public ValidateBeam(Geometry geometry, BeamReinforcement beamReinforcement, DesignParameters designParameters) {
         this.validationMessages = new ArrayList<>();
         setValidationMessagesForSpacings(geometry, beamReinforcement, designParameters);
-        setValidationMessagesForBeamThickness(geometry, beamReinforcement, designParameters);
+        setValidationMessagesForBeamDepth(geometry, beamReinforcement, designParameters);
     }
 
     /**
-     * @param beamReinforcement
-     * @param designParameters
+     * Method that sets validation messages for horizontal bar spacings and vertical bar spacings between rows.
+     * It invokes getValidationMessagesForVerticalSpacings and getValidationMessagesForHorizontalSpacings on top and bottom reinforcement rows.
+     * It adds all validation messages to the validationMessages field.
+     *
+     * @param geometry          beam geometry
+     * @param beamReinforcement beam reinforcement object
+     * @param designParameters  design parameters object
      */
     private void setValidationMessagesForSpacings(Geometry geometry, BeamReinforcement beamReinforcement, DesignParameters designParameters) {
         List<List<Integer>> topDiameters = beamReinforcement.getTopDiameters();
@@ -54,13 +62,18 @@ public class ValidateBeam implements Validation {
     }
 
     /**
-     * // TODO: 07/08/2022 Test these
+     * Gets validation messages for clear horizontal spacings between reinforcement bars in each row.
+     * The method calculates the clear spacing based on reinforcement, nominal cover and beam geometry. It than checks it against minimum spacing required by Eurocode 2.
+     * The minimum spacing is maximum of 20 mm, aggregate size + 5mm or bar diameter.
+     * If spacing is less than minimum spacing a String message is added to the list that is returned.
      *
-     * @param face
-     * @param width
-     * @param diameters
-     * @param aggregateSize
-     * @return
+     * @param face               beam face top or bottom
+     * @param width              beam width in mm
+     * @param aggregateSize      aggregate size in mm
+     * @param nominalCoverSides  nominal cover for beam side in mm
+     * @param shearLinksDiameter shear links diameter in mm
+     * @param diameters          main bar diameters for given beam face
+     * @return List of validation messages for horizontal spacings
      */
     private List<String> getValidationMessagesForHorizontalSpacings(String face,
                                                                     int width,
@@ -93,14 +106,20 @@ public class ValidateBeam implements Validation {
         });
 
 
-
         return validationMessages;
     }
 
     /**
-     * @param face
-     * @param clearVerticalSpacings
-     * @return
+     * Gets validation messages for clear vertical spacings between reinforcement rows.
+     * The method checks if clear vertical spacings are greater than minimum spacing required by Eurocode 2.
+     * The minimum spacing is maximum of 20 mm, aggregate size + 5mm or bar diameter.
+     * If spacing is less than minimum spacing a String message is added to the list that is returned.
+     *
+     * @param face                  beam face top or bottom
+     * @param aggregateSize         aggregate size in mm
+     * @param clearVerticalSpacings clear vertical spacings between reinforcement rows for given beam face
+     * @param diameters             main bar diameters for given beam face
+     * @return List of validation messages for vertical spacings
      */
     private List<String> getValidationMessagesForVerticalSpacings(String face, int aggregateSize, List<Integer> clearVerticalSpacings, List<List<Integer>> diameters) {
         List<String> validationMessages = new ArrayList<>();
@@ -126,9 +145,18 @@ public class ValidateBeam implements Validation {
         return validationMessages;
     }
 
-    private void setValidationMessagesForBeamThickness(Geometry geometry,
-                                                       BeamReinforcement beamReinforcement,
-                                                       DesignParameters designParameters) {
+    /**
+     * Method that sets validation message for beam depth.
+     * It checks whether beam defined in Geometry object is deep enough to accommodate vertical spacing between bars, bar diameters, nominal cover etc.
+     * If beam is not deep enough, a message is added to the validationMessages field to inform the user.
+     *
+     * @param geometry          beam geometry
+     * @param beamReinforcement beam reinforcement defined using BeamReinforcement class
+     * @param designParameters  design parameters used in project defined in DesignParameters class
+     */
+    private void setValidationMessagesForBeamDepth(Geometry geometry,
+                                                   BeamReinforcement beamReinforcement,
+                                                   DesignParameters designParameters) {
         int beamDepth = geometry.getDepth();
 
         List<Integer> clearSpacings = new ArrayList<>();
@@ -154,7 +182,7 @@ public class ValidateBeam implements Validation {
                 .reduce(Integer::sum)
                 .orElse(0);
 
-        int minimumSpacingBetweenTopAndBottomLayers = IntStream.of(
+        int minimumSpacingBetweenTopAndBottomRows = IntStream.of(
                 20,
                 designParameters.getAggregateSize() + 5,
                 maxTopDiameters.get(maxTopDiameters.size() - 1),
@@ -163,7 +191,7 @@ public class ValidateBeam implements Validation {
 
         int shearLinksDiameter = beamReinforcement.getShearLinks().getDiameter();
 
-        int minimumBeamThickness = designParameters.getNominalCoverBottom() + 2 * shearLinksDiameter + sumOfReinforcementZoneHeights + sumOfClearSpacings + minimumSpacingBetweenTopAndBottomLayers + designParameters.getNominalCoverTop();
+        int minimumBeamThickness = designParameters.getNominalCoverBottom() + 2 * shearLinksDiameter + sumOfReinforcementZoneHeights + sumOfClearSpacings + minimumSpacingBetweenTopAndBottomRows + designParameters.getNominalCoverTop();
 
         if (beamDepth < minimumBeamThickness) {
             validationMessages.add(String.format("Invalid beam thickness for given reinforcement. Minimum beam depth: %d mm.", minimumBeamThickness));
