@@ -135,7 +135,7 @@ public class Project implements Serializable {
      * It calculates bending and shear capacity and crack widths based on forces and parameters provided.
      */
     private void calculateBeamProject() {
-        // TODO: 11/08/2020 Implement method
+        System.out.println("Calculating beam project.");
     }
 
     /**

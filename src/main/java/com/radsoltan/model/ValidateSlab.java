@@ -51,8 +51,12 @@ public class ValidateSlab implements Validation {
 
         validationMessages.addAll(getValidationMessagesForHorizontalSpacings(Constants.SLAB_TOP_FACE, topDiameters, additionalTopDiameters, topSpacings, aggregateSize));
         validationMessages.addAll(getValidationMessagesForHorizontalSpacings(Constants.SLAB_BOTTOM_FACE, bottomDiameters, additionalBottomDiameters, bottomSpacings, aggregateSize));
-        validationMessages.addAll(getValidateMessagesForVerticalSpacings(Constants.SLAB_TOP_FACE, topDiameters, additionalTopDiameters, topVerticalSpacings, aggregateSize));
-        validationMessages.addAll(getValidateMessagesForVerticalSpacings(Constants.SLAB_BOTTOM_FACE, bottomDiameters, additionalBottomDiameters, bottomVerticalSpacings, aggregateSize));
+        if (topVerticalSpacings.size() != 0) {
+            validationMessages.addAll(getValidateMessagesForVerticalSpacings(Constants.SLAB_TOP_FACE, topDiameters, additionalTopDiameters, topVerticalSpacings, aggregateSize));
+        }
+        if (bottomVerticalSpacings.size() != 0) {
+            validationMessages.addAll(getValidateMessagesForVerticalSpacings(Constants.SLAB_BOTTOM_FACE, bottomDiameters, additionalBottomDiameters, bottomVerticalSpacings, aggregateSize));
+        }
     }
 
     /**

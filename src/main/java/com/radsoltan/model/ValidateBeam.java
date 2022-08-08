@@ -36,8 +36,8 @@ public class ValidateBeam implements Validation {
     private void setValidationMessagesForSpacings(Geometry geometry, BeamReinforcement beamReinforcement, DesignParameters designParameters) {
         List<List<Integer>> topDiameters = beamReinforcement.getTopDiameters();
         List<List<Integer>> bottomDiameters = beamReinforcement.getBottomDiameters();
-        List<Integer> topClearSpacings = beamReinforcement.getTopVerticalSpacings();
-        List<Integer> bottomClearSpacings = beamReinforcement.getBottomVerticalSpacings();
+        List<Integer> topVerticalSpacings = beamReinforcement.getTopVerticalSpacings();
+        List<Integer> bottomVerticalSpacings = beamReinforcement.getBottomVerticalSpacings();
         int width = geometry.getWidth();
         int aggregateSize = designParameters.getAggregateSize();
         int nominalCoverSides = designParameters.getNominalCoverSides();
@@ -45,12 +45,16 @@ public class ValidateBeam implements Validation {
 
         validationMessages.addAll(getValidationMessagesForHorizontalSpacings(Constants.BEAM_TOP_FACE, width, aggregateSize, nominalCoverSides, shearLinksDiameter, topDiameters));
         validationMessages.addAll(getValidationMessagesForHorizontalSpacings(Constants.BEAM_BOTTOM_FACE, width, aggregateSize, nominalCoverSides, shearLinksDiameter, bottomDiameters));
-        validationMessages.addAll(getValidationMessagesForVerticalSpacings(Constants.BEAM_TOP_FACE, aggregateSize, topClearSpacings, topDiameters));
-        validationMessages.addAll(getValidationMessagesForVerticalSpacings(Constants.BEAM_BOTTOM_FACE, aggregateSize, bottomClearSpacings, bottomDiameters));
+        if (topVerticalSpacings.size() != 0) {
+            validationMessages.addAll(getValidationMessagesForVerticalSpacings(Constants.BEAM_TOP_FACE, aggregateSize, topVerticalSpacings, topDiameters));
+        }
+        if (bottomVerticalSpacings.size() != 0) {
+            validationMessages.addAll(getValidationMessagesForVerticalSpacings(Constants.BEAM_BOTTOM_FACE, aggregateSize, bottomVerticalSpacings, bottomDiameters));
+        }
     }
 
     /**
-     *
+     * // TODO: 07/08/2022 Test these
      *
      * @param face
      * @param width
@@ -64,6 +68,7 @@ public class ValidateBeam implements Validation {
                                                                     int nominalCoverSides,
                                                                     int shearLinksDiameter,
                                                                     List<List<Integer>> diameters) {
+        List<String> validationMessages = new ArrayList<>();
         String location = face.equals(Constants.BEAM_TOP_FACE) ? "top" : "bottom";
         double availableWidth = width - 2 * shearLinksDiameter - 2 * nominalCoverSides;
 
@@ -89,7 +94,7 @@ public class ValidateBeam implements Validation {
 
 
 
-        return List.of("");
+        return validationMessages;
     }
 
     /**
@@ -101,21 +106,21 @@ public class ValidateBeam implements Validation {
         List<String> validationMessages = new ArrayList<>();
         String location = face.equals(Constants.BEAM_TOP_FACE) ? "top" : "bottom";
 
-        IntStream.range(0, diameters.size()).forEach(i -> {
-            List<Integer> rowDiameters = diameters.get(i);
+        IntStream.range(1, diameters.size()).forEach(i -> {
+            List<Integer> diametersInPreviousRow = diameters.get(i - 1);
+            List<Integer> diametersInRow = diameters.get(i);
+            int maxDiameterInPreviousRow = Collections.max(diametersInPreviousRow);
+            int maxDiameterInRow = Collections.max(diametersInRow);
 
-            IntStream.range(1, rowDiameters.size()).forEach(j -> {
-                int minSpacing = IntStream.of(20, aggregateSize + 5, rowDiameters.get(j - 1), rowDiameters.get(j))
-                        .max()
-                        .orElse(0);
+            int minSpacing = IntStream.of(20, aggregateSize + 5, maxDiameterInPreviousRow, maxDiameterInRow)
+                    .max()
+                    .orElse(0);
 
-                if (clearVerticalSpacings.get(i) < minSpacing) {
-                    validationMessages.add(String.format(
-                            "Vertical spacing between %s and %s %s row is less than minimum required - %d mm.",
-                            Constants.ORDINAL_LABELS.get(j - 1), Constants.ORDINAL_LABELS.get(j), location.toLowerCase(), minSpacing));
-                }
-
-            });
+            if (clearVerticalSpacings.get(i - 1) < minSpacing) {
+                validationMessages.add(String.format(
+                        "Vertical spacing between %s and %s %s row is less than minimum required - %d mm.",
+                        Constants.ORDINAL_LABELS.get(i - 1), Constants.ORDINAL_LABELS.get(i), location.toLowerCase(), minSpacing));
+            }
         });
 
         return validationMessages;
@@ -161,7 +166,7 @@ public class ValidateBeam implements Validation {
         int minimumBeamThickness = designParameters.getNominalCoverBottom() + 2 * shearLinksDiameter + sumOfReinforcementZoneHeights + sumOfClearSpacings + minimumSpacingBetweenTopAndBottomLayers + designParameters.getNominalCoverTop();
 
         if (beamDepth < minimumBeamThickness) {
-            validationMessages.add(String.format("Invalid beam thickness. Minimum beam depth: %d mm.", minimumBeamThickness));
+            validationMessages.add(String.format("Invalid beam thickness for given reinforcement. Minimum beam depth: %d mm.", minimumBeamThickness));
         }
     }
 
