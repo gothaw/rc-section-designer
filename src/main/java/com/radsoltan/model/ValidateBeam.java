@@ -194,7 +194,7 @@ public class ValidateBeam implements Validation {
         int minimumBeamThickness = designParameters.getNominalCoverBottom() + 2 * shearLinksDiameter + sumOfReinforcementZoneHeights + sumOfClearSpacings + minimumSpacingBetweenTopAndBottomRows + designParameters.getNominalCoverTop();
 
         if (beamDepth < minimumBeamThickness) {
-            validationMessages.add(String.format("Invalid beam thickness for given reinforcement. Minimum beam depth: %d mm.", minimumBeamThickness));
+            validationMessages.add(String.format("Invalid beam depth for given reinforcement. Minimum beam depth: %d mm.", minimumBeamThickness));
         }
     }
 

@@ -19,7 +19,6 @@ class ValidateBeamTest {
     private static Geometry validGeometry;
     private static Geometry invalidGeometry;
     private static DesignParameters designParameters;
-    private static ShearLinks shearLinks;
     private static BeamReinforcement validBeamReinforcement;
     private static int minimumBeamDepthForValidSpacing;
     private static BeamReinforcement beamReinforcementWithInvalidHorizontalSpacing;
@@ -29,7 +28,7 @@ class ValidateBeamTest {
     @BeforeAll
     static void beforeAll() {
         designParameters = new DesignParameters(30, 25, 35, 500, 20, 1.5, 1.15, 0.85, true, true, 0.3);
-        shearLinks = new ShearLinks(500, 8, 200, 3);
+        ShearLinks shearLinks = new ShearLinks(500, 6, 200, 3);
 
         List<List<Integer>> validTopDiameters = List.of(
                 List.of(20, 25, 25, 20),
@@ -40,7 +39,7 @@ class ValidateBeamTest {
                 List.of(32, 32, 32, 32),
                 List.of(16, 16),
                 List.of(8, 8),
-                List.of(6, 6, 6, 6, 6)
+                List.of(8, 6, 6, 6, 8)
         );
         List<Integer> validTopVerticalSpacings = List.of(50, 30);
         List<Integer> validBottomVerticalSpacings = List.of(45, 40, 25);
@@ -57,7 +56,7 @@ class ValidateBeamTest {
                 List.of(6, 6)
         );
         List<Integer> invalidTopVerticalSpacings = List.of(50, 19);
-        List<Integer> invalidBottomVerticalSpacings = List.of(45, 40, 12);
+        List<Integer> invalidBottomVerticalSpacings = List.of(12, 25, 40);
 
         int topDiametersHeight = validTopDiameters
                 .stream()
@@ -85,9 +84,6 @@ class ValidateBeamTest {
                 Collections.max(validBottomDiameters.get(validBottomDiameters.size() - 1))
         ));
 
-        validGeometry = new Geometry(new Rectangle(300, 800));
-        invalidGeometry = new Geometry(new Rectangle(300, 500));
-
         minimumBeamDepthForValidSpacing = designParameters.getNominalCoverTop() +
                 topDiametersHeight +
                 topVerticalSpacingsSum +
@@ -96,6 +92,9 @@ class ValidateBeamTest {
                 bottomVerticalSpacingsSum +
                 designParameters.getNominalCoverBottom() +
                 2 * shearLinks.getDiameter();
+
+        validGeometry = new Geometry(new Rectangle(300, minimumBeamDepthForValidSpacing));
+        invalidGeometry = new Geometry(new Rectangle(300, minimumBeamDepthForValidSpacing - 10));
 
         validBeamReinforcement = new BeamReinforcement(
                 validTopDiameters,
@@ -139,21 +138,50 @@ class ValidateBeamTest {
 
     @Test
     void errorMessageIsAddedWhenBeamDepthIsInvalid() {
+        ValidateBeam validateBeam = new ValidateBeam(invalidGeometry, validBeamReinforcement, designParameters);
 
+        List<String> validationMessages = validateBeam.getValidationMessages();
+
+        assertEquals(1, validationMessages.size());
+        assertEquals(String.format("Invalid beam depth for given reinforcement. Minimum beam depth: %s mm.", minimumBeamDepthForValidSpacing), validationMessages.get(0));
     }
 
     @Test
     void errorMessageIsAddedWhenHorizontalBarSpacingIsInvalid() {
+        ValidateBeam validateBeam = new ValidateBeam(validGeometry, beamReinforcementWithInvalidHorizontalSpacing, designParameters);
 
+        List<String> validationMessages = validateBeam.getValidationMessages();
+
+        assertEquals(4, validationMessages.size());
+        assertEquals("Horizontal spacing between bars in 1st top row is less than minimum required - 25 mm.", validationMessages.get(0));
+        assertEquals("Horizontal spacing between bars in 3rd top row is less than minimum required - 25 mm.", validationMessages.get(1));
+        assertEquals("Horizontal spacing between bars in 1st bottom row is less than minimum required - 32 mm.", validationMessages.get(2));
+        assertEquals("Horizontal spacing between bars in 2nd bottom row is less than minimum required - 25 mm.", validationMessages.get(3));
     }
 
     @Test
     void errorMessageIsAddedWhenVerticalSpacingBetweenRowsIsInvalid() {
+        ValidateBeam validateBeam = new ValidateBeam(validGeometry, beamReinforcementWithInvalidVerticalSpacing, designParameters);
 
+        List<String> validationMessages = validateBeam.getValidationMessages();
+
+        assertEquals(2, validationMessages.size());
+        assertEquals("Vertical spacing between 2nd and 3rd top row is less than minimum required - 25 mm.", validationMessages.get(0));
+        assertEquals("Vertical spacing between 1st and 2nd bottom row is less than minimum required - 32 mm.", validationMessages.get(1));
     }
 
     @Test
     void errorMessageIsAddedWhenBeamReinforcementIsInvalid() {
+        ValidateBeam validateBeam = new ValidateBeam(validGeometry, invalidBeamReinforcement, designParameters);
 
+        List<String> validationMessages = validateBeam.getValidationMessages();
+
+        assertEquals(6, validationMessages.size());
+        assertEquals("Horizontal spacing between bars in 1st top row is less than minimum required - 25 mm.", validationMessages.get(0));
+        assertEquals("Horizontal spacing between bars in 3rd top row is less than minimum required - 25 mm.", validationMessages.get(1));
+        assertEquals("Horizontal spacing between bars in 1st bottom row is less than minimum required - 32 mm.", validationMessages.get(2));
+        assertEquals("Horizontal spacing between bars in 2nd bottom row is less than minimum required - 25 mm.", validationMessages.get(3));
+        assertEquals("Vertical spacing between 2nd and 3rd top row is less than minimum required - 25 mm.", validationMessages.get(4));
+        assertEquals("Vertical spacing between 1st and 2nd bottom row is less than minimum required - 32 mm.", validationMessages.get(5));
     }
 }
