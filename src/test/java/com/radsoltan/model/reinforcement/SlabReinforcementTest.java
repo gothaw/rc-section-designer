@@ -24,12 +24,30 @@ class SlabReinforcementTest {
         SlsMomentSagging = 100;
         SlsMomentHogging = -100;
 
-        slabReinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
-                List.of(32), List.of(0), List.of(175), Collections.emptyList());
-        slabReinforcementWithMultipleLayers = new SlabReinforcement(List.of(20, 20, 10), List.of(0, 0, 0), List.of(200, 200, 175), List.of(25, 25),
-                List.of(20, 20, 16, 16), List.of(0, 0, 0, 0), List.of(250, 250, 200, 200), List.of(50, 40, 30));
-        slabReinforcementWithAdditionalReinforcement = new SlabReinforcement(List.of(20, 20, 10), List.of(16, 0, 12), List.of(200, 200, 175), List.of(25, 25),
-                List.of(20, 20, 16, 16), List.of(25, 0, 0, 16), List.of(250, 250, 200, 200), List.of(50, 40, 30));
+        slabReinforcement = new SlabReinforcement(List.of(25),
+                List.of(0),
+                List.of(200),
+                Collections.emptyList(),
+                List.of(32),
+                List.of(0),
+                List.of(175),
+                Collections.emptyList());
+        slabReinforcementWithMultipleLayers = new SlabReinforcement(List.of(20, 20, 10),
+                List.of(0, 0, 0),
+                List.of(200, 200, 175),
+                List.of(25, 25),
+                List.of(20, 20, 16, 16),
+                List.of(0, 0, 0, 0),
+                List.of(250, 250, 200, 200),
+                List.of(50, 40, 30));
+        slabReinforcementWithAdditionalReinforcement = new SlabReinforcement(List.of(20, 20, 10),
+                List.of(16, 0, 12),
+                List.of(200, 200, 175),
+                List.of(25, 25),
+                List.of(20, 20, 16, 16),
+                List.of(25, 0, 0, 16),
+                List.of(250, 250, 200, 200),
+                List.of(50, 40, 30));
     }
 
     @Test
@@ -146,6 +164,7 @@ class SlabReinforcementTest {
 
         assertEquals(200, maxSpacing);
         assertEquals(200, maxSpacingForReinforcementWithAdditionalRebar);
+        assertEquals(200, maxSpacingForReinforcementWithAdditionalRebar);
         assertEquals(200, maxSpacingForReinforcementWithMultipleLayers);
     }
 
@@ -158,5 +177,16 @@ class SlabReinforcementTest {
         assertEquals(25, maxDiameter);
         assertEquals(20, maxDiameterForReinforcementWithAdditionalRebar);
         assertEquals(20, maxDiameterForReinforcementWithMultipleLayers);
+    }
+
+    @Test
+    void shouldGetDescription() {
+        String description = slabReinforcementWithAdditionalReinforcement.getDescription();
+
+        assertEquals("Top layers:\n" +
+                "1st layer: \u03c620@200 + \u03c616@200,  2nd layer: \u03c620@200,  3rd layer: \u03c610@175 + \u03c612@175\n" +
+                "Bottom layers:\n" +
+                "1st layer: \u03c620@250 + \u03c625@250,  2nd layer: \u03c620@250,  3rd layer: \u03c616@200,  4th layer: \u03c616@200 + \u03c616@200",
+                description);
     }
 }
