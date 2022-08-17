@@ -71,6 +71,28 @@ public class BeamReinforcement extends Reinforcement {
         this(topDiameters, topVerticalSpacings, bottomDiameters, bottomVerticalSpacings, shearLinks, null, null, null, null, 0);
     }
 
+    /**
+     * Constructor used in structural calculations.
+     * It includes section and design parameters objects. Can be used in SLS calculations.
+     *
+     * @param topDiameters           contains top bar diameters in mm
+     * @param topVerticalSpacings    clear vertical spacings between top rows in mm
+     * @param bottomDiameters        contains bottom bar diameters in mm
+     * @param bottomVerticalSpacings clear vertical spacings between bottom rows in mm
+     * @param shearLinks             shear links object
+     * @param designParameters       DesignParameters object
+     * @param section                beam section
+     *
+     */
+    public BeamReinforcement(List<List<Integer>> topDiameters,
+                             List<Integer> topVerticalSpacings,
+                             List<List<Integer>> bottomDiameters,
+                             List<Integer> bottomVerticalSpacings,
+                             ShearLinks shearLinks,
+                             DesignParameters designParameters,
+                             Section section) {
+        this(topDiameters, topVerticalSpacings, bottomDiameters, bottomVerticalSpacings, shearLinks, designParameters, section, null, null, 0);
+    }
 
     /**
      * Constructor. Used in structural calculations.
@@ -275,16 +297,50 @@ public class BeamReinforcement extends Reinforcement {
         return sumOfFirstMomentsOfArea / sumOfAreas;
     }
 
+    /**
+     * Gets max horizontal spacing between reinforcement bars for tensile reinforcement. This is measured between bar centres.
+     *
+     * @param SlsMoment SLS moment in kNm/m
+     * @return max bar spacing for tensile reinforcement
+     */
     @Override
     public int getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
-        // TODO: 26/06/2022 Use this in SLS cracking calcs
-        return 0;
+        if (designParameters == null || section == null) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+
+        List<List<Integer>> diameters = (SlsMoment >= 0) ? bottomDiameters : topDiameters;
+
+        int nominalCover = designParameters.getNominalCoverSides();
+        int shearLinkDiameter = shearLinks.getDiameter();
+        int width = section.getWidth();
+
+        int availableWidth = width - 2 * nominalCover - 2 * shearLinkDiameter;
+
+        List<Integer> horizontalSpacings = diameters
+                .stream()
+                .map(row -> {
+                    int numberOfBars = row.size();
+
+                    // spacings between bar centres
+                    return (availableWidth - row.get(0)) / (numberOfBars - 1);
+                }).collect(Collectors.toList());
+
+        return Collections.max(horizontalSpacings);
     }
 
+    /**
+     * Gets max reinforcement bar diameter for tensile reinforcement.
+     *
+     * @param SlsMoment SLS moment in kNm/m
+     * @return max bar diameter for tensile reinforcement
+     */
     @Override
     public int getMaxBarDiameterForTensileReinforcement(double SlsMoment) {
-        // TODO: 26/06/2022 Use this in SLS cracking calcs
-        return 0;
+        List<List<Integer>> diameters = (SlsMoment >= 0) ? bottomDiameters : topDiameters;
+        List<Integer> flattenDiameters = diameters.stream().flatMap(List::stream).collect(Collectors.toList());
+
+        return Collections.max(flattenDiameters);
     }
 
     /**

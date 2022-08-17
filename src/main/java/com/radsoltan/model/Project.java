@@ -24,7 +24,7 @@ public class Project implements Serializable {
     private String UlsMoment;
     private String SlsMoment;
     private String UlsShear;
-    private String elementType = "beam"; // HARDCODED
+    private String elementType = "beam"; // HARDCODED // TODO: 14/08/2022 Change this
     private Geometry geometry;
     private Reinforcement reinforcement;
     private DesignParameters designParameters;
