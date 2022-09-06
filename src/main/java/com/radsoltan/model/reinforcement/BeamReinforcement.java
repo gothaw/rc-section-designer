@@ -244,7 +244,7 @@ public class BeamReinforcement extends Reinforcement {
      * @param nominalCover             nominal cover for given beam's edge in mm
      * @return List of reinforcement rows, each row is list that stores first moment of area (in mm3) of each bar in that row
      */
-    public List<List<Double>> getFirstMomentOfAreaForReinforcementBars(List<List<Double>> areasOfReinforcementBars, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, int nominalCover) {
+    private List<List<Double>> getFirstMomentOfAreaForReinforcementBars(List<List<Double>> areasOfReinforcementBars, List<List<Integer>> diameters, List<Integer> clearVerticalSpacings, int nominalCover) {
 
         List<List<Double>> distanceFromCentreOfEachBarToEdge = getDistanceFromCentreOfEachBarToEdge(diameters, clearVerticalSpacings, nominalCover);
 
@@ -300,7 +300,7 @@ public class BeamReinforcement extends Reinforcement {
     /**
      * Gets max horizontal spacing between reinforcement bars for tensile reinforcement. This is measured between bar centres.
      *
-     * @param SlsMoment SLS moment in kNm/m
+     * @param SlsMoment SLS moment in kNm
      * @return max bar spacing for tensile reinforcement
      */
     @Override
@@ -332,7 +332,7 @@ public class BeamReinforcement extends Reinforcement {
     /**
      * Gets max reinforcement bar diameter for tensile reinforcement.
      *
-     * @param SlsMoment SLS moment in kNm/m
+     * @param SlsMoment SLS moment in kNm
      * @return max bar diameter for tensile reinforcement
      */
     @Override
