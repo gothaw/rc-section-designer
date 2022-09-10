@@ -298,13 +298,14 @@ public class BeamReinforcement extends Reinforcement {
     }
 
     /**
-     * Gets max horizontal spacing between reinforcement bars for tensile reinforcement. This is measured between bar centres.
+     * Gets max horizontal spacing between reinforcement bars for tensile reinforcement.
+     * This is measured between bar centres for the first bar row - closes to the beam edge.
      *
      * @param SlsMoment SLS moment in kNm
      * @return max bar spacing for tensile reinforcement
      */
     @Override
-    public int getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
+    public double getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
         if (designParameters == null || section == null) {
             throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
         }
@@ -315,22 +316,19 @@ public class BeamReinforcement extends Reinforcement {
         int shearLinkDiameter = shearLinks.getDiameter();
         int width = section.getWidth();
 
-        int availableWidth = width - 2 * nominalCover - 2 * shearLinkDiameter;
+        double availableWidth = width - 2 * nominalCover - 2 * shearLinkDiameter;
 
-        List<Integer> horizontalSpacings = diameters
-                .stream()
-                .map(row -> {
-                    int numberOfBars = row.size();
+        List<Integer> firstRow = diameters.get(0);
 
-                    // spacings between bar centres
-                    return (availableWidth - row.get(0)) / (numberOfBars - 1);
-                }).collect(Collectors.toList());
+        int numberOfBars = firstRow.size();
 
-        return Collections.max(horizontalSpacings);
+        // Spacings between bar centres
+        return (availableWidth - firstRow.get(0)) / (numberOfBars - 1);
     }
 
     /**
      * Gets max reinforcement bar diameter for tensile reinforcement.
+     * This is done for the first row of reinforcement - closest to the edge.
      *
      * @param SlsMoment SLS moment in kNm
      * @return max bar diameter for tensile reinforcement
@@ -338,9 +336,9 @@ public class BeamReinforcement extends Reinforcement {
     @Override
     public int getMaxBarDiameterForTensileReinforcement(double SlsMoment) {
         List<List<Integer>> diameters = (SlsMoment >= 0) ? bottomDiameters : topDiameters;
-        List<Integer> flattenDiameters = diameters.stream().flatMap(List::stream).collect(Collectors.toList());
+        List<Integer> firstRow = diameters.get(0);
 
-        return Collections.max(flattenDiameters);
+        return Collections.max(firstRow);
     }
 
     /**

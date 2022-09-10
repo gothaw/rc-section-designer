@@ -41,7 +41,7 @@ public interface Cracking {
             double neutralAxis,
             double UlsMoment,
             double SlsMoment,
-            int maxSpacing,
+            double maxSpacing,
             int maxBarDiameter,
             double providedReinforcement,
             double requirementReinforcement,

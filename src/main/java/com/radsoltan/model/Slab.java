@@ -101,7 +101,7 @@ public class Slab implements Flexure, Cracking, Serializable {
         int width = geometry.getWidth();
         int depth = geometry.getDepth();
         double neutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
-        int maxSpacing = reinforcement.getMaxBarSpacingForTensileReinforcement(SlsMoment);
+        double maxSpacing = reinforcement.getMaxBarSpacingForTensileReinforcement(SlsMoment);
         int maxBarDiameter = reinforcement.getMaxBarDiameterForTensileReinforcement(SlsMoment);
 
         this.crackWidth = calculateCrackWidth(width, depth, effectiveDepth, neutralAxis, UlsMoment, SlsMoment, maxSpacing, maxBarDiameter, providedTensileReinforcement, requiredTensileReinforcement, concrete, designParameters);

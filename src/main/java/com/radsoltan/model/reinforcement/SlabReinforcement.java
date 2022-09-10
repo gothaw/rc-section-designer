@@ -1,17 +1,15 @@
 package com.radsoltan.model.reinforcement;
 
-import com.radsoltan.model.DesignParameters;
-import com.radsoltan.model.geometry.SlabStrip;
 import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.UIText;
-
+import com.radsoltan.model.DesignParameters;
+import com.radsoltan.model.geometry.SlabStrip;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -341,19 +339,21 @@ public class SlabReinforcement extends Reinforcement {
 
     /**
      * Gets max horizontal spacing between reinforcement bars for tensile reinforcement. This is measured between bar centres.
+     * This is done for the first layer - closest to the edge.
      *
      * @param SlsMoment SLS moment in kNm/m
      * @return max bar spacing for tensile reinforcement
      */
     @Override
-    public int getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
+    public double getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
         List<Integer> spacings = SlsMoment >= 0 ? bottomSpacings : topSpacings;
 
-        return Collections.max(spacings);
+        return spacings.get(0);
     }
 
     /**
      * Gets max reinforcement bar diameter for tensile reinforcement.
+     * This is done for the first layer - closest to the edge.
      *
      * @param SlsMoment SLS moment in kNm/m
      * @return max bar diameter for tensile reinforcement
@@ -363,7 +363,7 @@ public class SlabReinforcement extends Reinforcement {
         List<Integer> mainReinforcement = SlsMoment >= 0 ? bottomDiameters : topDiameters;
         List<Integer> additionalReinforcement = SlsMoment >= 0 ? additionalBottomDiameters : additionalTopDiameters;
 
-        return Math.max(Collections.max(mainReinforcement), Collections.max(additionalReinforcement));
+        return Math.max(mainReinforcement.get(0), additionalReinforcement.get(0));
     }
 
     /**

@@ -50,7 +50,7 @@ public abstract class Reinforcement implements Drawable, Serializable {
      * @param SlsMoment SLS moment in kNm or kNm/m
      * @return max bar spacing for tensile reinforcement
      */
-    public abstract int getMaxBarSpacingForTensileReinforcement(double SlsMoment);
+    public abstract double getMaxBarSpacingForTensileReinforcement(double SlsMoment);
 
     /**
      * Gets max reinforcement bar diameter for tensile reinforcement.
