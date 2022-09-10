@@ -225,7 +225,7 @@ public class BeamReinforcement extends Reinforcement {
         List<List<Double>> distanceForBarsInSubsequentRows = IntStream.range(1, diameters.size())
                 .mapToObj(i -> IntStream
                         .range(0, diameters.get(i).size())
-                        .mapToObj(distance -> distancesForSubsequentRows.get(i - 1)) // // TODO: 27/07/2022 Check this in unit tests
+                        .mapToObj(distance -> distancesForSubsequentRows.get(i - 1))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
 
