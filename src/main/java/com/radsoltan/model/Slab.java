@@ -38,8 +38,8 @@ public class Slab implements Flexure, Cracking, Serializable {
     /**
      * Slab constructor. It includes internal forces, slab geometry, reinforcement, materials and all design parameters.
      *
-     * @param UlsMoment        ULS bending moment
-     * @param SlsMoment        SLS bending moment
+     * @param UlsMoment        ULS bending moment in kNm/m
+     * @param SlsMoment        SLS bending moment in kNm/m
      * @param slabStrip        SlabStrip geometry object
      * @param concrete         Concrete enum
      * @param reinforcement    Slab reinforcement object
@@ -119,7 +119,7 @@ public class Slab implements Flexure, Cracking, Serializable {
     /**
      * Getter for bending Capacity.
      *
-     * @return bending capacity in kNm
+     * @return bending capacity in kNm/m
      */
     public double getBendingCapacity() {
         return bendingCapacity;

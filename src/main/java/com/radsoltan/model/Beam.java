@@ -7,6 +7,11 @@ import com.radsoltan.constants.UIText;
 
 import java.io.Serializable;
 
+/**
+ * Class that describes a beam with given geometry, materials, reinforcement and internal forces.
+ * It implements Flexure, Shear and Cracking interfaces.
+ * Includes methods that calculate bending and shear capacity and crack widths.
+ */
 public class Beam implements Flexure, Shear, Cracking, Serializable {
     private final double UlsMoment;
     private final double UlsShear;
@@ -38,6 +43,17 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Beam constructor. It includes internal forces, beam geometry, reinforcement, materials and all design parameters.
+     *
+     * @param UlsMoment        ULS bending moment in kNm
+     * @param UlsShear         ULS shear force in kN
+     * @param SlsMoment        SLS bending moment in kNm
+     * @param geometry         Geometry object
+     * @param concrete         Concrete enum
+     * @param reinforcement    Beam reinforcement
+     * @param designParameters Design parameters object
+     */
     public Beam(double UlsMoment, double UlsShear, double SlsMoment,
                 Geometry geometry, Concrete concrete,
                 BeamReinforcement reinforcement,
@@ -62,6 +78,17 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
         this.providedShearReinforcement = shearLinks.getArea();
     }
 
+    /**
+     * Calculates bending capacity of the beam with accordance to Eurocode 2. Calculations support both flanged and rectangular section.
+     *
+     * The method calculates required section properties such as minimum reinforcement, width in compression zone and lever arm.
+     * Based on these bendingCapacity and requiredTensileReinforcement fields are set up with relevant bending capacity and reinforcement required for bending.
+     * If a beam has a flanged section with plastic neutral axis in the flange, the calculations are carried out as for rectangular section - invoking a separate method.
+     *
+     * The calculations are based on Concrete Centre guide "How to Design Concrete Structures using Eurocode 2" January 2011 - Chapter 4, Fig. 2 and 11.
+     *
+     * @throws IllegalArgumentException exception if fck is greater than 50MPa or if compressive force is to large and is flanged section with plastic neutral axis in web
+     */
     @Override
     public void calculateBendingCapacity() {
         if (fck <= 50) {
@@ -71,9 +98,12 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
             double minimumReinforcement = getMinimumReinforcement(UlsMoment, fctm, fy, effectiveDepth, geometry);
             this.leverArm = getLeverArm(effectiveDepth, kFactor, kDashFactor);
             if (geometry.isFlangedSection()) {
+                // Flanged section
                 if (geometry.checkIfPlasticNeutralAxisInFlange(UlsMoment, effectiveDepth, leverArm)) {
+                    // PNA in the flange, treat as rectangular section
                     calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, widthInCompressiveZone, minimumReinforcement);
                 } else {
+                    // PNA in the web
                     double flangeThickness = geometry.getFlangeThickness();
                     double flangeCapacity = 0.57 * fck * (geometry.getFlangeWidth() - geometry.getWidth()) * flangeThickness * (effectiveDepth - 0.5 * flangeThickness) * Math.pow(10, -6);
                     double flangeKFactor = (UlsMoment - flangeCapacity) * Math.pow(10, 6) / (fck * geometry.getWidth() * effectiveDepth * effectiveDepth);
@@ -86,6 +116,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
                     }
                 }
             } else {
+                // Rectangular section
                 calculateBendingCapacityForRectangularSection(kFactor, kDashFactor, effectiveDepth, widthInCompressiveZone, minimumReinforcement);
             }
         } else {
@@ -93,11 +124,24 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
         }
     }
 
+    /**
+     * Method calculates capacity of a rectangular section. It distinguishes between singly or doubly reinforced section.
+     *
+     * The calculations are based on Concrete Centre guide "How to Design Concrete Structures using Eurocode 2" January 2011 - Chapter 4, Fig. 2.
+     *
+     * @param kFactor K factor for the section
+     * @param kDashFactor K' factor for the section
+     * @param effectiveDepth effective depth of the section in mm
+     * @param widthInCompressionZone width of the beam in compression zone in mm
+     * @param minimumReinforcement minimum area of reinforcement in mm2
+     */
     private void calculateBendingCapacityForRectangularSection(double kFactor, double kDashFactor, double effectiveDepth, double widthInCompressionZone, double minimumReinforcement) {
         if (kFactor <= kDashFactor) {
+            // Singly reinforced section
             this.requiredTensileReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
             this.bendingCapacity = providedTensileReinforcement * leverArm * fyd * Math.pow(10, -6);
         } else {
+            // Doubly reinforced section
             double depthOfPlasticNeutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
             double centroidOfCompressionReinforcement = getCentroidOfCompressionReinforcement(UlsMoment, reinforcement, designParameters);
             double fsc = Math.min(700 * (depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) / depthOfPlasticNeutralAxis, fyd);
