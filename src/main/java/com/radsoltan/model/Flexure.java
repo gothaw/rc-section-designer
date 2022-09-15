@@ -97,7 +97,7 @@ public interface Flexure {
      * @return maximum reinforcement area in mm2
      */
     default double getMaximumReinforcement(double concreteArea) {
-        return 0.04 * concreteArea;
+        return 0.04 * concreteArea; // TODO: 15/09/2022 Add this to validation
     }
 
     /**

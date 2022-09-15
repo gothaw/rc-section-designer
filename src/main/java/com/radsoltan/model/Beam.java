@@ -23,6 +23,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     private final double effectiveDepth;
     private double leverArm;
     /* Material Properties */
+    private final Concrete concrete;
     private final int fck;
     private final double fcd;
     private final int fy;
@@ -40,6 +41,8 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     /* Results Shear */
     private final double maximumLinksSpacing;
     private double requiredShearReinforcement;
+    /* Results Cracking */
+    private double crackWidth;
 
     private static final long serialVersionUID = 1L;
 
@@ -65,6 +68,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
         this.shearLinks = reinforcement.getShearLinks();
         this.designParameters = designParameters;
         this.geometry = geometry;
+        this.concrete = concrete;
         this.fck = concrete.getCompressiveStrength();
         this.fcd = concrete.getDesignCompressiveResistance(designParameters.getPartialFactorOfSafetyForConcrete());
         this.fctm = concrete.getMeanAxialTensileStrength();
@@ -87,7 +91,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
      *
      * The calculations are based on Concrete Centre guide "How to Design Concrete Structures using Eurocode 2" January 2011 - Chapter 4, Fig. 2 and 11.
      *
-     * @throws IllegalArgumentException exception if fck is greater than 50MPa or if compressive force is to large and is flanged section with plastic neutral axis in web
+     * @throws IllegalArgumentException exception if fck is greater than 50MPa or if compressive force is too great and is flanged section with plastic neutral axis in web
      */
     @Override
     public void calculateBendingCapacity() {
@@ -151,10 +155,19 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
         }
     }
 
+    /**
+     * Calculates shear capacity for a beam with accordance to Eurocode 2 - cl. 6.2.
+     *
+     * The method calculates concrete shear resistance. If this is adequate to withstand the forces then minimal reinforcement is suggested.
+     * Otherwise, required shear reinforcement is calculated based on the angle of compressive strut.
+     *
+     * @throws IllegalArgumentException exception if fck is greater than 50MPa or if shear force is too great
+     */
     @Override
     public void calculateShearCapacity() {
         if (fck <= 50) {
             if (leverArm == 0) {
+                // If bending capacity not calculated
                 leverArm = 0.9 * effectiveDepth;
             }
             double width = geometry.getWidth();
@@ -163,65 +176,135 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
             double CRdc = 0.18 / designParameters.getPartialFactorOfSafetyForConcrete();
             double k = Math.min(1 + Math.sqrt(200 / effectiveDepth), 2.0);
             double minimumConcreteShearResistance = 0.035 * Math.pow(k, 1.5) * Math.pow(fck, 0.5);
-            double concreteShearResistance = Math.max(CRdc * k * Math.pow(100 * reinforcementRatio * fck, 0.333), minimumConcreteShearResistance) * width * effectiveDepth * Math.pow(10, -3);
+            // Resistance for members not requiring shear reinforcement cl. 6.2.2
+            double concreteShearResistance = Math.max(CRdc * k * Math.pow(100 * reinforcementRatio * fck, 0.333), minimumConcreteShearResistance) * width * effectiveDepth * Math.pow(10, -3); // Eq. 6.2
             double yieldStrength = shearLinks.getYieldStrength();
+            double minimumShearReinforcement = 0.08 * width * Math.pow(fck, 0.5) / yieldStrength * Math.pow(10, 3); // Eq. 9.5N;
             if (UlsShear > concreteShearResistance) {
+                // Calculations if shear reinforcement is needed cl. 6.2.3
                 double strengthReductionFactor = 0.6 * (1 - 0.004 * fck);
                 double coefficientForStressState = 1.0;
                 double maxAngleOfCompressiveStrut = Math.toRadians(45);
-                double maxShearResistance = coefficientForStressState * width * leverArm * strengthReductionFactor * fcd / (Math.tan(maxAngleOfCompressiveStrut) + 1 / Math.tan(maxAngleOfCompressiveStrut));
+                double maxShearResistance = coefficientForStressState * width * leverArm * strengthReductionFactor * fcd / (Math.tan(maxAngleOfCompressiveStrut) + 1 / Math.tan(maxAngleOfCompressiveStrut)); // Eq. 6.9
                 if (UlsShear <= maxShearResistance) {
                     double angleOfCompressiveStrut = Math.toRadians(Math.max(0.5 * Math.asin(shearStress / (0.2 * fck * (1 - 0.004 * fck))), 21.8));
-                    requiredShearReinforcement = Math.max(shearStress * width / (yieldStrength / Math.tan(angleOfCompressiveStrut)), 0.08 * width * Math.pow(fck, 0.5) * yieldStrength);
+                    requiredShearReinforcement = Math.max(shearStress * width / (yieldStrength / Math.tan(angleOfCompressiveStrut)) * Math.pow(10, 3), minimumShearReinforcement);
                 } else {
                     throw new IllegalArgumentException(UIText.REDESIGN_SECTION_DUE_TO_HIGH_SHEAR);
                 }
             } else {
-                requiredShearReinforcement = 0.08 * width * Math.pow(fck, 0.5) * yieldStrength;
+                requiredShearReinforcement = minimumShearReinforcement;
             }
         } else {
             throw new IllegalArgumentException(UIText.WRONG_CONCRETE_CLASS);
         }
     }
 
+    /**
+     * Calculates crack widths with accordance to Eurocode 2. It requires flexure capacity to be calculated beforehand to run the calculations.
+     * It uses calculateCrackWidth default method from cracking interface. The crack width value is assigned to member variable.
+     */
     @Override
     public void calculateCracking() {
+        if (this.bendingCapacity == 0) {
+            throw new IllegalArgumentException(UIText.INVALID_BENDING_CAPACITY);
+        }
+        int width = geometry.getWidth();
+        int depth = geometry.getDepth();
+        double neutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
+        double maxSpacing = reinforcement.getMaxBarSpacingForTensileReinforcement(SlsMoment);
+        int maxBarDiameter = reinforcement.getMaxBarDiameterForTensileReinforcement(SlsMoment);
 
+        this.crackWidth = calculateCrackWidth(width, depth, effectiveDepth, neutralAxis, UlsMoment, SlsMoment, maxSpacing, maxBarDiameter, providedTensileReinforcement, requiredTensileReinforcement, concrete, designParameters);
     }
 
+    /**
+     * Getter for provided tensile reinforcement.
+     *
+     * @return provided tensile reinforcement area
+     */
     public double getProvidedTensileReinforcement() {
         return providedTensileReinforcement;
     }
 
+    /**
+     * Getter for provided compressive reinforcement.
+     *
+     * @return provided compressive reinforcement area
+     */
     public double getProvidedCompressiveReinforcement() {
         return providedCompressiveReinforcement;
     }
 
+    /**
+     * Getter for bending Capacity.
+     *
+     * @return bending capacity in kNm/m
+     */
     public double getBendingCapacity() {
         return bendingCapacity;
     }
 
+    /**
+     * Getter for required tensile reinforcement.
+     *
+     * @return required tensile reinforcement area
+     */
     public double getRequiredTensileReinforcement() {
         return requiredTensileReinforcement;
     }
 
+    /**
+     * Getter for required compressive reinforcement.
+     *
+     * @return required compressive reinforcement area
+     */
     public double getRequiredCompressionReinforcement() {
         return requiredCompressionReinforcement;
     }
 
+    /**
+     * Getter for required tensile reinforcement.
+     *
+     * @return required tensile reinforcement area
+     */
     public double getMaximumReinforcement() {
         return maximumReinforcement;
     }
 
+    /**
+     * Getter for required shear reinforcement.
+     *
+     * @return required shear reinforcement area
+     */
     public double getRequiredShearReinforcement() {
         return requiredShearReinforcement;
     }
 
+    /**
+     * Getter for provided shear reinforcement.
+     *
+     * @return provided shear reinforcement area
+     */
     public double getProvidedShearReinforcement() {
         return providedShearReinforcement;
     }
 
+    /**
+     * Getter for maximum shear links spacing
+     *
+     * @return maximum shear links spacing
+     */
     public double getMaximumLinksSpacing() {
         return maximumLinksSpacing;
+    }
+
+    /**
+     * Getter for crack width.
+     *
+     * @return crack width
+     */
+    public double getCrackWidth() {
+        return crackWidth;
     }
 }

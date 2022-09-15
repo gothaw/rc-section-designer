@@ -32,6 +32,7 @@ public class Slab implements Flexure, Cracking, Serializable {
     private double crackWidth;
     private double bendingCapacity;
     private double requiredTensileReinforcement;
+    private final double maximumReinforcement;
 
     private static final long serialVersionUID = 1L;
 
@@ -61,6 +62,7 @@ public class Slab implements Flexure, Cracking, Serializable {
         this.fyd = designParameters.getDesignYieldStrength();
         this.providedTensileReinforcement = (UlsMoment >= 0) ? reinforcement.getTotalAreaOfBottomReinforcement() : reinforcement.getTotalAreaOfTopReinforcement();
         this.effectiveDepth = getEffectiveDepth(geometry.getDepth(), UlsMoment, reinforcement, designParameters);
+        this.maximumReinforcement = getMaximumReinforcement(geometry.getArea() - providedTensileReinforcement);
     }
 
     /**
@@ -68,7 +70,7 @@ public class Slab implements Flexure, Cracking, Serializable {
      * The method calculates required section properties such as minimum reinforcement, width in compression zone and lever arm.
      * Based on these bendingCapacity and requiredTensileReinforcement fields are set up with relevant bending capacity and reinforcement required for bending.
      *
-     * @throws IllegalArgumentException exception if wrong concrete class or compressive force too large
+     * @throws IllegalArgumentException exception if wrong concrete class or compressive force too great
      */
     @Override
     public void calculateBendingCapacity() throws IllegalArgumentException {
@@ -114,6 +116,15 @@ public class Slab implements Flexure, Cracking, Serializable {
      */
     public double getProvidedTensileReinforcement() {
         return providedTensileReinforcement;
+    }
+
+    /**
+     * Getter for required tensile reinforcement.
+     *
+     * @return required tensile reinforcement area
+     */
+    public double getMaximumReinforcement() {
+        return maximumReinforcement;
     }
 
     /**
