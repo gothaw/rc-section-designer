@@ -145,7 +145,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
             this.requiredTensileReinforcement = Math.max(Math.abs(UlsMoment) * Math.pow(10, 6) / (fyd * leverArm), minimumReinforcement);
             this.bendingCapacity = providedTensileReinforcement * leverArm * fyd * Math.pow(10, -6);
         } else {
-            // Doubly reinforced section
+            // Doubly reinforced section // TODO: 17/09/2022 Throw something like an alert saying its a doubly reinforced section
             double depthOfPlasticNeutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
             double centroidOfCompressionReinforcement = getCentroidOfCompressionReinforcement(UlsMoment, reinforcement, designParameters);
             double fsc = Math.min(700 * (depthOfPlasticNeutralAxis - centroidOfCompressionReinforcement) / depthOfPlasticNeutralAxis, fyd);

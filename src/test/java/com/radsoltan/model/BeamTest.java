@@ -4,6 +4,7 @@ import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.UIText;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.Rectangle;
+import com.radsoltan.model.geometry.TSection;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,13 +28,13 @@ class BeamTest {
     private static BeamReinforcement beamReinforcement;
     private static BeamReinforcement beamReinforcementWithMultipleRows;
     private static BeamReinforcement beamReinforcementWithMultipleRowsAndBarTypes;
-    private static ShearLinks shearLinks;
     private static DesignParameters designParameters;
     private static DecimalFormat decimalFormat;
     private static DecimalFormat decimalFormatCracks;
 
     @BeforeAll
     static void beforeAll() {
+        ShearLinks shearLinks = new ShearLinks(500, 10, 200, 3);
         decimalFormat = new DecimalFormat("##.000");
         decimalFormatCracks = new DecimalFormat("##.0000");
         UlsMomentHogging = -200;
@@ -43,7 +44,6 @@ class BeamTest {
         UlsShear = 500;
         geometry = new Geometry(new Rectangle(500, 800));
         concrete = Concrete.C32_40;
-        shearLinks = new ShearLinks(500, 10, 200, 3);
 
         beamReinforcement = new BeamReinforcement(
                 List.of(List.of(16, 16, 16, 16)),
@@ -130,12 +130,39 @@ class BeamTest {
 
     @Test
     void bendingCapacityIsCalculatedForDoublyReinforcedRectangularSection() {
-        
+        double excessiveMoment = 1800;
+
+        Beam beam = new Beam(excessiveMoment, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcement, designParameters);
+
+        beam.calculateBendingCapacity();
+
+        double bendingCapacity = beam.getBendingCapacity();
+        double requiredTensileReinforcement = beam.getRequiredTensileReinforcement();
+        double providedTensileReinforcement = beam.getProvidedTensileReinforcement();
+        double requiredCompressiveReinforcement = beam.getRequiredCompressionReinforcement();
+        double providedCompressiveReinforcement = beam.getProvidedCompressiveReinforcement();
+
+        assertEquals(1061.065, Double.parseDouble(decimalFormat.format(requiredCompressiveReinforcement)));
+        assertEquals(804.248, Double.parseDouble(decimalFormat.format(providedCompressiveReinforcement)));
+        assertEquals(243.018, Double.parseDouble(decimalFormat.format(bendingCapacity)));
+        assertEquals(6666.213, Double.parseDouble(decimalFormat.format(requiredTensileReinforcement)));
+        assertEquals(1472.622, Double.parseDouble(decimalFormat.format(providedTensileReinforcement)));
     }
 
     @Test
     void errorIsThrownIfExcessiveCompressiveForceAndFlangedSectionWithPNAinWeb() {
-    
+        Geometry flanged = new Geometry(new TSection(500, 800, 300, 100));
+        double excessiveMoment = 1800;
+
+        Beam beam = new Beam(excessiveMoment, UlsShear, SlsMomentSagging, flanged, concrete, beamReinforcement, designParameters);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, beam::calculateBendingCapacity);
+
+        String errorMessage = exception.getMessage();
+        String expectedMessage = UIText.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE;
+
+        assertEquals(expectedMessage, errorMessage);
+
     }
 
     @Test
