@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,9 +33,9 @@ class BeamReinforcementTest {
 
         beamReinforcement = new BeamReinforcement(
             List.of(List.of(25, 25, 25)),
-            List.of(),
+            Collections.emptyList(),
             List.of(List.of(16, 16, 16, 16)),
-            List.of(),
+            Collections.emptyList(),
             shearLinks
         );
 

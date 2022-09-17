@@ -185,10 +185,10 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
                 double strengthReductionFactor = 0.6 * (1 - 0.004 * fck);
                 double coefficientForStressState = 1.0;
                 double maxAngleOfCompressiveStrut = Math.toRadians(45);
-                double maxShearResistance = coefficientForStressState * width * leverArm * strengthReductionFactor * fcd / (Math.tan(maxAngleOfCompressiveStrut) + 1 / Math.tan(maxAngleOfCompressiveStrut)); // Eq. 6.9
+                double maxShearResistance = coefficientForStressState * width * leverArm * strengthReductionFactor * fcd / (Math.tan(maxAngleOfCompressiveStrut) + 1 / Math.tan(maxAngleOfCompressiveStrut)) * Math.pow(10, -3); // Eq. 6.9
                 if (UlsShear <= maxShearResistance) {
                     double angleOfCompressiveStrut = Math.toRadians(Math.max(0.5 * Math.asin(shearStress / (0.2 * fck * (1 - 0.004 * fck))), 21.8));
-                    requiredShearReinforcement = Math.max(shearStress * width / (yieldStrength / Math.tan(angleOfCompressiveStrut)) * Math.pow(10, 3), minimumShearReinforcement);
+                    requiredShearReinforcement = Math.max(shearStress * width / (yieldStrength / designParameters.getPartialFactorOfSafetyForSteel() * 1 / Math.tan(angleOfCompressiveStrut)) * Math.pow(10, 3), minimumShearReinforcement);
                 } else {
                     throw new IllegalArgumentException(UIText.REDESIGN_SECTION_DUE_TO_HIGH_SHEAR);
                 }

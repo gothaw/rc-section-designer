@@ -21,6 +21,7 @@ class SlabTest {
     private static SlabStrip slabStrip;
     private static Concrete concrete;
     private static SlabReinforcement slabReinforcement;
+    private static SlabReinforcement slabReinforcementWithExcessiveSpacing;
     private static SlabReinforcement slabReinforcementWithMultipleLayers;
     private static SlabReinforcement slabReinforcementWithAdditionalReinforcement;
     private static DesignParameters designParameters;
@@ -37,8 +38,10 @@ class SlabTest {
         SlsMomentSagging = 0.7 * UlsMomentSagging;
         slabStrip = new SlabStrip(500);
         concrete = Concrete.C32_40;
-        slabReinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
+        slabReinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(175), Collections.emptyList(),
                 List.of(32), List.of(0), List.of(175), Collections.emptyList());
+        slabReinforcementWithExcessiveSpacing = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
+                List.of(25), List.of(0), List.of(500), Collections.emptyList());
         slabReinforcementWithMultipleLayers = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
                 List.of(20, 20, 16, 16), List.of(0, 0, 0, 0), List.of(250, 225, 200, 200), List.of(50, 40, 30));
         slabReinforcementWithAdditionalReinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
@@ -72,9 +75,9 @@ class SlabTest {
         double requiredReinforcement = slab.getRequiredTensileReinforcement();
         double providedReinforcement = slab.getProvidedTensileReinforcement();
 
-        assertEquals(466.621, Double.parseDouble(decimalFormat.format(bendingCapacity)));
+        assertEquals(533.281, Double.parseDouble(decimalFormat.format(bendingCapacity)));
         assertEquals(2103.951, Double.parseDouble(decimalFormat.format(requiredReinforcement)));
-        assertEquals(2454.369, Double.parseDouble(decimalFormat.format(providedReinforcement)));
+        assertEquals(2804.993, Double.parseDouble(decimalFormat.format(providedReinforcement)));
     }
 
     @Test
@@ -147,8 +150,20 @@ class SlabTest {
     }
 
     @Test
-    void crackingIsNotCalculatedForExcessiveSpacing() {
+    void crackingIsCalculatedForHoggingMoment() {
         Slab slab = new Slab(UlsMomentHogging, SlsMomentHogging, slabStrip, concrete, slabReinforcement, designParameters);
+
+        slab.calculateBendingCapacity();
+        slab.calculateCracking();
+
+        double crackWidth = slab.getCrackWidth();
+
+        assertEquals(0.2512, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
+    }
+
+    @Test
+    void crackingIsNotCalculatedForExcessiveSpacing() {
+        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithExcessiveSpacing, designParameters);
 
         slab.calculateBendingCapacity();
 
