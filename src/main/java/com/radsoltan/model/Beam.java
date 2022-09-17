@@ -212,8 +212,20 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
         int width = geometry.getWidth();
         int depth = geometry.getDepth();
         double neutralAxis = getDepthOfPlasticNeutralAxis(effectiveDepth, leverArm);
-        double maxSpacing = reinforcement.getMaxBarSpacingForTensileReinforcement(SlsMoment);
-        int maxBarDiameter = reinforcement.getMaxBarDiameterForTensileReinforcement(SlsMoment);
+
+        // Setting up reinforcement to support SLS calculations - max bar spacing and diameter
+        BeamReinforcement reinforcementForSls = new BeamReinforcement(
+                reinforcement.getTopDiameters(),
+                reinforcement.getTopVerticalSpacings(),
+                reinforcement.getBottomDiameters(),
+                reinforcement.getBottomVerticalSpacings(),
+                reinforcement.getShearLinks(),
+                designParameters,
+                geometry.getSection()
+        );
+
+        double maxSpacing = reinforcementForSls.getMaxBarSpacingForTensileReinforcement(SlsMoment);
+        int maxBarDiameter = reinforcementForSls.getMaxBarDiameterForTensileReinforcement(SlsMoment);
 
         this.crackWidth = calculateCrackWidth(width, depth, effectiveDepth, neutralAxis, UlsMoment, SlsMoment, maxSpacing, maxBarDiameter, providedTensileReinforcement, requiredTensileReinforcement, concrete, designParameters);
     }
