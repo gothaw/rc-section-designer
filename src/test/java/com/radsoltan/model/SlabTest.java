@@ -93,7 +93,7 @@ class SlabTest {
     }
 
     @Test
-    void bendingCapacityIsCalculatedCorrectlyForSaggingAndMultipleLayers() {
+    void bendingCapacityIsCalculatedCorrectlyForMultipleLayers() {
         Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithMultipleLayers, designParameters);
 
         slab.calculateBendingCapacity();
@@ -108,7 +108,7 @@ class SlabTest {
     }
 
     @Test
-    void bendingCapacityIsCalculatedCorrectlyForSaggingAndAdditionalReinforcement() {
+    void bendingCapacityIsCalculatedCorrectlyForAdditionalReinforcement() {
         Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithAdditionalReinforcement, designParameters);
 
         slab.calculateBendingCapacity();
@@ -123,16 +123,6 @@ class SlabTest {
     }
 
     @Test
-    void bendingCapacityIsCalculatedCorrectlyForHoggingAndMultipleLayers() {
-        // TODO: 17/09/2022 Implement
-    }
-
-    @Test
-    void bendingCapacityIsCalculatedCorrectlyForHoggingAndAdditionalReinforcement() {
-        // TODO: 17/09/2022 Implement
-    }
-
-    @Test
     void errorIsThrownWhenCompressiveForceExceedsCompressionZoneCapacity() {
         Slab slab = new Slab(1.5 * UlsMomentSagging, 1.5 * SlsMomentSagging, slabStrip, concrete, slabReinforcementWithMultipleLayers, designParameters);
 
@@ -142,11 +132,6 @@ class SlabTest {
         String expectedMessage = UIText.REDESIGN_SECTION_DUE_TO_COMPRESSIVE_FORCE;
 
         assertEquals(expectedMessage, errorMessage);
-    }
-
-    @Test
-    void errorIsThrownIfWrongConcreteClass() {
-        // TODO: 17/09/2022 Implement
     }
 
     @Test
@@ -188,7 +173,7 @@ class SlabTest {
     }
 
     @Test
-    void crackingIsCalculatedForSaggingAndWithMultipleLayers() {
+    void crackingIsCalculatedForMultipleLayers() {
         Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithMultipleLayers, designParameters);
 
         slab.calculateBendingCapacity();
@@ -200,7 +185,7 @@ class SlabTest {
     }
 
     @Test
-    void crackingIsCalculatedForSaggingAndAdditionalReinforcement() {
+    void crackingIsCalculatedForAdditionalReinforcement() {
         Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithAdditionalReinforcement, designParameters);
 
         slab.calculateBendingCapacity();
@@ -209,16 +194,6 @@ class SlabTest {
         double crackWidth = slab.getCrackWidth();
 
         assertEquals(0.4739, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
-    }
-
-    @Test
-    void crackingIsCalculatedForHoggingAndWithMultipleLayers() {
-        // TODO: 17/09/2022 Implement
-    }
-
-    @Test
-    void crackingIsCalculatedForHoggingAndAdditionalReinforcement() {
-        // TODO: 17/09/2022 Implement
     }
 
     @Test
