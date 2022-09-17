@@ -120,12 +120,32 @@ class BeamTest {
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForMultipleRows() {
+        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRows, designParameters);
 
+        beam.calculateBendingCapacity();
+
+        double bendingCapacity = beam.getBendingCapacity();
+        double requiredReinforcement = beam.getRequiredTensileReinforcement();
+        double providedReinforcement = beam.getProvidedTensileReinforcement();
+
+        assertEquals(674.8, Double.parseDouble(decimalFormat.format(bendingCapacity)));
+        assertEquals(1034.589, Double.parseDouble(decimalFormat.format(requiredReinforcement)));
+        assertEquals(2327.135, Double.parseDouble(decimalFormat.format(providedReinforcement)));
     }
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForMultipleRowsAndBarTypes() {
+        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRowsAndBarTypes, designParameters);
 
+        beam.calculateBendingCapacity();
+
+        double bendingCapacity = beam.getBendingCapacity();
+        double requiredReinforcement = beam.getRequiredTensileReinforcement();
+        double providedReinforcement = beam.getProvidedTensileReinforcement();
+
+        assertEquals(1445.815, Double.parseDouble(decimalFormat.format(bendingCapacity)));
+        assertEquals(1019.356, Double.parseDouble(decimalFormat.format(requiredReinforcement)));
+        assertEquals(4912.666, Double.parseDouble(decimalFormat.format(providedReinforcement)));
     }
 
     @Test
@@ -261,12 +281,26 @@ class BeamTest {
 
     @Test
     void crackingIsCalculatedForAndMultipleRows() {
-    
+        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRows, designParameters);
+
+        beam.calculateBendingCapacity();
+        beam.calculateCracking();
+
+        double crackWidth = beam.getCrackWidth();
+
+        assertEquals(0.1604, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
     }
 
     @Test
     void crackingIsCalculatedForMultipleRowsAndBarTypes() {
-    
+        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRowsAndBarTypes, designParameters);
+
+        beam.calculateBendingCapacity();
+        beam.calculateCracking();
+
+        double crackWidth = beam.getCrackWidth();
+
+        assertEquals(0.0535, Double.parseDouble(decimalFormatCracks.format(crackWidth)));
     }
 
     @Test
