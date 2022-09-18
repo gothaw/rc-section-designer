@@ -37,12 +37,13 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     private double bendingCapacity;
     private double requiredTensileReinforcement;
     private double requiredCompressionReinforcement;
-    private final double maximumReinforcement;
     /* Results Shear */
-    private final double maximumLinksSpacing;
     private double requiredShearReinforcement;
     /* Results Cracking */
     private double crackWidth;
+    /* Post Validation */
+    private final double maximumLinksSpacing;
+    private final double maximumReinforcement;
 
     private static final long serialVersionUID = 1L;
 

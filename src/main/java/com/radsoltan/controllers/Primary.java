@@ -138,27 +138,16 @@ public class Primary extends Controller {
         }
         // Setting geometry, reinforcement and design parameters sections
         if (project.getGeometry() == null) {
-            project.setElementType("beam"); // Hardcoded // TODO: 18/09/2022 Change this
-            project.setGeometry(new Geometry(new Rectangle(300, 600))); // Hardcoded // TODO: 18/09/2022 Change this
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         } else {
             geometryText.setText(project.getGeometry().getDescription());
         }
         if (project.getReinforcement() == null) {
-            project.setReinforcement(new BeamReinforcement(
-                    List.of(List.of(20, 20, 20, 20)),
-                    List.of(),
-                    List.of(List.of(20, 20, 20, 20)),
-                    List.of(),
-                    new ShearLinks(500, 8, 300, 2)
-            )); // Hardcoded // TODO: 18/09/2022 Change this
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         } else {
             reinforcementText.setText(project.getReinforcement().getDescription());
         }
         if (project.getDesignParameters() == null) {
-            project.setDesignParameters(new DesignParameters(30, 25, 30, 500, 20, 1.4, 1.15, 0.85, true, false, 0.3)); // Hardcoded // TODO: 18/09/2022 Change this
-            project.setConcrete(Concrete.C40_50); // Hardcoded // TODO: 18/09/2022 Change this
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         // Drawing main image

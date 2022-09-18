@@ -32,6 +32,7 @@ public class Slab implements Flexure, Cracking, Serializable {
     private double crackWidth;
     private double bendingCapacity;
     private double requiredTensileReinforcement;
+    /* Post Validation */
     private final double maximumReinforcement;
 
     private static final long serialVersionUID = 1L;
