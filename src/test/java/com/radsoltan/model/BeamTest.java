@@ -69,13 +69,32 @@ class BeamTest {
                 shearLinks
         );
 
-        designParameters = new DesignParameters(35, 25, 35, 500, 20,
-                Constants.GAMMA_C_PERSISTENT_TRANSIENT, Constants.GAMMA_S_PERSISTENT_TRANSIENT, 0.85, true, true, 0.3);
+        designParameters = new DesignParameters(
+                35,
+                25,
+                35,
+                500,
+                20,
+                Constants.GAMMA_C_PERSISTENT_TRANSIENT,
+                Constants.GAMMA_S_PERSISTENT_TRANSIENT,
+                0.85,
+                true,
+                true,
+                0.3
+        );
     }
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForSaggingMoment() {
-        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                UlsShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
 
@@ -90,7 +109,15 @@ class BeamTest {
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForHoggingMoment() {
-        Beam beam = new Beam(UlsMomentHogging, UlsShear, SlsMomentHogging, geometry, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                UlsMomentHogging,
+                UlsShear,
+                SlsMomentHogging,
+                geometry,
+                concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
 
@@ -120,7 +147,15 @@ class BeamTest {
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForMultipleRows() {
-        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRows, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                UlsShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcementWithMultipleRows,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
 
@@ -135,7 +170,15 @@ class BeamTest {
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForMultipleRowsAndBarTypes() {
-        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRowsAndBarTypes, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                UlsShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcementWithMultipleRowsAndBarTypes,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
 
@@ -152,7 +195,15 @@ class BeamTest {
     void bendingCapacityIsCalculatedForDoublyReinforcedRectangularSection() {
         double excessiveMoment = 1800;
 
-        Beam beam = new Beam(excessiveMoment, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                excessiveMoment,
+                UlsShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
 
@@ -174,7 +225,15 @@ class BeamTest {
         Geometry flanged = new Geometry(new TSection(500, 800, 300, 100));
         double excessiveMoment = 1800;
 
-        Beam beam = new Beam(excessiveMoment, UlsShear, SlsMomentSagging, flanged, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                excessiveMoment,
+                UlsShear,
+                SlsMomentSagging,
+                flanged,
+                concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         Exception exception = assertThrows(IllegalArgumentException.class, beam::calculateBendingCapacity);
 
@@ -187,7 +246,15 @@ class BeamTest {
 
     @Test
     void shearCapacityIsCalculatedCorrectly() {
-        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                UlsShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
         beam.calculateShearCapacity();
@@ -217,7 +284,15 @@ class BeamTest {
     void errorIsThrownForExcessiveShearForce() {
         double excessiveShear = 1700;
 
-        Beam beam = new Beam(UlsMomentSagging, excessiveShear, SlsMomentSagging, geometry, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                excessiveShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
 
@@ -231,7 +306,14 @@ class BeamTest {
 
     @Test
     void crackingIsCalculatedForSaggingMoment() {
-        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                UlsShear,
+                SlsMomentSagging,
+                geometry, concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
         beam.calculateCracking();
@@ -243,7 +325,15 @@ class BeamTest {
     
     @Test
     void crackingIsCalculatedForHoggingMoment() {
-        Beam beam = new Beam(UlsMomentHogging, UlsShear, SlsMomentHogging, geometry, concrete, beamReinforcement, designParameters);
+        Beam beam = new Beam(
+                UlsMomentHogging,
+                UlsShear,
+                SlsMomentHogging,
+                geometry,
+                concrete,
+                beamReinforcement,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
         beam.calculateCracking();
@@ -255,7 +345,15 @@ class BeamTest {
 
     @Test
     void crackingIsNotCalculatedForExcessiveSpacing() {
-        Beam beam = new Beam(UlsMomentHogging, UlsShear, SlsMomentHogging, geometry, concrete, beamReinforcementWithMultipleRows, designParameters);
+        Beam beam = new Beam(
+                UlsMomentHogging,
+                UlsShear,
+                SlsMomentHogging,
+                geometry,
+                concrete,
+                beamReinforcementWithMultipleRows,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
 
@@ -281,7 +379,15 @@ class BeamTest {
 
     @Test
     void crackingIsCalculatedForAndMultipleRows() {
-        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRows, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                UlsShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcementWithMultipleRows,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
         beam.calculateCracking();
@@ -293,7 +399,15 @@ class BeamTest {
 
     @Test
     void crackingIsCalculatedForMultipleRowsAndBarTypes() {
-        Beam beam = new Beam(UlsMomentSagging, UlsShear, SlsMomentSagging, geometry, concrete, beamReinforcementWithMultipleRowsAndBarTypes, designParameters);
+        Beam beam = new Beam(
+                UlsMomentSagging,
+                UlsShear,
+                SlsMomentSagging,
+                geometry,
+                concrete,
+                beamReinforcementWithMultipleRowsAndBarTypes,
+                designParameters
+        );
 
         beam.calculateBendingCapacity();
         beam.calculateCracking();
@@ -305,7 +419,15 @@ class BeamTest {
 
     @Test
     void errorIsThrownForCrackingWhenBendingCapacityIsNotCalculated() {
-        Beam beam = new Beam(UlsMomentHogging, UlsShear, SlsMomentHogging, geometry, concrete, beamReinforcementWithMultipleRows, designParameters);
+        Beam beam = new Beam(
+                UlsMomentHogging,
+                UlsShear,
+                SlsMomentHogging,
+                geometry,
+                concrete,
+                beamReinforcementWithMultipleRows,
+                designParameters
+        );
 
         Exception exception = assertThrows(IllegalArgumentException.class, beam::calculateCracking);
 

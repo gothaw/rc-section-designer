@@ -1,5 +1,6 @@
 package com.radsoltan.model;
 
+import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.UIText;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,19 @@ class CrackingTest {
         providedReinforcement = 1570.796;
         requiredReinforcement = 931.174;
         concrete = Concrete.C40_50;
-        designParameters = new DesignParameters(30, 0, 30, 500, 20, 1.4, 1.15, 0.85, true, true, 0.3);
+        designParameters = new DesignParameters(
+                30,
+                0,
+                30,
+                500,
+                20,
+                Constants.GAMMA_C_PERSISTENT_TRANSIENT,
+                Constants.GAMMA_S_PERSISTENT_TRANSIENT,
+                0.85,
+                true,
+                true,
+                0.3
+        );
     }
 
     @Test

@@ -96,7 +96,14 @@ public class Project implements Serializable {
         double UlsMomentValue = Double.parseDouble(UlsMoment);
         double SlsMomentValue = Double.parseDouble(SlsMoment);
         // Instantiating new slab
-        Slab slab = new Slab(UlsMomentValue, SlsMomentValue, slabStrip, concrete, slabReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentValue,
+                SlsMomentValue,
+                slabStrip,
+                concrete,
+                slabReinforcement,
+                designParameters
+        );
         try {
             // Calculating bending capacity
             slab.calculateBendingCapacity();

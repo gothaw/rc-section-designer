@@ -1,5 +1,6 @@
 package com.radsoltan.model;
 
+import com.radsoltan.constants.Constants;
 import com.radsoltan.model.geometry.Geometry;
 import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
@@ -27,7 +28,19 @@ class ValidateBeamTest {
 
     @BeforeAll
     static void beforeAll() {
-        designParameters = new DesignParameters(30, 25, 35, 500, 20, 1.5, 1.15, 0.85, true, true, 0.3);
+        designParameters = new DesignParameters(
+                30,
+                25,
+                35,
+                500,
+                20,
+                Constants.GAMMA_C_PERSISTENT_TRANSIENT,
+                Constants.GAMMA_S_PERSISTENT_TRANSIENT,
+                0.85,
+                true,
+                true,
+                0.3
+        );
         ShearLinks shearLinks = new ShearLinks(500, 6, 200, 3);
 
         List<List<Integer>> validTopDiameters = List.of(

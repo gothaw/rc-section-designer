@@ -42,10 +42,29 @@ class FlexureTest {
         widthInCompressionZonePositiveMoment = geometry.getWidthInCompressionZone(UlsMomentPositive);
         widthInCompressionZoneNegativeMoment = geometry.getWidthInCompressionZone(UlsMomentNegative);
         depth = geometry.getDepth();
-        reinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
-                List.of(25, 16), List.of(20, 10), List.of(300, 250), List.of(50));
-        designParameters = new DesignParameters(25, 0, 50, 500, 20,
-                Constants.GAMMA_C_PERSISTENT_TRANSIENT, Constants.GAMMA_S_PERSISTENT_TRANSIENT, 0.85, true, true, 0.3);
+        reinforcement = new SlabReinforcement(
+                List.of(25),
+                List.of(0),
+                List.of(200),
+                Collections.emptyList(),
+                List.of(25, 16),
+                List.of(20, 10),
+                List.of(300, 250),
+                List.of(50)
+        );
+        designParameters = new DesignParameters(
+                25,
+                0,
+                50,
+                500,
+                20,
+                Constants.GAMMA_C_PERSISTENT_TRANSIENT,
+                Constants.GAMMA_S_PERSISTENT_TRANSIENT,
+                0.85,
+                true,
+                true,
+                0.3
+        );
     }
 
     @Test

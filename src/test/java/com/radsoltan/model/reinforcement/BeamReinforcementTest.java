@@ -1,5 +1,6 @@
 package com.radsoltan.model.reinforcement;
 
+import com.radsoltan.constants.Constants;
 import com.radsoltan.constants.UIText;
 import com.radsoltan.model.DesignParameters;
 import com.radsoltan.model.geometry.Rectangle;
@@ -61,7 +62,19 @@ class BeamReinforcementTest {
                 List.of(List.of(25, 20, 16, 16, 16, 20, 25), List.of(12, 10, 10, 12), List.of(10, 8, 10)),
                 List.of(40, 30),
                 shearLinks,
-                new DesignParameters(30, 25, 35, 500, 20, 1.5, 1.15, 0.85, true, true, 0.3),
+                new DesignParameters(
+                        30,
+                        25,
+                        35,
+                        500,
+                        20,
+                        Constants.GAMMA_C_PERSISTENT_TRANSIENT,
+                        Constants.GAMMA_S_PERSISTENT_TRANSIENT,
+                        0.85,
+                        true,
+                        true,
+                        0.3
+                ),
                 new Rectangle(700, 1300)
         );
     }

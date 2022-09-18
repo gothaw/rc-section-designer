@@ -38,21 +38,71 @@ class SlabTest {
         SlsMomentSagging = 0.7 * UlsMomentSagging;
         slabStrip = new SlabStrip(500);
         concrete = Concrete.C32_40;
-        slabReinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(175), Collections.emptyList(),
-                List.of(32), List.of(0), List.of(175), Collections.emptyList());
-        slabReinforcementWithExcessiveSpacing = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
-                List.of(25), List.of(0), List.of(500), Collections.emptyList());
-        slabReinforcementWithMultipleLayers = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
-                List.of(20, 20, 16, 16), List.of(0, 0, 0, 0), List.of(250, 225, 200, 200), List.of(50, 40, 30));
-        slabReinforcementWithAdditionalReinforcement = new SlabReinforcement(List.of(25), List.of(0), List.of(200), Collections.emptyList(),
-                List.of(25, 16), List.of(20, 10), List.of(300, 250), List.of(50));
-        designParameters = new DesignParameters(25, 0, 50, 500, 20,
-                Constants.GAMMA_C_PERSISTENT_TRANSIENT, Constants.GAMMA_S_PERSISTENT_TRANSIENT, 0.85, true, true, 0.3);
+        slabReinforcement = new SlabReinforcement(
+                List.of(25),
+                List.of(0),
+                List.of(175),
+                Collections.emptyList(),
+                List.of(32),
+                List.of(0),
+                List.of(175),
+                Collections.emptyList()
+        );
+        slabReinforcementWithExcessiveSpacing = new SlabReinforcement(
+                List.of(25),
+                List.of(0),
+                List.of(200),
+                Collections.emptyList(),
+                List.of(25),
+                List.of(0),
+                List.of(500),
+                Collections.emptyList()
+        );
+        slabReinforcementWithMultipleLayers = new SlabReinforcement(
+                List.of(25),
+                List.of(0),
+                List.of(200),
+                Collections.emptyList(),
+                List.of(20, 20, 16, 16),
+                List.of(0, 0, 0, 0),
+                List.of(250, 225, 200, 200),
+                List.of(50, 40, 30)
+        );
+        slabReinforcementWithAdditionalReinforcement = new SlabReinforcement(
+                List.of(25),
+                List.of(0),
+                List.of(200),
+                Collections.emptyList(),
+                List.of(25, 16),
+                List.of(20, 10),
+                List.of(300, 250),
+                List.of(50)
+        );
+        designParameters = new DesignParameters(
+                25,
+                0,
+                50,
+                500,
+                20,
+                Constants.GAMMA_C_PERSISTENT_TRANSIENT,
+                Constants.GAMMA_S_PERSISTENT_TRANSIENT,
+                0.85,
+                true,
+                true,
+                0.3
+        );
     }
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForSaggingMoment() {
-        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentSagging,
+                SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcement,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
 
@@ -67,7 +117,14 @@ class SlabTest {
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForHoggingMoment() {
-        Slab slab = new Slab(UlsMomentHogging, SlsMomentHogging, slabStrip, concrete, slabReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentHogging,
+                SlsMomentHogging,
+                slabStrip,
+                concrete,
+                slabReinforcement,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
 
@@ -97,7 +154,14 @@ class SlabTest {
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForMultipleLayers() {
-        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithMultipleLayers, designParameters);
+        Slab slab = new Slab(
+                UlsMomentSagging,
+                SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcementWithMultipleLayers,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
 
@@ -112,7 +176,14 @@ class SlabTest {
 
     @Test
     void bendingCapacityIsCalculatedCorrectlyForAdditionalReinforcement() {
-        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithAdditionalReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentSagging,
+                SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcementWithAdditionalReinforcement,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
 
@@ -127,7 +198,14 @@ class SlabTest {
 
     @Test
     void errorIsThrownWhenCompressiveForceExceedsCompressionZoneCapacity() {
-        Slab slab = new Slab(1.5 * UlsMomentSagging, 1.5 * SlsMomentSagging, slabStrip, concrete, slabReinforcementWithMultipleLayers, designParameters);
+        Slab slab = new Slab(
+                1.5 * UlsMomentSagging,
+                1.5 * SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcementWithMultipleLayers,
+                designParameters
+        );
 
         Exception exception = assertThrows(IllegalArgumentException.class, slab::calculateBendingCapacity);
 
@@ -139,7 +217,14 @@ class SlabTest {
 
     @Test
     void crackingIsCalculatedForSaggingMoment() {
-        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentSagging,
+                SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcement,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
         slab.calculateCracking();
@@ -151,7 +236,14 @@ class SlabTest {
 
     @Test
     void crackingIsCalculatedForHoggingMoment() {
-        Slab slab = new Slab(UlsMomentHogging, SlsMomentHogging, slabStrip, concrete, slabReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentHogging,
+                SlsMomentHogging,
+                slabStrip,
+                concrete,
+                slabReinforcement,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
         slab.calculateCracking();
@@ -163,7 +255,14 @@ class SlabTest {
 
     @Test
     void crackingIsNotCalculatedForExcessiveSpacing() {
-        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithExcessiveSpacing, designParameters);
+        Slab slab = new Slab(
+                UlsMomentSagging,
+                SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcementWithExcessiveSpacing,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
 
@@ -189,7 +288,14 @@ class SlabTest {
 
     @Test
     void crackingIsCalculatedForMultipleLayers() {
-        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithMultipleLayers, designParameters);
+        Slab slab = new Slab(
+                UlsMomentSagging,
+                SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcementWithMultipleLayers,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
         slab.calculateCracking();
@@ -201,7 +307,14 @@ class SlabTest {
 
     @Test
     void crackingIsCalculatedForAdditionalReinforcement() {
-        Slab slab = new Slab(UlsMomentSagging, SlsMomentSagging, slabStrip, concrete, slabReinforcementWithAdditionalReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentSagging,
+                SlsMomentSagging,
+                slabStrip,
+                concrete,
+                slabReinforcementWithAdditionalReinforcement,
+                designParameters
+        );
 
         slab.calculateBendingCapacity();
         slab.calculateCracking();
@@ -213,7 +326,14 @@ class SlabTest {
 
     @Test
     void errorIsThrownForCrackingWhenBendingCapacityIsNotCalculated() {
-        Slab slab = new Slab(UlsMomentHogging, SlsMomentHogging, slabStrip, concrete, slabReinforcement, designParameters);
+        Slab slab = new Slab(
+                UlsMomentHogging,
+                SlsMomentHogging,
+                slabStrip,
+                concrete,
+                slabReinforcement,
+                designParameters
+        );
 
         Exception exception = assertThrows(IllegalArgumentException.class, slab::calculateCracking);
 

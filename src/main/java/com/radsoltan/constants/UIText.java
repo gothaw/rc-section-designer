@@ -55,6 +55,5 @@ public class UIText {
     public static final String SOMETHING_WENT_WRONG = "Sorry. Something went wrong.";
     public static final String UNIT_MOMENT_BEAM = "kNm";
     public static final String UNIT_MOMENT_SLAB = "kNm/m";
-    public static final String UNIT_SHEAR = "kN";
     public static final String WRONG_CONCRETE_CLASS = "Concrete class greater than C50/60. Outside of scope of this software.";
 }

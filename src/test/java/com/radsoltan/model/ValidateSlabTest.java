@@ -1,5 +1,6 @@
 package com.radsoltan.model;
 
+import com.radsoltan.constants.Constants;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,19 @@ class ValidateSlabTest {
 
     @BeforeAll
     static void beforeAll() {
-        designParameters = new DesignParameters(30, 0, 35, 500, 20, 1.5, 1.15, 0.85, true, true, 0.3);
+        designParameters = new DesignParameters(
+                30,
+                0,
+                35,
+                500,
+                20,
+                Constants.GAMMA_C_PERSISTENT_TRANSIENT,
+                Constants.GAMMA_S_PERSISTENT_TRANSIENT,
+                0.85,
+                true,
+                true,
+                0.3
+        );
         List<Integer> topDiameters = new ArrayList<>(List.of(32, 25, 32));
         List<Integer> additionalTopDiameters = new ArrayList<>(List.of(20, 40, 20));
         List<Integer> bottomDiameters = new ArrayList<>(List.of(32, 25, 32, 20));
@@ -56,14 +69,43 @@ class ValidateSlabTest {
 
         minimumSlabThicknessForValidSpacing = designParameters.getNominalCoverTop() + topReinforcementHeightSum + validTopVerticalSpacingSum + distanceBetweenTopAndBottomReinforcement + bottomReinforcementHeightSum + validBottomVerticalSpacingSum + designParameters.getNominalCoverBottom();
 
-        validSlabReinforcement = new SlabReinforcement(topDiameters, additionalTopDiameters, validTopSpacings, validTopVerticalSpacings,
-                bottomDiameters, additionalBottomDiameters, validBottomSpacings, validBottomVerticalSpacings);
-        slabReinforcementWithInvalidHorizontalSpacing = new SlabReinforcement(topDiameters, additionalTopDiameters, invalidTopSpacings, validTopVerticalSpacings,
-                bottomDiameters, additionalBottomDiameters, invalidBottomSpacings, validBottomVerticalSpacings);
-        slabReinforcementWithInvalidVerticalSpacing = new SlabReinforcement(topDiameters, additionalTopDiameters, validTopSpacings, invalidTopVerticalSpacings,
-                bottomDiameters, additionalBottomDiameters, validBottomSpacings, invalidBottomVerticalSpacings);
-        invalidSlabReinforcement = new SlabReinforcement(topDiameters, additionalTopDiameters, invalidTopSpacings, invalidTopVerticalSpacings,
-                bottomDiameters, additionalBottomDiameters, validBottomSpacings, validBottomVerticalSpacings);
+        validSlabReinforcement = new SlabReinforcement(
+                topDiameters,
+                additionalTopDiameters,
+                validTopSpacings,
+                validTopVerticalSpacings,
+                bottomDiameters,
+                additionalBottomDiameters,
+                validBottomSpacings,
+                validBottomVerticalSpacings
+        );
+        slabReinforcementWithInvalidHorizontalSpacing = new SlabReinforcement(
+                topDiameters,
+                additionalTopDiameters,
+                invalidTopSpacings,
+                validTopVerticalSpacings,
+                bottomDiameters,
+                additionalBottomDiameters,
+                invalidBottomSpacings,
+                validBottomVerticalSpacings);
+        slabReinforcementWithInvalidVerticalSpacing = new SlabReinforcement(
+                topDiameters,
+                additionalTopDiameters,
+                validTopSpacings,
+                invalidTopVerticalSpacings,
+                bottomDiameters,
+                additionalBottomDiameters,
+                validBottomSpacings,
+                invalidBottomVerticalSpacings);
+        invalidSlabReinforcement = new SlabReinforcement(
+                topDiameters,
+                additionalTopDiameters,
+                invalidTopSpacings,
+                invalidTopVerticalSpacings,
+                bottomDiameters,
+                additionalBottomDiameters,
+                validBottomSpacings,
+                validBottomVerticalSpacings);
     }
 
     @Test
