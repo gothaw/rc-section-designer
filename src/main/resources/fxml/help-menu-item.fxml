@@ -16,9 +16,10 @@
         <Label styleClass="help-sub-bullet-point">◦ For slab, this is just thickness of the slab in mm.</Label>
         <Label styleClass="help-sub-bullet-point">◦ For beam, this is width and depth in mm. This app only supports rectangular sections.</Label>
         <Label>• Set up reinforcement</Label>
-        <Label styleClass="help-sub-bullet-point">◦ For slab, this can be up to six layers of reinforcement for each face.</Label>
+        <Label styleClass="help-sub-bullet-point">◦ For slab, this can be up to six layers of reinforcement per each face.</Label>
         <Label styleClass="help-sub-bullet-point-next-line">Alternate bars can be also added by clicking add button for each layer.</Label>
-        <Label styleClass="help-sub-bullet-point">◦ For beam, (todo)</Label>
+        <Label styleClass="help-sub-bullet-point">◦ For beam, it can be up to six rows of reinforcement per each face.</Label>
+        <Label styleClass="help-sub-bullet-point-next-line">There can be up to 3 different bar types per row</Label>
         <Label>• Set up design parameters. This includes:</Label>
         <Label styleClass="help-sub-bullet-point">◦ Nominal cover</Label>
         <Label styleClass="help-sub-bullet-point">◦ Concrete class and aggregate size</Label>
