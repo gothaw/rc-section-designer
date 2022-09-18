@@ -24,30 +24,36 @@ class SlabReinforcementTest {
         SlsMomentSagging = 100;
         SlsMomentHogging = -100;
 
-        slabReinforcement = new SlabReinforcement(List.of(25),
+        slabReinforcement = new SlabReinforcement(
+                List.of(25),
                 List.of(0),
                 List.of(200),
                 Collections.emptyList(),
                 List.of(32),
                 List.of(0),
                 List.of(175),
-                Collections.emptyList());
-        slabReinforcementWithMultipleLayers = new SlabReinforcement(List.of(20, 20, 10),
+                Collections.emptyList()
+        );
+        slabReinforcementWithMultipleLayers = new SlabReinforcement(
+                List.of(20, 20, 10),
                 List.of(0, 0, 0),
                 List.of(200, 200, 175),
                 List.of(25, 25),
                 List.of(20, 20, 16, 16),
                 List.of(0, 0, 0, 0),
                 List.of(250, 250, 200, 200),
-                List.of(50, 40, 30));
-        slabReinforcementWithAdditionalReinforcement = new SlabReinforcement(List.of(20, 20, 10),
+                List.of(50, 40, 30)
+        );
+        slabReinforcementWithAdditionalReinforcement = new SlabReinforcement(
+                List.of(20, 20, 10),
                 List.of(16, 0, 12),
                 List.of(200, 200, 175),
                 List.of(25, 25),
                 List.of(20, 20, 16, 16),
                 List.of(25, 0, 0, 16),
                 List.of(250, 250, 200, 200),
-                List.of(50, 40, 30));
+                List.of(50, 40, 30)
+        );
     }
 
     @Test
