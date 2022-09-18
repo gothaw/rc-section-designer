@@ -138,8 +138,8 @@ public class Primary extends Controller {
         }
         // Setting geometry, reinforcement and design parameters sections
         if (project.getGeometry() == null) {
-            project.setElementType("beam"); // Hardcoded
-            project.setGeometry(new Geometry(new Rectangle(300, 600))); // Hardcoded
+            project.setElementType("beam"); // Hardcoded // TODO: 18/09/2022 Change this
+            project.setGeometry(new Geometry(new Rectangle(300, 600))); // Hardcoded // TODO: 18/09/2022 Change this
             geometrySection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         } else {
             geometryText.setText(project.getGeometry().getDescription());
@@ -151,14 +151,14 @@ public class Primary extends Controller {
                     List.of(List.of(20, 20, 20, 20)),
                     List.of(),
                     new ShearLinks(500, 8, 300, 2)
-            )); // Hardcoded
+            )); // Hardcoded // TODO: 18/09/2022 Change this
             reinforcementSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         } else {
             reinforcementText.setText(project.getReinforcement().getDescription());
         }
         if (project.getDesignParameters() == null) {
-            project.setDesignParameters(new DesignParameters(30, 25, 30, 500, 20, 1.4, 1.15, 0.85, true, false, 0.3)); // Hardcoded
-            project.setConcrete(Concrete.C40_50); // Hardcoded
+            project.setDesignParameters(new DesignParameters(30, 25, 30, 500, 20, 1.4, 1.15, 0.85, true, false, 0.3)); // Hardcoded // TODO: 18/09/2022 Change this
+            project.setConcrete(Concrete.C40_50); // Hardcoded // TODO: 18/09/2022 Change this
             designParametersSection.getStyleClass().add(CssStyleClasses.NOT_DEFINED);
         }
         // Drawing main image
@@ -250,7 +250,7 @@ public class Primary extends Controller {
             project.setFlexureResultsAdditionalMessage(projectFromFile.getFlexureResultsAdditionalMessage());
             project.setFlexureError(projectFromFile.getIsFlexureError());
             // Shear
-            project.setShearCapacity(projectFromFile.getShearCapacity());
+            project.setRequiredShearReinforcement(projectFromFile.getRequiredShearReinforcement());
             project.setShearCapacityCheckMessage(projectFromFile.getShearCapacityCheckMessage());
             project.setShearResultsAdditionalMessage(projectFromFile.getShearResultsAdditionalMessage());
             project.setShearError(projectFromFile.getIsShearError());
@@ -554,7 +554,7 @@ public class Primary extends Controller {
             flexureResultsWrapper.getChildren().add(flexureResults);
         }
         if (project.getShearCapacityCheckMessage() != null) {
-            VBox shearResults = generateResultsForSingleCheck(Math.abs(Double.parseDouble(project.getUlsShear())), project.getShearCapacity(), UIText.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage(), project.getIsShearError());
+            VBox shearResults = generateResultsForSingleCheck(Math.abs(Double.parseDouble(project.getUlsShear())), project.getRequiredShearReinforcement(), UIText.SHEAR, project.getShearCapacityCheckMessage(), project.getShearResultsAdditionalMessage(), project.getIsShearError());
             shearResultsWrapper.getChildren().add(shearResults);
         }
         if (project.getCrackingCheckMessage() != null) {

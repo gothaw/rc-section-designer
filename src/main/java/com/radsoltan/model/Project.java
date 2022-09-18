@@ -1,7 +1,9 @@
 package com.radsoltan.model;
 
 import com.radsoltan.model.geometry.Geometry;
+import com.radsoltan.model.geometry.Rectangle;
 import com.radsoltan.model.geometry.SlabStrip;
+import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.Reinforcement;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
 import com.radsoltan.constants.UIText;
@@ -34,7 +36,7 @@ public class Project implements Serializable {
     private String flexureCapacityCheckMessage;
     private String flexureResultsAdditionalMessage;
     private boolean isFlexureError;
-    private double shearCapacity;
+    private double requiredShearReinforcement;
     private String shearCapacityCheckMessage;
     private String shearResultsAdditionalMessage;
     private boolean isShearError;
@@ -117,8 +119,8 @@ public class Project implements Serializable {
                 crackWidth = slab.getCrackWidth();
                 crackWidthLimit = designParameters.getCrackWidthLimit();
                 crackingCheckMessage = (crackWidth < crackWidthLimit) ?
-                        String.format("%.2f mmm \u003c %.2f mmm", crackWidth, crackWidthLimit) :
-                        String.format("%.2f mmm \u003e %.2f mmm", crackWidth, crackWidthLimit);
+                        String.format("%.3f mm \u003c %.3f mm", crackWidth, crackWidthLimit) :
+                        String.format("%.3f mm \u003e %.3f mm", crackWidth, crackWidthLimit);
                 crackingResultsAdditionalMessage = (crackWidth <= crackWidthLimit) ? UIText.SECTION_ADEQUATE : UIText.CRACKING_FAIL_MESSAGE;
                 isCrackingError = false;
             } catch (IllegalArgumentException e) {
@@ -135,8 +137,71 @@ public class Project implements Serializable {
      * It calculates bending and shear capacity and crack widths based on forces and parameters provided.
      */
     private void calculateBeamProject() {
-        // TODO: 10/09/2022 Implement
-        System.out.println("Calculating beam project.");
+        if (!(geometry.getSection() instanceof Rectangle)) {
+            // Only rectangular sections are supported as of now
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_GEOMETRY);
+        }
+        if (!(reinforcement instanceof BeamReinforcement)) {
+            throw new IllegalArgumentException(UIText.INVALID_BEAM_REINFORCEMENT);
+        }
+        BeamReinforcement beamReinforcement = (BeamReinforcement) reinforcement;
+        // Getting forces
+        double UlsMomentValue = Double.parseDouble(UlsMoment);
+        double SlsMomentValue = Double.parseDouble(SlsMoment);
+        double UlsShearValue = Double.parseDouble(UlsShear);
+        // Instantiating new beam
+        Beam beam = new Beam(UlsMomentValue, UlsShearValue, SlsMomentValue, geometry, concrete, beamReinforcement, designParameters);
+
+        try {
+            // Calculating bending capacity
+            beam.calculateBendingCapacity();
+            flexureCapacity = beam.getBendingCapacity();
+            flexureCapacityCheckMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ?
+                    String.format("%.2f kNm \u003c %.2f kNm", Math.abs(UlsMomentValue), flexureCapacity) :
+                    String.format("%.2f kNm \u003e %.2f kNm", Math.abs(UlsMomentValue), flexureCapacity);
+            flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? UIText.SECTION_ADEQUATE : UIText.FLEXURE_FAIL_MESSAGE;
+            isFlexureError = false;
+        } catch (IllegalArgumentException e) {
+            flexureCapacity = 0;
+            flexureCapacityCheckMessage = UIText.CALCULATIONS_ERROR;
+            flexureResultsAdditionalMessage = e.getMessage();
+            isFlexureError = true;
+        }
+        try {
+            // Calculating shear capacity
+            beam.calculateShearCapacity();
+            requiredShearReinforcement = beam.getRequiredShearReinforcement();
+            double providedShearReinforcement = beam.getProvidedShearReinforcement();
+            shearCapacityCheckMessage = (requiredShearReinforcement <= providedShearReinforcement) ?
+                    String.format("%.2f mm\u00b2/m \u003c %.2f mm\u00b2/m", requiredShearReinforcement, providedShearReinforcement) :
+                    String.format("%.2f mm\u00b2/m \u003e %.2f mm\u00b2/m", requiredShearReinforcement, providedShearReinforcement);
+            shearResultsAdditionalMessage = (requiredShearReinforcement <= providedShearReinforcement) ? UIText.SECTION_ADEQUATE : UIText.FLEXURE_FAIL_MESSAGE;
+            isShearError = false;
+        } catch (IllegalArgumentException e) {
+            requiredShearReinforcement = 0;
+            shearCapacityCheckMessage = UIText.CALCULATIONS_ERROR;
+            shearResultsAdditionalMessage = e.getMessage();
+            isShearError = true;
+        }
+
+        if (designParameters.isIncludeCrackingCalculations()) {
+            try {
+                // Calculate cracking
+                beam.calculateCracking();
+                crackWidth = beam.getCrackWidth();
+                crackWidthLimit = designParameters.getCrackWidthLimit();
+                crackingCheckMessage = (crackWidth < crackWidthLimit) ?
+                        String.format("%.3f mm \u003c %.3f mm", crackWidth, crackWidthLimit) :
+                        String.format("%.3f mm \u003e %.3f mm", crackWidth, crackWidthLimit);
+                crackingResultsAdditionalMessage = (crackWidth <= crackWidthLimit) ? UIText.SECTION_ADEQUATE : UIText.CRACKING_FAIL_MESSAGE;
+                isCrackingError = false;
+            } catch (IllegalArgumentException e) {
+                crackWidth = 0;
+                crackingCheckMessage = UIText.CALCULATIONS_ERROR;
+                crackingResultsAdditionalMessage = e.getMessage();
+                isCrackingError = true;
+            }
+        }
     }
 
     /**
@@ -147,7 +212,7 @@ public class Project implements Serializable {
         setFlexureCapacityCheckMessage(null);
         setFlexureResultsAdditionalMessage(null);
         setFlexureError(false);
-        setShearCapacity(0);
+        setRequiredShearReinforcement(0);
         setShearCapacityCheckMessage(null);
         setShearResultsAdditionalMessage(null);
         setShearError(false);
@@ -384,12 +449,12 @@ public class Project implements Serializable {
     }
 
     /**
-     * Getter for shear capacity.
+     * Getter for required shear reinforcement.
      *
      * @return shear capacity
      */
-    public double getShearCapacity() {
-        return shearCapacity;
+    public double getRequiredShearReinforcement() {
+        return requiredShearReinforcement;
     }
 
     /**
@@ -528,12 +593,12 @@ public class Project implements Serializable {
     }
 
     /**
-     * Setter for shear capacity.
+     * Setter for required shear reinforcement.
      *
-     * @param shearCapacity in kN
+     * @param requiredShearReinforcement in mm2/m
      */
-    public void setShearCapacity(double shearCapacity) {
-        this.shearCapacity = shearCapacity;
+    public void setRequiredShearReinforcement(double requiredShearReinforcement) {
+        this.requiredShearReinforcement = requiredShearReinforcement;
     }
 
     /**
