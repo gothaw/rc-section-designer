@@ -347,8 +347,13 @@ public class SlabReinforcement extends Reinforcement {
     @Override
     public double getMaxBarSpacingForTensileReinforcement(double SlsMoment) {
         List<Integer> spacings = SlsMoment >= 0 ? bottomSpacings : topSpacings;
-
-        return spacings.get(0);
+        List<Integer> additionalReinforcement = SlsMoment >= 0 ? additionalBottomDiameters : additionalTopDiameters;
+        if (additionalReinforcement.get(0) == 0) {
+            // No additional reinforcement
+            return spacings.get(0);
+        } else {
+            return 0.5 * spacings.get(0);
+        }
     }
 
     /**
