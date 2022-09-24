@@ -17,7 +17,7 @@ public interface Cracking {
     void calculateCracking();
 
     /**
-     * Calculates crack width in mm with accordance to 7.3.4 in EC2. The cracking calculations are run if the reinforcement is 'reasonably closely' spaced.
+     * Calculates crack width in mm in accordance with 7.3.4 in EC2. The cracking calculations are run if the reinforcement is 'reasonably closely' spaced.
      * That is if it satisfies a requirement that the spacing should be no greater than 5 * (c + 0.5d).
      *
      * @param width element width in mm
@@ -83,7 +83,7 @@ public interface Cracking {
     }
 
     /**
-     * Calculates effective tension area of concrete. Calculated with accordance to Figure 7.1 and cl. 7.3.2 (3) in EC2.
+     * Calculates effective tension area of concrete. Calculated in accordance with Figure 7.1 and cl. 7.3.2 (3) in EC2.
      *
      * @param width element width in tension area in mm
      * @param depth element depth in mm

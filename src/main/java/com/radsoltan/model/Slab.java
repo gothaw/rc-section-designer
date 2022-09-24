@@ -67,7 +67,7 @@ public class Slab implements Flexure, Cracking, Serializable {
     }
 
     /**
-     * Calculates bending capacity of the slab with accordance to Eurocode 2. Calculations support only singly reinforced section and are valid for concrete with fck less than 50 MPa.
+     * Calculates bending capacity of the slab in accordance with Eurocode 2. Calculations support only singly reinforced section and are valid for concrete with fck less than 50 MPa.
      * The method calculates required section properties such as minimum reinforcement, width in compression zone and lever arm.
      * Based on these bendingCapacity and requiredTensileReinforcement fields are set up with relevant bending capacity and reinforcement required for bending.
      *
@@ -93,7 +93,7 @@ public class Slab implements Flexure, Cracking, Serializable {
     }
 
     /**
-     * Calculates crack widths with accordance to Eurocode 2. It requires flexure capacity to be calculated beforehand to run the calculations.
+     * Calculates crack widths in accordance with Eurocode 2. It requires flexure capacity to be calculated beforehand to run the calculations.
      * It uses calculateCrackWidth default method from cracking interface. The crack width value is assigned to member variable.
      */
     @Override

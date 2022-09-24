@@ -84,7 +84,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     }
 
     /**
-     * Calculates bending capacity of the beam with accordance to Eurocode 2. Calculations support both flanged and rectangular section.
+     * Calculates bending capacity of the beam in accordance with Eurocode 2. Calculations support both flanged and rectangular section.
      *
      * The method calculates required section properties such as minimum reinforcement, width in compression zone and lever arm.
      * Based on these bendingCapacity and requiredTensileReinforcement fields are set up with relevant bending capacity and reinforcement required for bending.
@@ -157,7 +157,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     }
 
     /**
-     * Calculates shear capacity for a beam with accordance to Eurocode 2 - cl. 6.2.
+     * Calculates shear capacity for a beam in accordance with Eurocode 2 - cl. 6.2.
      *
      * The method calculates concrete shear resistance. If this is adequate to withstand the forces then minimal reinforcement is suggested.
      * Otherwise, required shear reinforcement is calculated based on the angle of compressive strut.
@@ -202,7 +202,7 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     }
 
     /**
-     * Calculates crack widths with accordance to Eurocode 2. It requires flexure capacity to be calculated beforehand to run the calculations.
+     * Calculates crack widths in accordance with Eurocode 2. It requires flexure capacity to be calculated beforehand to run the calculations.
      * It uses calculateCrackWidth default method from cracking interface. The crack width value is assigned to member variable.
      */
     @Override

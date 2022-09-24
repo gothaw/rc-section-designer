@@ -38,7 +38,7 @@ public interface Flanged {
     boolean isPlasticNeutralAxisInFlange(double UlsMoment, double effectiveDepth, double leverArm);
 
     /**
-     * It calculates factor for non-uniform self equilibrating stress with accordance to cl. 7.3.2 in EC2.
+     * It calculates factor for non-uniform self equilibrating stress in accordance with cl. 7.3.2 in EC2.
      * It uses either flange width or down stand depth.
      *
      * @param size flange width or down stand depth in mm
