@@ -36,6 +36,7 @@ public class Project implements Serializable {
     private String flexureCapacityCheckMessage;
     private String flexureResultsAdditionalMessage;
     private boolean isFlexureError;
+    private boolean isDoublyReinforced;
     private double requiredShearReinforcement;
     private String shearCapacityCheckMessage;
     private String shearResultsAdditionalMessage;
@@ -168,6 +169,7 @@ public class Project implements Serializable {
                     String.format("%.2f kNm \u003e %.2f kNm", Math.abs(UlsMomentValue), flexureCapacity);
             flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? UIText.SECTION_ADEQUATE : UIText.FLEXURE_FAIL_MESSAGE;
             isFlexureError = false;
+            isDoublyReinforced = beam.getRequiredCompressionReinforcement() > 0;
         } catch (IllegalArgumentException e) {
             flexureCapacity = 0;
             flexureCapacityCheckMessage = UIText.CALCULATIONS_ERROR;
@@ -543,6 +545,15 @@ public class Project implements Serializable {
      */
     public boolean getIsFlexureError() {
         return isFlexureError;
+    }
+
+    /**
+     * Getter for boolean flag that indicates if section is doubly reinforced.
+     *
+     * @return boolean flag if section is doubly reinforced
+     */
+    public boolean getIsDoublyReinforced() {
+        return isDoublyReinforced;
     }
 
     /**

@@ -11,7 +11,10 @@ import com.radsoltan.model.geometry.*;
 import com.radsoltan.model.reinforcement.BeamReinforcement;
 import com.radsoltan.model.reinforcement.ShearLinks;
 import com.radsoltan.model.reinforcement.SlabReinforcement;
-import com.radsoltan.util.*;
+import com.radsoltan.util.AlertKind;
+import com.radsoltan.util.FileEvent;
+import com.radsoltan.util.ProjectFile;
+import com.radsoltan.util.Utility;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -29,6 +32,7 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -300,6 +304,9 @@ public class Primary extends Controller {
                     }
                     // Generating results area
                     generateResultsArea();
+                    // Running post calculation validation
+                    List<String> postCalculationValidationMessages = getPostCalculationValidationMessagesBasedOnElementType(project.getElementType());
+                    postCalculationValidationMessages.forEach(message -> showAlertBox(message, AlertKind.WARNING));
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                 }
@@ -577,6 +584,36 @@ public class Primary extends Controller {
             default:
                 elementValidationMessages.add(UIText.INVALID_ELEMENT_TYPE);
         }
+        return elementValidationMessages;
+    }
+
+    /**
+     * Gets post calculation validation messages for the element type.
+     * These are warnings that could include notifications that the section is doubly reinforced or max reinforcement is exceeded.
+     *
+     * @param elementType structure element type. This can be either 'beam' or 'slab'
+     * @return List of post calculation validation messages based on element type
+     */
+    private List<String> getPostCalculationValidationMessagesBasedOnElementType(String elementType) {
+        List<String> elementValidationMessages = new ArrayList<>();
+
+        switch (elementType) {
+            case Constants.ELEMENT_TYPE_SLAB:
+                if (project.getReinforcement() instanceof SlabReinforcement) {
+                    PostCalculationValidate postCalculationValidate = new PostCalculationValidate((SlabReinforcement) project.getReinforcement());
+                    elementValidationMessages.addAll(postCalculationValidate.getValidationMessages());
+                }
+                break;
+            case Constants.ELEMENT_TYPE_BEAM:
+                if (project.getReinforcement() instanceof BeamReinforcement) {
+                    PostCalculationValidate postCalculationValidate = new PostCalculationValidate((BeamReinforcement) project.getReinforcement(), project.getIsDoublyReinforced());
+                    elementValidationMessages.addAll(postCalculationValidate.getValidationMessages());
+                }
+                break;
+            default:
+                return Collections.emptyList();
+        }
+
         return elementValidationMessages;
     }
 
