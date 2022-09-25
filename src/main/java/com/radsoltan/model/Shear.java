@@ -18,6 +18,6 @@ public interface Shear {
      * @return maximum shear link spacing
      */
     default double getMaximumSpacingForShearLinks(double effectiveDepth){
-        return 0.75 * effectiveDepth; // TODO: 15/09/2022 Add this to validation
+        return 0.75 * effectiveDepth;
     }
 }
