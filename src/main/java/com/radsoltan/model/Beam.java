@@ -320,4 +320,13 @@ public class Beam implements Flexure, Shear, Cracking, Serializable {
     public double getCrackWidth() {
         return crackWidth;
     }
+
+    /**
+     * Getter for beam reinforcement.
+     *
+     * @return beam reinforcement
+     */
+    public BeamReinforcement getReinforcement() {
+        return reinforcement;
+    }
 }

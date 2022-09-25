@@ -31,12 +31,13 @@ public class Project implements Serializable {
     private Reinforcement reinforcement;
     private DesignParameters designParameters;
     private Concrete concrete;
+    private Beam beam;
+    private Slab slab;
     /* Results */
     private double flexureCapacity;
     private String flexureCapacityCheckMessage;
     private String flexureResultsAdditionalMessage;
     private boolean isFlexureError;
-    private boolean isDoublyReinforced;
     private double requiredShearReinforcement;
     private String shearCapacityCheckMessage;
     private String shearResultsAdditionalMessage;
@@ -97,7 +98,7 @@ public class Project implements Serializable {
         double UlsMomentValue = Double.parseDouble(UlsMoment);
         double SlsMomentValue = Double.parseDouble(SlsMoment);
         // Instantiating new slab
-        Slab slab = new Slab(
+        slab = new Slab(
                 UlsMomentValue,
                 SlsMomentValue,
                 slabStrip,
@@ -158,7 +159,7 @@ public class Project implements Serializable {
         double SlsMomentValue = Double.parseDouble(SlsMoment);
         double UlsShearValue = Double.parseDouble(UlsShear);
         // Instantiating new beam
-        Beam beam = new Beam(UlsMomentValue, UlsShearValue, SlsMomentValue, geometry, concrete, beamReinforcement, designParameters);
+        beam = new Beam(UlsMomentValue, UlsShearValue, SlsMomentValue, geometry, concrete, beamReinforcement, designParameters);
 
         try {
             // Calculating bending capacity
@@ -169,7 +170,6 @@ public class Project implements Serializable {
                     String.format("%.2f kNm \u003e %.2f kNm", Math.abs(UlsMomentValue), flexureCapacity);
             flexureResultsAdditionalMessage = (Math.abs(UlsMomentValue) <= flexureCapacity) ? UIText.SECTION_ADEQUATE : UIText.FLEXURE_FAIL_MESSAGE;
             isFlexureError = false;
-            isDoublyReinforced = beam.getRequiredCompressionReinforcement() > 0;
         } catch (IllegalArgumentException e) {
             flexureCapacity = 0;
             flexureCapacityCheckMessage = UIText.CALCULATIONS_ERROR;
@@ -215,8 +215,11 @@ public class Project implements Serializable {
 
     /**
      * It resets results fields. This includes capacities and calculation messages.
+     * It also resets beam and slab member variables.
      */
     public void resetResults() {
+        setBeam(null);
+        setSlab(null);
         setFlexureCapacity(0);
         setFlexureCapacityCheckMessage(null);
         setFlexureResultsAdditionalMessage(null);
@@ -548,15 +551,6 @@ public class Project implements Serializable {
     }
 
     /**
-     * Getter for boolean flag that indicates if section is doubly reinforced.
-     *
-     * @return boolean flag if section is doubly reinforced
-     */
-    public boolean getIsDoublyReinforced() {
-        return isDoublyReinforced;
-    }
-
-    /**
      * Getter for boolean flag that indicates if there was an error in shear calculations.
      *
      * @return boolean flag for error in shear calculations
@@ -689,5 +683,37 @@ public class Project implements Serializable {
      */
     public void setCrackingError(boolean crackingError) {
         isCrackingError = crackingError;
+    }
+
+    /**
+     * Getter for project beam object.
+     */
+    public Beam getBeam() {
+        return beam;
+    }
+
+    /**
+     * Setter for project beam object.
+     *
+     * @param beam beam object
+     */
+    public void setBeam(Beam beam) {
+        this.beam = beam;
+    }
+
+    /**
+     * Getter for project slab object.
+     */
+    public Slab getSlab() {
+        return slab;
+    }
+
+    /**
+     * Setter for project slab object.
+     *
+     * @param slab slab object
+     */
+    public void setSlab(Slab slab) {
+        this.slab = slab;
     }
 }

@@ -154,4 +154,13 @@ public class Slab implements Flexure, Cracking, Serializable {
     public double getCrackWidth() {
         return crackWidth;
     }
+
+    /**
+     * Getter for slab reinforcement.
+     *
+     * @return slab reinforcement
+     */
+    public SlabReinforcement getReinforcement() {
+        return reinforcement;
+    }
 }

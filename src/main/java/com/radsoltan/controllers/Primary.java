@@ -599,16 +599,12 @@ public class Primary extends Controller {
 
         switch (elementType) {
             case Constants.ELEMENT_TYPE_SLAB:
-                if (project.getReinforcement() instanceof SlabReinforcement) {
-                    PostCalculationValidate postCalculationValidate = new PostCalculationValidate((SlabReinforcement) project.getReinforcement());
-                    elementValidationMessages.addAll(postCalculationValidate.getValidationMessages());
-                }
+                PostCalculationValidate postCalculationValidateSlab = new PostCalculationValidate(project.getSlab());
+                elementValidationMessages.addAll(postCalculationValidateSlab.getValidationMessages());
                 break;
             case Constants.ELEMENT_TYPE_BEAM:
-                if (project.getReinforcement() instanceof BeamReinforcement) {
-                    PostCalculationValidate postCalculationValidate = new PostCalculationValidate((BeamReinforcement) project.getReinforcement(), project.getIsDoublyReinforced());
-                    elementValidationMessages.addAll(postCalculationValidate.getValidationMessages());
-                }
+                PostCalculationValidate postCalculationValidateBeam = new PostCalculationValidate(project.getBeam());
+                elementValidationMessages.addAll(postCalculationValidateBeam.getValidationMessages());
                 break;
             default:
                 return Collections.emptyList();
