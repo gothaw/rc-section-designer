@@ -147,7 +147,7 @@ class SlabReinforcementTest {
         double maxSpacingForReinforcementWithMultipleLayers = slabReinforcementWithMultipleLayers.getMaxBarSpacingForTensileReinforcement(SlsMomentSagging);
 
         assertEquals(175, maxSpacing);
-        assertEquals(250, maxSpacingForReinforcementWithAdditionalRebar);
+        assertEquals(125, maxSpacingForReinforcementWithAdditionalRebar);
         assertEquals(250, maxSpacingForReinforcementWithMultipleLayers);
     }
 
@@ -169,8 +169,7 @@ class SlabReinforcementTest {
         double maxSpacingForReinforcementWithMultipleLayers = slabReinforcementWithMultipleLayers.getMaxBarSpacingForTensileReinforcement(SlsMomentHogging);
 
         assertEquals(200, maxSpacing);
-        assertEquals(200, maxSpacingForReinforcementWithAdditionalRebar);
-        assertEquals(200, maxSpacingForReinforcementWithAdditionalRebar);
+        assertEquals(100, maxSpacingForReinforcementWithAdditionalRebar);
         assertEquals(200, maxSpacingForReinforcementWithMultipleLayers);
     }
 
