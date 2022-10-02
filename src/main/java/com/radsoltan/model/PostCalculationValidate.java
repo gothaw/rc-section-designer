@@ -33,7 +33,7 @@ public class PostCalculationValidate {
         SlabReinforcement slabReinforcement = slab.getReinforcement();
         double maxReinforcement = slab.getMaximumReinforcement();
         double areaOfTopReinforcement = slabReinforcement.getTotalAreaOfTopReinforcement();
-        double areaOfBottomReinforcement = slabReinforcement.getTotalAreaOfTopReinforcement();
+        double areaOfBottomReinforcement = slabReinforcement.getTotalAreaOfBottomReinforcement();
 
         if (areaOfTopReinforcement > maxReinforcement) {
             validationMessages.add("Area of top reinforcement greater than maximum allowed!");
@@ -58,7 +58,7 @@ public class PostCalculationValidate {
         BeamReinforcement beamReinforcement = beam.getReinforcement();
         double maxReinforcement = beam.getMaximumReinforcement();
         double areaOfTopReinforcement = beamReinforcement.getTotalAreaOfTopReinforcement();
-        double areaOfBottomReinforcement = beamReinforcement.getTotalAreaOfTopReinforcement();
+        double areaOfBottomReinforcement = beamReinforcement.getTotalAreaOfBottomReinforcement();
         ShearLinks shearLinks = beamReinforcement.getShearLinks();
         double spacing = shearLinks.getSpacing();
         double maxSpacing = beam.getMaximumLinksSpacing();

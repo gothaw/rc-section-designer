@@ -306,7 +306,7 @@ public class Primary extends Controller {
                     generateResultsArea();
                     // Running post calculation validation
                     List<String> postCalculationValidationMessages = getPostCalculationValidationMessagesBasedOnElementType(project.getElementType());
-                    postCalculationValidationMessages.forEach(message -> showAlertBox(message, AlertKind.WARNING));
+                    postCalculationValidationMessages.forEach(message -> showAlertBox(message, AlertKind.WARNING, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT));
                 } else {
                     showAlertBox(elementValidationMessages.get(0), AlertKind.ERROR, Constants.LARGE_ALERT_WIDTH, Constants.LARGE_ALERT_HEIGHT);
                 }
